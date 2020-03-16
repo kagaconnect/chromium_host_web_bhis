@@ -4,6 +4,7 @@
 /*.exe
 /*.lib
 /*.pak
+/Logs
 /logo.ico
 /locales
 /resources
