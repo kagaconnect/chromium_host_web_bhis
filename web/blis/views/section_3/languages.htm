@@ -1,0 +1,229 @@
+<div class="FlexDisplay FlexColumn container"  style="margin:0px; padding:0px; height:100%;">
+	<div class="FlexDisplay" style="background:#535FD7; height:48px; box-shadow:0 1px 2px rgba(0, 0, 0, 0.3);" >
+		<div id="backBtn"  class="nav-button" >
+			<i class="mdi mdi-apps"></i>
+		</div>
+		<div class="FlexDisplay">
+			<span class="BLIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
+		</div>
+		<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
+		<div class="save dropdown" tooltip="save" flow="down">
+			<div class="nav-button transparent dropdown">
+				<i class="mdi mdi-check-circle"></i>
+			</div>
+			<div class="submenu">
+				<ul class="root"/>
+			</div>
+		</div>
+	</div>
+	<div class="FlexDisplay Flex ContentPage  inner-section FadeIn"  style="width:100%; height:1px;">
+		
+		<div class="FlexDisplay FlexColumn FlexGrow FlexBoxSizing-BorderBox" style="height:100%; overflow: hidden; position:relative;">
+			<div class="FlexDisplay" style="margin:16px 16px 0px 16px;">
+				<div class="page-container Flex FlexColumn inner-container-with-overflow Round Shadow" style="position:relative; height:100%;  width:100%;">
+					
+					<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
+						<div class="FlexDisplay Flex">
+							<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">LANGUAGES</h4>
+						</div>
+					</div>
+					<div class="FlexDisplay FlexRow">
+						<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin:8px 4px 8px 8px;">
+							<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+								<div class="icon">
+									<i class="mdi mdi-translate" />
+								</div>
+								<select onchange="language_category_selected(this)" class="language">
+									<option value="" selected="">Language...</option>
+									<option value="en">English</option>
+									<option value="fr">Francais</option>
+									<option value="sw">Swahili</option>
+								</select>
+							</div>
+						</div>
+						<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin:8px 8px 8px 4px;">
+							<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+								<div class="icon">
+									<i class="mdi mdi-format-list-bulleted" />
+								</div>
+								<select onchange="language_category_selected(this)" class="category">
+									<option value="" selected="">Category...</option>
+									<option value="general">General Terms</option>
+									<option value="header">Page Header</option>
+									<option value="footer">Page Footer</option>
+									<option value="login">Login Page</option>
+									<option value="home">Home Page</option>
+									<option value="regn">Main Registration Page</option>
+									<option value="find_patient">Patient Lookup Page</option>
+									<option value="new_patient">Patient Registration Page</option>
+									<option value="new_specimen">Specimen Registration Page</option>
+									<option value="specimen_added">Specimen Confirmation Page</option>
+									<option value="results_entry">Results Entry Page</option>
+									<option value="search">Search Page</option>
+									<option value="patient_profile">Patient Profile Page</option>
+									<option value="specimen_info">Specimen Info Page</option>
+									<option value="lab_configs">Lab Configurations List</option>
+									<option value="lab_config_home">Lab Configuration Page</option>
+									<option value="lab_admins">Lab Managers Page</option>
+									<option value="catalog">Test Catalog Page</option>
+									<option value="reports">Main Reports Page</option>
+									<option value="edit_profile">Edit Profile Page</option>
+									<option value="help">Main Help Page</option>
+									<option value="stocks">Stock Related Terms</option>
+									<option value="lang_modify">Language Modification Page</option>
+									<option value="blis_help_page">Help Page</option>
+									<option value="search_condition">Search Conditions</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					 
+				</div>
+			</div>
+			<div class="FlexDisplay FlexGrow" style="height:100%; margin:16px 16px 16px 16px;">
+				<div class="page-container Flex FlexColumn Overflow-Hidden inner-container Round Shadow" style="position:relative; height:calc(100% - 0px);  width:100%;">
+					<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
+						<div class="FlexDisplay Flex">
+							<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">TRANSALATIONS</h4>
+						</div>
+					</div>
+					<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 32px); z-index:2;">
+						<!--<div class="FlexDisplay FlexColumn"  style="width:100%; min-height: 24px; max-height: 24px;">
+							<div class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden " style="width:100%; padding:0px;">
+								<div class="FlexDisplay FlexRow Overflow-Hidden " style="width:100%; padding:0px;">
+									<div class="FlexDisplay Divider-Right" style="min-width:256px; max-width:256px; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">DEFAULT</span></div>
+									<div class="FlexDisplay" style="width:100%; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">TRANSALATION</span></div>			
+								</div>	
+							</div>	
+						</div>-->
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2 CategoriesList" style="overflow-y:auto; padding:8px 0px 0px 0px; height:calc(100% - 0px);">
+							
+							
+							
+						</div>
+					</div>			
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+var _config = null;
+
+$("#backBtn").unbind( "click" );
+$('#backBtn').click(function(){
+	var page = System.IO.Path.Combine("web","blis","views",backNavigation);
+	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
+});
+
+function language_category_selected(item){
+	$(".CategoriesList").html('');
+	
+	var _language 	=  $(".select-dropdown.language .current").text();
+	var _category 	=  $(".select-dropdown.category .current").text();
+	
+	if(_language != "Language..." && _category != "Category..."){
+	
+		var _language_value = $(".select-dropdown.language").find(".list .option.selected").data("value");
+		var _category_value = $(".select-dropdown.category").find(".list .option.selected").data("value");
+			
+		if(_language_value != undefined && _language_value != null &&
+		   _category_value != undefined && _category_value != null){
+	
+			var config_file = System.IO.Path.Combine("web","blis","configurations","languages_"+_language_value+".json");
+			if(System.IO.File.Exists(config_file)){
+				_config = JSON.parse(System.IO.File.ReadAllText(config_file));
+				var _item = _config.filter(function(d){ return d.name == _category_value; }).shift();
+				if(_item != undefined && _item != null){
+					
+						var element = _item.category;
+						Object.keys(element).forEach(function(key){
+
+							var category = '<div data-language="'+_language_value+'" data-category="'+_category_value+'" data-id="'+key+'" class="FlexDisplay Flex LanguageItem" style="min-height: 32px; max-height: 32px; margin:0px 12px 8px 12px;"> ';
+								category += '	<div class="FlexDisplay Flex FlexRow form-control"> ';
+								category += '		<div class="icon" tooltip="'+key+'" flow="right"> ';
+								category += '			<i class="mdi mdi-information" /> ';
+								category += '		</div> ';
+								category += '		<input type="text" placeholder="'+element[key]+'" value="'+element[key]+'"/> ';
+								category += '	</div> ';
+								category += '</div> ';
+							
+							$(".CategoriesList").append(category);
+							
+							$(".CategoriesList").find("[data-id='" + key + "']").on('change keydown paste input', function(){
+								element[key] = $(this).find("input").val().trim();
+							});
+						});
+					
+					$(".CategoriesList").scrollTop(0);
+				}
+			}
+		}
+	}
+}
+
+$(".save").unbind( "click" );
+$(".save").click(function(){	
+	$(".save .submenu").hide();
+	$(".save").attr('id', '');
+		
+	$(".CategoriesList").find(".LanguageItem").each(function (index, value) {
+		var val = $(this).find("input").val().trim();
+		if(val != undefined && val != null){
+			if(val.length > 0){
+				$(this).find(".form-control").removeClass("is-invalid");
+			}
+			else $(this).find(".form-control").addClass("is-invalid");
+		}
+		else $(this).find(".form-control").addClass("is-invalid");
+	});
+	
+	if($(".CategoriesList").find(".LanguageItem .form-control.is-invalid").children().length == 0){
+		var _language 	=  $(".select-dropdown.language .current").text();
+		if(_language != "Language..."){
+			var _language_value = $(".select-dropdown.language").find(".list .option.selected").data("value");
+			var config_file = System.IO.Path.Combine("web","blis","configurations","languages_"+_language_value+".json");
+			if(System.IO.File.Exists(config_file)){
+				System.IO.File.WriteAllText(config_file,JSON.stringify(_config));
+			}
+		}
+	}	
+});
+
+$(".save").mouseup(function(){
+	return false;
+});
+$(".submenu").mouseup(function(){
+	return false;
+});
+
+$('.save .submenu .root .nav-button').each(function (index, value) {
+	$(this).click(function(){
+		
+	});
+});
+
+
+
+function hideNavigationDropMenu(){
+	$(".save .submenu").hide();
+	$(".save").attr('id', '');
+}
+
+create_custom_dropdowns();
+		
+var _languages = $(".select-dropdown.language").find(".list");
+if(_languages != undefined && _languages != null){
+	_languages.addClass("scroll scroll2");
+	_languages.css({"overflow-y": "auto", "max-height": "200px"});
+}
+
+var _categories = $(".select-dropdown.category").find(".list");
+if(_categories != undefined && _categories != null){
+	_categories.addClass("scroll scroll2");
+	_categories.css({"overflow-y": "auto", "max-height": "200px"});
+}
+
+hideNavigationDropMenu();
+closeLoadingPage();
+</script>

@@ -1,0 +1,10 @@
+/*.bin
+/*.dat
+/*.dll
+/*.exe
+/*.lib
+/*.pak
+/logo.ico
+/locales
+/resources
+/swiftshader

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	Url="https://blis/index.htm" 
+	RemoteDebuggingPort="20480" 
+	Internal="true" 
+	Verbose="false" 
+	Extensions="extensions">
+  <Profiles />
+</Configuration>

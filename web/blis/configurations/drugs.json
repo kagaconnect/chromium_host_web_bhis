@@ -1,0 +1,53 @@
+[{
+        "Name": "Aspirate",
+        "Description": "Aspirate Sample"
+    }, {
+        "Name": "CSF",
+        "Description": ""
+    }, {
+        "Name": "Dried Blood Spot",
+        "Description": ""
+    }, {
+        "Name": "Nasal Swab",
+        "Description": ""
+    }, {
+        "Name": "Plasma",
+        "Description": ""
+    }, {
+        "Name": "Plasma EDTA",
+        "Description": ""
+    }, {
+        "Name": "Rectal Swab",
+        "Description": ""
+    }, {
+        "Name": "Semen",
+        "Description": ""
+    }, {
+        "Name": "Serum",
+        "Description": ""
+    }, {
+        "Name": "SKIN",
+        "Description": "Skin"
+    }, {
+        "Name": "Sputum",
+        "Description": ""
+    }, {
+        "Name": "Stool",
+        "Description": ""
+    }, {
+        "Name": "Throat Swab",
+        "Description": ""
+    }, {
+        "Name": "U/S",
+        "Description": "Urethral Smear"
+    }, {
+        "Name": "Urine",
+        "Description": ""
+    }, {
+        "Name": "V/S",
+        "Description": "Vaginal Smear"
+    }, {
+        "Name": "Whole Blood",
+        "Description": ""
+    }
+]

@@ -1,0 +1,460 @@
+<div class="FlexDisplay FlexColumn container"  style="margin:0px; padding:0px; height:100%;">
+	<div class="FlexDisplay" style="background:#535FD7; height:48px; box-shadow:0 1px 2px rgba(0, 0, 0, 0.3);" >
+		<div id="backBtn"  class="nav-button" >
+			<i class="mdi mdi-apps"></i>
+		</div>
+		<div class="FlexDisplay">
+			<span class="BLIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
+		</div>
+		<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
+		<div class="add-currency dropdown" tooltip="add currency" flow="left">
+			<div class="nav-button transparent dropdown">
+				<i class="mdi mdi-cash-plus"></i>
+			</div>
+			<div class="submenu">
+				<ul class="root"/>
+			</div>
+		</div>
+	</div>
+	<div class="FlexDisplay Flex ContentPage  inner-section FadeIn"  style="width:100%; height:1px;">
+		<div class="FlexDisplay FlexBoxSizing-BorderBox" style="width:100%; height:100%; overflow: hidden; position:relative;">
+			<div style="width:100%; height:100%; margin:16px 16px 16px 16px;">
+				<div class="page-container Flex FlexColumn Overflow-Hidden inner-container Round Shadow" style="position:relative; height:calc(100% - 32px);  width:100%;">
+					<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
+						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal;">BILLING</h4>
+					</div>
+					<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 32px); z-index:2;">
+						<div class="FlexDisplay FlexColumn"  style="width:100%; min-height: 24px; max-height: 24px;">
+							<div class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden " style="width:100%; padding:0px;">
+								<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; min-height: 32px; max-height: 32px; padding:7px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:9px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;"></div>
+								<div class="FlexDisplay Divider-Right" style="min-width:128px; max-width:128px; min-height: 24px; max-height: 24px; overflow:hidden; padding:7px 8px 0px 12px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">NAME</span></div>
+								<div class="FlexDisplay Divider-Right" style="min-width:128px; max-width:128px; min-height: 24px; max-height: 24px; overflow:hidden; padding:7px 8px 0px 12px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">DELIMITER</span></div>	
+								<div class="FlexDisplay FlexGrow" style="min-width:128px; min-height: 24px; max-height: 24px; overflow:hidden; padding:7px 8px 0px 12px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">EXCHANGE RATE</span></div>								
+							</div>	
+						</div>
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2 CurrencyList" style="overflow-y:auto; height:calc(100% - 24px);">
+						
+						</div>
+						<!--<div id="pagingBox" class="FlexDisplay Divider-Top FlexRow" style="width:100%; min-height:32px; max-height:32px;"></div>-->
+					</div>			
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+
+$("#backBtn").unbind( "click" );
+$('#backBtn').click(function(){
+	var page = System.IO.Path.Combine("web","blis","views",backNavigation);
+	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
+});
+
+function hideNavigationDropMenu(){
+	$(".add-currency .submenu").hide();
+	$(".add-currency").attr('id', '');
+}
+
+function edit_currency(item){
+	var name 			= $(item).parent().data("name");
+	var delimiter 		= $(item).parent().data("delimiter");
+	var exchange_rate 	= $(item).parent().data("exchange-rate");
+	var enabled 		= $(item).parent().data("enabled");
+	
+	hideNavigationDropMenu();
+	
+	var content = '';
+		content += '<div class="bar-container" style="margin:0px;">';
+		content += '	<div class="bar-progress"></div>';
+		content += '</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+		content += '				<div class="icon">';
+		content += '					<i class="mdi mdi-cash" />';
+		content += '				</div>';
+		content += '				<select class="currencyState">';
+		content += '					<option '+(enabled ? 'selected=""' : '')+'>Enabled</option>';
+		content += '					<option '+(enabled ? '' : 'selected=""')+'>Disabled</option>';
+		content += '				</select>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-cash" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Name"  class="name-input" value="'+name+'" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-cash" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Currency Delimiter"  class="delimiter-input" value="'+delimiter+'" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-cash" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Exchange Rate"  class="exchange-rate-input" value="'+exchange_rate+'" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+		content += '					<i class="mdi mdi-playlist-plus" />';
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		
+		content += '</div>';
+
+
+	var cry_dlg = ShowDialog('<i class="mdi mdi-cash"></i>', "Edit Currency", content,{
+		onCloseDialog : function() {
+			cry_dlg = null;
+			return false; 
+		}
+	},"320px");	
+	
+	create_custom_dropdowns();
+	
+	$(cry_dlg.el).find(".enter-value").unbind( "click" );
+	$(cry_dlg.el).find(".enter-value").click(function() {
+		var _name = $(cry_dlg.el).find(".name-input").val().trim();
+		var _delimiter = $(cry_dlg.el).find(".delimiter-input").val().trim();
+		var _exchange_rate = $(cry_dlg.el).find(".exchange-rate-input").val().trim();		
+		var _currencyState = $(cry_dlg.el).find(".select-dropdown.currencyState").find(".current").text();
+		
+		if(_name.length > 0 && _delimiter.length > 0){		
+			var config_file = System.IO.Path.Combine("web","blis","configurations","currency.json");
+			if(System.IO.File.Exists(config_file)){
+				var configs = JSON.parse(System.IO.File.ReadAllText(config_file));				
+				for(var x=0; x<configs.length; x++){
+					var config = configs[x];
+					if(name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
+						
+						config.Name = _name.toUpperCase(),
+						config.Delimiter = _delimiter,
+						config.ExchangeRate = _exchange_rate,
+						config.Enabled =  _currencyState == "Enabled" ? true : false
+						
+						System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+						
+						loadData();
+											
+						cry_dlg.toggle();
+						cry_dlg = null;						
+						
+						break;
+					}
+				}
+			}
+		}
+		else{
+			if(_name.length == 0){
+				var item = $(cry_dlg.el).find(".name-input");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Currency name is required");
+					item.focus(function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					});
+				}
+			}
+			
+			if( _delimiter.length == 0){
+				var item = $(cry_dlg.el).find(".delimiter-input");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Currency delimiter is required");
+					item.focus(function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					});
+				}
+			}
+		}
+	});	
+}
+
+function delete_currency(item){
+	var name 			= $(item).parent().data("name");
+	var config_file = System.IO.Path.Combine("web","blis","configurations","currency.json");
+	
+	
+	var content = '';
+		content += '<div class="bar-container" style="margin:0px;">';
+		content += '	<div class="bar-progress"></div>';
+		content += '</div>'; 
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:48px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<h4 class="feature-title mt-0" style="margin:auto auto; font-size: 12px; font-weight:normal;">Are you sure you want to delete currency "'+name+'"</h4>';
+		content += '		</div>';
+		content += '	</div>';
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:56px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay" style="margin:auto auto;">';
+		content += '				<div class="yesButton button button-primary" style="margin:0px 4px 0px 0px;">Yes</div>';
+		content += '				<div class="noButton button button-primary" style="margin:0px 0px 0px 4px;">No</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		
+		content += '</div>';
+
+
+	var cry_dlg = ShowDialog('<i class="mdi mdi-cash-minus"></i>', "Delete currency", content,{
+		onCloseDialog : function() {
+			cry_dlg = null;
+			return false; 
+		}
+	},"400px");	
+	
+	$(cry_dlg.el).find(".yesButton").unbind( "click" );
+	$(cry_dlg.el).find(".yesButton").click(function() {
+		if(System.IO.File.Exists(config_file)){
+			var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+
+			for(var x=0; x<configs.length; x++){
+				var config = configs[x];
+				if(name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
+					configs.splice(x, 1);
+					
+					System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+					
+					loadData();
+										
+					cry_dlg.toggle();
+					cry_dlg = null;						
+					
+					break;
+				}
+			}		
+		}
+	});
+	
+	$(cry_dlg.el).find(".noButton").unbind( "click" );
+	$(cry_dlg.el).find(".noButton").click(function() {
+		cry_dlg.toggle();
+		cry_dlg = null;		
+	});
+	
+}
+
+function add_currency(name, delimiter, exchange_rate, enabled, isrequired){
+	var isDefault = "mdi-check";
+	if(!enabled)isDefault = "mdi-close";
+	
+	var drug  = '<div data-isrequired="'+isrequired+'" data-name="'+name+'" data-delimiter="'+delimiter+'" data-exchange-rate="'+exchange_rate+'" data-enabled="'+enabled+'" class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden " style="width:100%; padding:0px; min-height: 32px; max-height: 32px;">';
+		drug += '	<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; height:100%; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi '+isDefault+'"></i></span></div>';
+		drug += '	<div class="FlexDisplay Divider-Right" style="min-width:128px; max-width:128px; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 12px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+name+'</span></div>';
+		drug += '	<div class="FlexDisplay Divider-Right" style="min-width:128px; max-width:128px; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 12px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+delimiter+'</span></div>';	
+		drug += '	<div class="FlexDisplay FlexGrow" style="min-width:128px; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 12px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+exchange_rate+'</span></div>';	
+		drug += '	<div onclick="edit_currency(this)" class="FlexDisplay" tooltip="Edit" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;"><i class="mdi mdi-square-edit-outline" style="margin:0px; padding:0px;"></i></div>';
+		if(!isrequired)drug += '	<div onclick="delete_currency(this)" class="FlexDisplay" tooltip="Delete" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;"><i class="mdi mdi-delete-sweep" style="margin:0px; padding:0px;"></i></div>';
+		drug += '</div>';
+
+	$(".CurrencyList").append(drug);
+}
+
+function loadData(){
+	$(".CurrencyList").html('');
+	
+	var config_file = System.IO.Path.Combine("web","blis","configurations","currency.json");
+	if(System.IO.File.Exists(config_file)){
+		var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+		
+		for(var x=0; x<configs.length; x++){
+			var config = configs[x];
+			add_currency(config.Name, config.Delimiter, config.ExchangeRate, config.Enabled, config.IsRequired);
+		}
+		
+	}
+}
+
+$(".add-currency").unbind( "click" );
+$(".add-currency").click(function(){	
+	hideNavigationDropMenu();
+	
+	var content = '';
+		content += '<div class="bar-container" style="margin:0px;">';
+		content += '	<div class="bar-progress"></div>';
+		content += '</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+		content += '				<div class="icon">';
+		content += '					<i class="mdi mdi-cash" />';
+		content += '				</div>';
+		content += '				<select class="currencyState">';
+		content += '					<option selected="">Enabled</option>';
+		content += '					<option>Disabled</option>';
+		content += '				</select>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-cash" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Name"  class="name-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-cash" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Currency Delimiter"  class="delimiter-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-cash" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Exchange Rate"  class="exchange-rate-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+		content += '					<i class="mdi mdi-playlist-plus" />';
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		
+		content += '</div>';
+
+
+	var cry_dlg = ShowDialog('<i class="mdi mdi-cash"></i>', "Add Currency", content,{
+		onCloseDialog : function() {
+			cry_dlg = null;
+			return false; 
+		}
+	},"320px");	
+	
+	create_custom_dropdowns();
+	
+	$(cry_dlg.el).find(".enter-value").unbind( "click" );
+	$(cry_dlg.el).find(".enter-value").click(function() {
+		var _name = $(cry_dlg.el).find(".name-input").val().trim();
+		var _delimiter = $(cry_dlg.el).find(".delimiter-input").val().trim();
+		var _exchange_rate = $(cry_dlg.el).find(".exchange-rate-input").val().trim();		
+		var _currencyState = $(cry_dlg.el).find(".select-dropdown.currencyState").find(".current").text();
+		
+		if(_name.length > 0 && _delimiter.length > 0){
+		
+			var config_file = System.IO.Path.Combine("web","blis","configurations","currency.json");
+			if(System.IO.File.Exists(config_file)){
+				var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+		
+				var exists = false;
+				for(var x=0; x<configs.length; x++){
+					var config = configs[x];
+					if(_name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
+						exists = true;
+						break;
+					}
+				}
+				
+				if(!exists){					
+					configs.push({
+						"Name": _name.toUpperCase(),
+						"Delimiter": _delimiter,
+						"ExchangeRate": _exchange_rate,
+						"Enabled": _currencyState == "Enabled" ? true : false,
+						"IsRequired": false
+					});
+					
+					System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+					
+					loadData();
+					
+					cry_dlg.toggle();
+					cry_dlg = null;
+					
+				}
+				else{
+					var item = $(cry_dlg.el).find(".name-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Currency already exists");
+						item.focus(function(){
+							$(this).parent().removeClass("is-invalid");
+							$(this).parent().attr("tooltip","");
+						});
+					}
+				}
+				
+				
+			}
+		}
+		else{
+			if(_name.length == 0){
+				var item = $(cry_dlg.el).find(".name-input");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Currency name is required");
+					item.focus(function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					});
+				}
+			}
+			
+			if( _delimiter.length == 0){
+				var item = $(cry_dlg.el).find(".delimiter-input");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Currency delimiter is required");
+					item.focus(function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					});
+				}
+			}
+		}
+	});
+	
+});
+
+$(".add-currency").mouseup(function(){
+	return false;
+});
+$(".submenu").mouseup(function(){
+	return false;
+});
+
+$('.add-currency .submenu .root .nav-button').each(function (index, value) {
+	$(this).click(function(){
+		
+	});
+});
+
+loadData();
+
+hideNavigationDropMenu();
+
+closeLoadingPage();	
+</script>

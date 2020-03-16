@@ -1,0 +1,76 @@
+<div class="pp-tableCell" style="height:100%">
+	<div class="container"  >
+		<div class="hero-inner" >
+			<div class="hero-copy">
+				<h1 class="hero-title mt-0">Basic Laboratory Information System</h1>
+				<p class="hero-paragraph">An open-source system to track patients, specimens and laboratory results</p>
+				<div class="hero-cta">
+					<div id="signinButton" class="button button-primary">Sign in</div>
+					<div id="settingsButton" class="button button-primary">Settings</div>
+				</div>
+			</div>
+			<div class="hero-media">
+				<div class="header-illustration">
+					<img class="header-illustration-image asset-light" src="images/header-illustration-light.svg" alt="Header illustration">
+					<img class="header-illustration-image asset-dark" src="images/header-illustration-dark.svg" alt="Header illustration">
+				</div>
+				<div class="hero-media-illustration">
+					<img class="hero-media-illustration-image asset-light" src="images/hero-media-illustration-light.svg" alt="Hero media illustration">
+					<img class="hero-media-illustration-image asset-dark" src="images/hero-media-illustration-dark.svg" alt="Hero media illustration">
+				</div>
+				<div class="hero-media-container">
+					<img class="hero-media-image asset-light" src="images/hero-media-light.svg" alt="Hero media">
+					<img class="hero-media-image asset-dark" src="images/hero-media-dark.svg" alt="Hero media">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+$('#signinButton').click(function(){
+	var page = System.IO.Path.Combine("web","blis","views","home.htm");
+	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
+});
+
+$('#settingsButton').click(function(){
+	backNavigation = "landing.htm";
+	var page = System.IO.Path.Combine("web","blis","views","settings.htm");
+	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
+});
+
+/*function trimIfNotNull(item, parIndex, childIndex, parent = false){
+	if(item != undefined && item != null)return item.trim();
+	console.log((parent ? "Parent: " : "Child: ")+ parIndex+"-"+childIndex);
+	return item;
+}
+
+var config_file = System.IO.Path.Combine("web","blis","configurations","msd_drugs.json");
+if(System.IO.File.Exists(config_file)){
+	var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+	for(var x=0; x<configs.length; x++){
+		var config = configs[x];
+		config.Category = trimIfNotNull(config.Category, x, -1, true);
+		for(var xx=0; xx<config.Categories.length; xx++){
+			config.Categories[xx].Group = trimIfNotNull(config.Categories[xx].Group, x, xx);
+			config.Categories[xx].VEN = trimIfNotNull(config.Categories[xx].VEN, x, xx);
+			config.Categories[xx].HFR = trimIfNotNull(config.Categories[xx].HFR, x, xx);
+			config.Categories[xx].DESCRIPTION = trimIfNotNull(config.Categories[xx].DESCRIPTION, x, xx);
+			config.Categories[xx].DOSAGE_FORMULATION = trimIfNotNull(config.Categories[xx].DOSAGE_FORMULATION, x, xx);
+			config.Categories[xx].STRENGTH = trimIfNotNull(config.Categories[xx].STRENGTH, x, xx);
+			config.Categories[xx].UOM = trimIfNotNull(config.Categories[xx].UOM, x, xx);
+			config.Categories[xx].MSDPRICES = trimIfNotNull(config.Categories[xx].MSDPRICES, x, xx);
+			config.Categories[xx].DISPENSARY_AND_HEALTH_CENTER = trimIfNotNull(config.Categories[xx].DISPENSARY_AND_HEALTH_CENTER, x, xx);
+			config.Categories[xx].DISTRICT_HOSPITAL = trimIfNotNull(config.Categories[xx].DISTRICT_HOSPITAL, x, xx);
+			config.Categories[xx].ZONAL_AND_REGIONAL_REFERAL_HOSPITAL = trimIfNotNull(config.Categories[xx].ZONAL_AND_REGIONAL_REFERAL_HOSPITAL, x, xx);
+			config.Categories[xx].NATIONAL_AND_SPECIALIZED_HOSPITAL = trimIfNotNull(config.Categories[xx].NATIONAL_AND_SPECIALIZED_HOSPITAL, x, xx);
+			config.Categories[xx].NATIONAL_HOSPITAL = trimIfNotNull(config.Categories[xx].NATIONAL_HOSPITAL, x, xx);
+		}
+	}
+	
+	System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+	console.log(configs);
+
+}*/
+
+closeLoadingPage();
+</script>

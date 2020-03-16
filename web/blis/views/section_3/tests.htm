@@ -1,0 +1,806 @@
+<div class="FlexDisplay FlexColumn container"  style="margin:0px; padding:0px; height:100%;">
+	<div class="FlexDisplay" style="background:#535FD7; height:48px; box-shadow:0 1px 2px rgba(0, 0, 0, 0.3);" >
+		<div id="backBtn"  class="nav-button" >
+			<i class="mdi mdi-apps"></i>
+		</div>
+		<div class="FlexDisplay">
+			<span class="BLIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
+		</div>
+		<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
+		<!--<div class="add-test dropdown" tooltip="Add test" flow="down">
+			<div class="nav-button transparent dropdown">
+				<i class="mdi mdi-flask-plus-outline"></i>
+			</div>
+			<div class="submenu">
+				<ul class="root"/>
+			</div>
+		</div>-->
+		<div class="save dropdown" tooltip="save" flow="down">
+			<div class="nav-button transparent dropdown">
+				<i class="mdi mdi-check-circle"></i>
+			</div>
+			<div class="submenu">
+				<ul class="root"/>
+			</div>
+		</div>
+	</div>
+	<div class="FlexDisplay Flex ContentPage  inner-section FadeIn"  style="width:100%; height:1px;">		
+		<div class="FlexDisplay FlexBoxSizing-BorderBox" style="min-width:272px; max-width:272px;  height:100%; overflow: hidden; position:relative;">
+				<div class="FlexBoxSizing-BorderBox active" style="padding:16px 0px 16px 16px; height:100%; min-width:256px; max-width:256px;">
+					<div class="page-container Flex FlexColumn Overflow-Hidden inner-container Round Shadow" style="position:relative;  height:calc(100% - 0px); width:100%;">
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%; height:calc(100% - 0px);  z-index:2;">
+							<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
+								<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal;">TESTS</h4>
+							</div>
+							<div class="FlexDisplay Flex FlexColumn FlexBoxSizing-BorderBox scroll scroll2 TestsList" style="overflow-y:auto;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+		<div class="FlexDisplay FlexBoxSizing-BorderBox" style="width:100%; height:100%; overflow: hidden; position:relative;">
+			<div style="width:100%; height:100%; margin:16px 16px 16px 0px;">
+				<div class="page-container Flex FlexColumn Overflow-Hidden inner-container Round Shadow" style="position:relative; height:calc(100% - 32px);  width:100%;">
+					<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
+						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal;">TEST</h4>
+						<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
+						<div onclick="previous(this)" class="nav-button prev transparent disable" style="height:32px; width:24px; " onclick="proceedTo(this,0)">
+							<i class="mdi mdi-chevron-left" style="margin:0px 0px 0px 0px;"></i>
+						</div>
+						<div onclick="next(this)" class="nav-button next transparent" style="height:32px; width:24px; " >
+							<i class="mdi mdi-chevron-right" style="margin:0px 0px 0px 0px;"></i>
+						</div>
+					</div>
+					<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 32px); z-index:2; position:relative;">
+						
+						<div class="animated-sub-page TestPage FlexColumn FlexBoxSizing-BorderBox active scroll scroll2" data-path="section-0"  style="width:100%; height:100%; overflow-y:auto; overflow-x:auto; display: block;">	
+							<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%; margin:0px 0px 16px 0px;">
+								
+								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Name</h4>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Description</h4>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 4px; font-size: 12px; font-weight:normal; line-height:16px;">Lab Section</h4>
+									</div>
+								</div>
+								<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">						
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-flask-outline" />
+											</div>
+											<input type="text" placeholder="Name"/>
+										</div>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-flask-outline" />
+											</div>
+											<input type="text" placeholder="Description"/>
+										</div>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">
+											<div class="icon">
+												<i class="mdi mdi-flask-outline" />
+											</div>
+											<select class="lab-sections" onchange="section_selected(this)">
+												<option value="-2" data-display-text="Lab Section" selected="">Lab Section</option>
+												<option value="1" data-display-text="Serology">Serology</option>
+												<option value="2" data-display-text="Hematology">Hematology</option>
+												<option value="4" data-display-text="HIV">HIV</option>
+												<option value="5" data-display-text="CD4">CD4</option>
+												<option value="6" data-display-text="Chemistry">Chemistry</option>
+												<option value="7" data-display-text="Microscopy">Microscopy</option>
+												<option value="8" data-display-text="Other">Other</option>
+												<option value="9" data-display-text="Hormonal">Hormonal</option>
+												<option value="10" data-display-text="Bacteriology">Bacteriology</option>
+												<option value="12" data-display-text="parasitology">parasitology</option>
+												<option value="-1" data-display-text="--New--">--New--</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								
+								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+									<div class="FlexDisplay Flex FlexGrow-2" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Clinical Data</h4>
+									</div>
+									<div class="FlexHidden Flex FlexGrow SectionNameTitle" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 4px; font-size: 12px; font-weight:normal; line-height:16px;">Section Name</h4>
+									</div>
+								</div>
+								<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">						
+									<div class="FlexDisplay Flex FlexGrow-2" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-flask-outline" />
+											</div>
+											<input type="text" placeholder="Clinical Data"/>
+										</div>
+									</div>
+									<div class="FlexHidden Flex FlexGrow SectionNameInput" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-flask-outline" />
+											</div>
+											<input type="text" placeholder="Section Name"/>
+										</div>
+									</div>
+								</div>
+								
+								
+								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+									<div class="FlexDisplay Flex" style="min-width:150px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Panel Test</h4>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:160px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Hide Patient Name in Report</h4>
+									</div>
+								</div>
+								<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">						
+									<div class="FlexDisplay Flex" style="min-width:150px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-tray-full" />
+											</div>
+											<select>
+												<option selected="">No</option>
+												<option>Yes</option>
+											</select>
+										</div>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:160px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-file-chart" />
+											</div>
+											<select>
+												<option selected="">No</option>
+												<option>Yes</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								
+								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Prevalence Threshold</h4>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Target TAT</h4>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 4px; font-size: 12px; font-weight:normal; line-height:16px;">Cost To Patient</h4>
+									</div>
+								</div>
+								<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">						
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-menu-open" />
+											</div>
+											<input type="text" placeholder="Prevalence Threshold"/>
+										</div>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-timelapse" />
+											</div>
+											<input type="text" placeholder="Target TAT"/>
+										</div>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-cash-usd" />
+											</div>
+											<input type="text" placeholder="Cost To Patient"/>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							<div class="FlexDisplay FlexColumn Flex FlexBoxSizing-BorderBox Divider-Top" style="width:100%; margin:8px 0px 8px 0px;">
+								<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
+									<div class="FlexDisplay Flex">
+										<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Measures</h4>
+									</div>
+									<div id="addTests" class="FlexDisplay btn-clear">
+										<div style="margin:auto auto; width:16px height:16px; padding:0px 16px;"><i class="mdi mdi-flask-plus-outline" /></div>
+									</div>
+								</div>
+								<div class="FlexDisplay Flex FlexColumn FlexBoxSizing-BorderBox MeasuresList"></div>
+							</div>
+						</div>
+						<div class="animated-sub-page FlexColumn FlexBoxSizing-BorderBox" data-path="section-1"  style="width:100%; height:100%;">	
+							<div class="FlexDisplay FlexColumn" style="width:100%;  height:calc(100% - 0px);">
+								<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
+									<div class="FlexDisplay Flex">
+										<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Compatible Specimens</h4>
+									</div>
+								</div>
+								<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox">
+									<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px;">
+										<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px">
+											<h4 class="feature-title mt-0" style="width:100%; margin:0px 0px 0px 0px; font-size: 12px; font-weight:normal; text-align:center;"></h4>
+										</div>
+										<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">
+											<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 12px; font-weight:normal;">Specimen</h4>
+										</div>
+									</div>
+								</div>
+								<div class="FlexDisplay Flex FlexColumn FlexBoxSizing-BorderBox scroll scroll2 CompatibleSpecimenList" style="overflow-y:auto;"></div>
+							</div>
+						</div>
+						
+					</div>			
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+
+var transitioning = false;
+
+function add_test(value, autoScroll=true){
+	if(value != undefined && value != null && value.trim().length > 0){
+		var index = $('.testindex').last().text();
+		if(index.length == 0)index = 1;
+		else index = parseInt($('.testindex').last().text())+1;
+		
+		var test  = '<div class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold" style="min-height:32px;">';
+			test += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
+			test += '		<h4 class="testindex feature-title mt-0" style="width:100%; margin:0px 0px 0px 0px; font-size: 12px; font-weight:normal; text-align:center;">'+(index)+'</h4>';
+			test += '	</div>';
+			test += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
+			test += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 12px; font-weight:normal;">'+value+' '+index+'</h4>';
+			test += '	</div>';
+			test += '</div>';
+		
+		$('.TestsList').append(test);
+		if(autoScroll)$('.TestsList').scrollTop($('.TestsList')[0].scrollHeight);
+	}
+}
+
+function add_specimen(x,value,isChecked=false, autoScroll=true){
+	var _specimen = '';
+	_specimen += '<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;">';
+	_specimen += '	<div class="FlexDisplay Divider-Right" style="min-width:40px; max-width:40px; height:100%; padding:0px 0px 0px 0px;">';
+	_specimen += '		<input type="checkbox" id="checkbox_'+x+'" class="checkbox" '+(isChecked ? "checked" : "")+' style="display: none;">';
+	_specimen += '		<label for="checkbox_'+x+'" class="check">';
+	_specimen += '		  <svg width="18px" height="18px" viewBox="0 0 18 18">';
+	_specimen += '			<path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>';
+	_specimen += '			<polyline points="1 9 7 14 15 4"></polyline>';
+	_specimen += '		  </svg>';
+	_specimen += '		</label>';
+	_specimen += '	</div>	';						
+	_specimen += '	<div class="feature-content" style=" overflow:hidden; margin:-2px 12px 0px 12px;">';
+	_specimen += '		<span class="feature-title mt-0" style="font-size:12px; font-weight:normal; white-space:nowrap; width:100%; text-overflow:ellipsis; -webkit-line-clamp:1; color:#6B7A90;">'+value+'</span>';
+	_specimen += '	</div>';
+	_specimen += '</div>';
+	
+	$('.CompatibleSpecimenList').append(_specimen);
+	if(autoScroll)$('.CompatibleSpecimenList').scrollTop($('.CompatibleSpecimenList')[0].scrollHeight);
+
+}
+
+function section_selected(item){
+	var _labsection = $(".select-dropdown.lab-sections").find(".current").text();
+	var _sectionTitle = $(".SectionNameTitle");
+	var _sectionInput = $(".SectionNameInput");
+	 
+	
+	if(_labsection == "--New--"){
+		_sectionTitle.addClass('FlexDisplay');
+		_sectionInput.addClass('FlexDisplay');
+	}
+	else {
+		_sectionTitle.removeClass('FlexDisplay');
+		_sectionInput.removeClass('FlexDisplay');
+	}
+}
+
+function previous(item){
+	if(!transitioning && !$(item).hasClass('disable')){
+		var section = parseInt($('.animated-sub-page.active').data("path").replace("section-",""));
+		var other_section = parseInt($('.animated-sub-page').first().data("path").replace("section-",""));
+		if(section>other_section){
+			if(section-1 == other_section)$(item).addClass('disable');
+			$('.nav-button.next').removeClass('disable');
+			proceedTo(item, --section);
+		}
+	}
+}
+
+function next(item){
+	if(!transitioning && !$(item).hasClass('disable')){
+		var section = parseInt($('.animated-sub-page.active').data("path").replace("section-",""));
+		var other_section = parseInt($('.animated-sub-page').last().data("path").replace("section-",""));
+		if(section<other_section){
+			if(section+1 == other_section)$(item).addClass('disable');
+			$('.nav-button.prev').removeClass('disable');			
+			proceedTo(item, ++section);
+		}
+	}
+}
+
+function proceedTo(item, index){
+	transitioning = true;
+	var navigateFrom = $('.animated-sub-page.active');
+	var indexFrom = navigateFrom.data("path").replace("section-","");
+
+	if(index != indexFrom){					
+		var navigateTo = $("#mainPage").find(`[data-path='section-${index}']`);
+		
+		navigateTo.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
+			transitioning = false;
+		});	
+		
+		navigateFrom.removeClass('transition-busy');
+		navigateFrom.removeClass('transition-enter');
+		navigateFrom.removeClass('transition-grow');
+		navigateFrom.removeClass('transition-shrink');
+		navigateFrom.removeClass('transition-enter-right-no-scale');
+		navigateFrom.removeClass('transition-enter-left-no-scale');
+		if(indexFrom < index) navigateFrom.addClass('transition-leave-left-no-scale');
+		else navigateFrom.addClass('transition-leave-right-no-scale');
+		  
+		navigateTo.removeClass('transition-busy');
+		navigateTo.removeClass('transition-enter');
+		navigateTo.removeClass('transition-grow');
+		navigateTo.removeClass('transition-shrink');
+		navigateTo.removeClass('transition-leave-right-no-scale');
+		navigateTo.removeClass('transition-leave-left-no-scale');
+		if(indexFrom < index) navigateTo.addClass('transition-enter-right-no-scale');
+		else navigateTo.addClass('transition-enter-left-no-scale');
+		
+		navigateFrom.removeClass("active");
+		navigateTo.addClass('active');
+	}
+}
+
+
+function hideNavigationDropMenu(){
+	$(".add-test .submenu").hide();
+	$(".add-test").attr('id', '');
+	$(".save .submenu").hide();
+	$(".save").attr('id', '');
+}
+
+$("#backBtn").unbind( "click" );
+$('#backBtn').click(function(){
+	var page = System.IO.Path.Combine("web","blis","views",backNavigation);
+	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
+});
+
+
+create_custom_dropdowns();
+
+var _labSections = $(".select-dropdown.lab-sections").find(".list");
+if(_labSections != undefined && _labSections != null){
+	_labSections.addClass("scroll scroll2");
+	_labSections.css({"overflow-y": "auto", "max-height": "200px"});
+}
+
+$(".select-dropdown.genders").each(function( index ) {
+	var _genders = $(this).find(".list");
+	if(_genders != undefined && _genders != null){
+		_genders.addClass("scroll scroll2");
+		_genders.css({"overflow-y": "auto", "max-height": "96px"});
+	}
+});
+
+function test_type_changed(item){
+	var _parent = $(item).parents(".TestItem");
+	if(_parent != undefined && _parent != null){
+		var _test_type =  _parent.find(".select-dropdown.test-type .current").text();
+		
+		_parent.find('.TestItemInfo').children().not(':first').remove();
+		
+		var _numericRange = _parent.find(".Measure_NumericRange");
+		var _alphanumericValues = _parent.find(".Measure_AlphanumericValues");
+		var _autoComplete = _parent.find(".Measure_Autocomplete");
+		var _freeText = _parent.find(".Measure_FreeText");
+		
+		_numericRange.removeClass('FlexDisplay');
+		_alphanumericValues.removeClass('FlexDisplay');
+		_autoComplete.removeClass('FlexDisplay');
+		_freeText.removeClass('FlexDisplay');
+		
+		if(_test_type == "Numeric Range")_numericRange.addClass('FlexDisplay');
+		else if(_test_type == "Alphanumeric Values")_alphanumericValues.addClass('FlexDisplay');
+		else if(_test_type == "Autocomplete")_autoComplete.addClass('FlexDisplay');
+		else if(_test_type == "Free Text")_freeText.addClass('FlexDisplay');
+	}
+}
+
+function remove_test(item){
+	var _parent = $(item).parents(".TestItem");
+	if(_parent != undefined && _parent != null){
+		if(!_parent.hasClass('TestSub'))_parent = $(item).parents(".TestContainer");
+		else _parent = $(item).parents(".TestSub").parent();
+		
+		_parent.remove();
+	}
+}
+
+function add_autocomplete_item(item){
+	var _parent = $(item).parents(".Measure_Autocomplete");
+	if(_parent != undefined && _parent != null){
+		var _autocompleteList  = _parent.find("select.autocomplete-list");
+		if(_autocompleteList != undefined && _autocompleteList != null){
+		
+			var content = '';
+				content += '<div class="bar-container" style="margin:0px;">';
+				content += '	<div class="bar-progress"></div>';
+				content += '</div>';
+				
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-textbox-password" />';	
+				content += '				</div>';	
+				content += '				<input type="text" placeholder="Enter value"  class="value-input" style="padding:0px 0px 0px 8px;"/>';	
+				content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+				content += '					<i class="mdi mdi-playlist-plus" />';
+				content += '				</div>';
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				
+				
+				content += '</div>';
+
+
+			var acv_dlg = ShowDialog('<i class="mdi mdi-menu-open"></i>', "Auto complete value", content,{
+				onCloseDialog : function() {
+					acv_dlg = null;
+					return false; 
+				}
+			},"320px");	
+			
+			$(acv_dlg.el).find(".enter-value").unbind( "click" );
+			$(acv_dlg.el).find(".enter-value").click(function() {
+				var _value = $(acv_dlg.el).find(".value-input").val().trim();
+				if(_value.length > 0){
+				
+					var _selector = _parent.find(".select-dropdown.autocomplete-list");
+					if(_selector != undefined && _selector != null){
+						_selector.remove();
+				
+						_autocompleteList.append('<option value="'+_value+'">'+_value+'</option>');
+						
+						create_custom_dropdowns();
+						
+						var _autocompleteListScroll = _parent.find(".select-dropdown.autocomplete-list").find(".list");
+						_autocompleteListScroll.addClass("scroll scroll2");
+						_autocompleteListScroll.css({"overflow-y": "auto", "max-height": "128px"});	
+						
+						acv_dlg.toggle();
+						acv_dlg = null;
+					}
+				}
+			});
+		}
+	}
+}
+
+function add_sub(item){
+	var _parent = $(item).parents(".TestContainer");
+	if(_parent != undefined && _parent != null){
+		var parentIndex = parseInt($(item).parents(".TestItem").find(".MesurementTitle").text().replace("Measurement ",""));
+		
+		var lastSub = _parent.find(".TestSub").last().find(".MesurementTitle").text().replace("Measurement "+parentIndex+": Sub ","");
+		console.log(lastSub);
+		if(lastSub.length == 0)lastSub = 1;
+		else lastSub = parseInt(lastSub)+1;
+	
+		add_measurement('Measurement '+parentIndex+': Sub '+lastSub, _parent);
+	}
+}
+
+function add_another(item){
+	var _parent = $(item).parents(".TestItem");
+	if(_parent != undefined && _parent != null){
+		var _test_type =  _parent.find(".select-dropdown.test-type .current").text();		
+		if(_test_type != "Free Text"){
+			_parent.find('.TestItemInfo').append(add_testInfo(_test_type));
+			
+			_parent.scrollTop(_parent[0].scrollHeight);
+		}
+	}
+}
+
+function add_testInfo(item){
+	var _testInfo = '';
+	_testInfo += '	<div class="FlexDisplay Flex FlexRow" style="padding:4px 16px 8px 16px; min-height:60px; max-height:60px;">';
+	_testInfo += '		<div class="FlexDisplay Flex FlexRow">';
+	
+	if(item == null || (item != null && item == "Numeric Range")){
+		_testInfo += '			<div class="FlexHidden Flex FlexRow '+((item == null || (item != null && item == "Numeric Range")) ? "FlexDisplay" : "")+' Measure_NumericRange">';
+		_testInfo += '				<div class="FlexDisplay Flex FlexColumn" style="min-width:180px;">';
+		_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+		_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
+		_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Range</h4>';
+		_testInfo += '						</span>';
+		_testInfo += '					</div>';
+		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+		_testInfo += '							<input type="text" placeholder="From" style="text-align:center;"/>';
+		_testInfo += '						</div>';
+		_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">:</h4>';
+		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+		_testInfo += '							<input type="text" placeholder="To" style="text-align:center;"/>';
+		_testInfo += '						</div>';
+		_testInfo += '					</div>';
+		_testInfo += '				</div>';
+		_testInfo += '				<div class="FlexDisplay Flex FlexColumn" style="min-width:150px;">';
+		_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+		_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
+		_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Gender</h4>';
+		_testInfo += '						</span>';
+		_testInfo += '					</div>';
+		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">';
+		_testInfo += '							<div class="icon">';
+		_testInfo += '								<i class="mdi mdi-tray-full" />';
+		_testInfo += '							</div>';
+		_testInfo += '							<select class="genders">';
+		_testInfo += '								<option selected="">Choose...</option>';
+		_testInfo += '								<option>Ambiguous</option>';
+		_testInfo += '								<option>Female</option>';
+		_testInfo += '								<option>Male</option>';
+		_testInfo += '								<option>Not applicable</option>';
+		_testInfo += '								<option>Other</option>';
+		_testInfo += '								<option>Unknown</option>';
+		_testInfo += '							</select>';
+		_testInfo += '						</div>';
+		_testInfo += '					</div>';
+		_testInfo += '				</div>';
+		_testInfo += '				<div class="FlexDisplay Flex FlexColumn"  style="min-width:138px;">';
+		_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+		_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
+		_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Age Range</h4>';
+		_testInfo += '						</span>';
+		_testInfo += '					</div>';
+		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+		_testInfo += '							<input type="text" placeholder="From" style="text-align:center;"/>';
+		_testInfo += '						</div>';
+		_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">:</h4>';
+		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+		_testInfo += '							<input type="text" placeholder="To" style="text-align:center;"/>';
+		_testInfo += '						</div>';
+		_testInfo += '					</div>';
+		_testInfo += '				</div>';
+		_testInfo += '			</div>';
+	}
+	
+	if(item == null || (item != null && item == "Alphanumeric Values")){
+		_testInfo += '			<div class="FlexHidden Flex FlexRow '+((item != null && item == "Alphanumeric Values") ? "FlexDisplay" : "")+' Measure_AlphanumericValues">';												
+		_testInfo += '				<div class="FlexDisplay Flex FlexColumn">';
+		_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+		_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
+		_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Values</h4>';
+		_testInfo += '						</span>';
+		_testInfo += '					</div>';
+		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+		_testInfo += '							<input type="text" placeholder="" style="text-align:center;"/>';
+		_testInfo += '						</div>';
+		_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">/</h4>';
+		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+		_testInfo += '							<input type="text" placeholder="" style="text-align:center;"/>';
+		_testInfo += '						</div>';
+		_testInfo += '					</div>';
+		_testInfo += '				</div>';
+		_testInfo += '			</div>';
+	}
+	
+	if(item == null || (item != null && item == "Autocomplete")){
+		_testInfo += '			<div class="FlexHidden Flex FlexRow '+((item != null && item == "Autocomplete") ? "FlexDisplay" : "")+' Measure_Autocomplete">	';											
+		_testInfo += '				<div class="FlexDisplay Flex FlexColumn">';
+		_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+		_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Values</h4>';
+		_testInfo += '					</div>';
+		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+		_testInfo += '							<div class="icon">';
+		_testInfo += '								<i class="mdi mdi-textbox-password" />';
+		_testInfo += '							</div>';
+		_testInfo += '							<select class="autocomplete-list">';
+		_testInfo += '								<option selected=""></option>';
+		_testInfo += '							</select>';
+		_testInfo += '						</div>';
+		_testInfo += '						<div class="FlexDisplay FlexColumn">';
+		_testInfo += '							<div onclick="add_autocomplete_item(this)" class="FlexDisplay btn-clear">';
+		_testInfo += '								<div style="margin:auto auto; width:16px height:16px; padding:0px 8px 0px 8px;">';
+		_testInfo += '									<i class="mdi mdi-plus-circle" />';
+		_testInfo += '								</div>';
+		_testInfo += '							</div>';
+		_testInfo += '						</div>';
+		_testInfo += '					</div>';
+		_testInfo += '				</div>	';											
+		_testInfo += '			</div>';
+	}
+	
+	if(item == null || (item != null && item == "Free Text")){
+		_testInfo += '			<div class="FlexHidden Flex FlexRow '+((item != null && item == "Free Text") ? "FlexDisplay" : "")+' Measure_FreeText">	';											
+		_testInfo += '				<div class="FlexDisplay Flex FlexColumn">';
+		_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+		_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Values</h4>';
+		_testInfo += '					</div>';
+		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+		_testInfo += '							<div class="icon">';
+		_testInfo += '								<i class="mdi mdi-help-circle" />';
+		_testInfo += '							</div>';
+		_testInfo += '							<span style="margin:0px 0px 0px 0px; width:100%;">';
+		_testInfo += '								<h4 class="feature-title mt-0" style="font-size: 12px; font-weight:normal; line-height:16px; margin-top:6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Will appear as a text box for result entry</h4>';
+		_testInfo += '							</span>';
+		_testInfo += '						</div>';
+		_testInfo += '					</div>';
+		_testInfo += '				</div>	';											
+		_testInfo += '			</div>';
+	}
+	
+	_testInfo += '		</div>';
+	_testInfo += '	</div>';
+	
+	return _testInfo;
+}
+
+function add_measurement(title,item){
+
+	var _test = '';
+	_test += '<div class="FlexDisplay Flex FlexColumn '+(item == null ? "TestContainer" : "")+'" style="padding:0px 0px 8px 0px; min-height:160px;">';
+	_test += '	<div class="FlexDisplay Flex FlexColumn TestItem '+(item == null ? "" : "TestSub")+' Divider-Bottom">';
+	
+	_test += '		<div class="FlexDisplay FlexRow Divider-Bottom TestTitleBackground" style="height:32px;" >';
+	_test += '			<div class="FlexDisplay Flex">';
+	_test += '				<h4 class="MesurementTitle feature-title mt-0" style="margin:8px 0px 0px 24px; font-size: 12px; font-weight:normal; line-height:16px;">'+title+'</h4>';
+	_test += '			</div>';
+	if(item == null){
+		_test += '		<div onclick="add_sub(this)" class="FlexDisplay btn-clear" tooltip="Add Sub" flow="down">';
+		_test += '			<div style="margin:auto auto; width:16px height:16px; padding:0px 16px 0px 8px;">';
+		_test += '				<i class="mdi mdi-plus-circle" />';
+		_test += '			</div>';
+		_test += '		</div>';
+	}
+	_test += '		<div onclick="add_another(this)" class="FlexDisplay btn-clear" tooltip="Add another" flow="down">';
+	_test += '			<div style="margin:auto auto; width:16px height:16px; padding:0px 16px 0px 8px;">';
+	_test += '				<i class="mdi mdi-swap-vertical-circle" />';
+	_test += '			</div>';
+	_test += '		</div>';
+	
+	_test += '		<div class="FlexDisplay btn-clear" tooltip="Remove" flow="left" onclick="remove_test(this)">';
+	_test += '			<div style="margin:auto auto; width:16px height:16px; padding:0px 16px 0px 8px;">';
+	_test += '				<i class="mdi mdi-close-circle" />';
+	_test += '			</div>';
+	_test += '		</div>';
+	
+	_test += '		</div>';	
+	_test += '		<div class="FlexDisplay Flex FlexRow" style="padding:4px 12px 8px 16px; min-height:60px; max-height:60px;">';
+	_test += '			<div class="FlexDisplay Flex FlexColumn" style="min-width:180px;">';
+	_test += '				<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+	_test += '					<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Type</h4>';
+	_test += '				</div>';
+	_test += '				<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+	_test += '					<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">';
+	_test += '						<div class="icon">';
+	_test += '							<i class="mdi mdi-tray-full" />';
+	_test += '						</div>';
+	_test += '						<select class="test-type" onchange="test_type_changed(this)">';
+	_test += '							<option value="2" selected="">Numeric Range</option>';
+	_test += '							<option value="1">Alphanumeric Values</option>';
+	_test += '							<option value="4">Autocomplete</option>';
+	_test += '							<option value="5">Free Text</option>';
+	_test += '						</select>';
+	_test += '					</div>';
+	_test += '				</div>';
+	_test += '			</div>';
+	_test += '			<div class="FlexDisplay Flex FlexColumn" style="min-width:150px;">';
+	_test += '				<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+	_test += '					<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Name</h4>';
+	_test += '				</div>';
+	_test += '				<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+	_test += '					<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">';
+	_test += '						<div class="icon">';
+	_test += '							<i class="mdi mdi-test-tube" />';
+	_test += '						</div>';
+	_test += '						<input type="text" placeholder="Name"/>';
+	_test += '					</div>';
+	_test += '				</div>';
+	_test += '			</div>';
+	_test += '			<div class="FlexDisplay Flex FlexColumn" style="min-width:138px;">';
+	_test += '				<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+	_test += '					<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Unit/Default Value</h4>';
+	_test += '				</div>';
+	_test += '				<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+	_test += '					<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">';
+	_test += '						<div class="icon">';
+	_test += '							<i class="mdi mdi-beaker" />';
+	_test += '						</div>';
+	_test += '						<input type="text" placeholder="Unit/Default Value"/>';
+	_test += '					</div>';
+	_test += '				</div>';
+	_test += '			</div>';
+	_test += '		</div>';
+	_test += '		<div class="FlexDisplay Flex FlexColumn TestItemInfo">';
+	_test +=			add_testInfo(null);
+	_test += '		</div>';
+	_test += '	</div>';
+	_test += '</div>';
+	
+	if(item != undefined && item != null){
+		//var toAdd = item.next();
+		//
+		//if(toAdd.length > 0){
+		//	toAdd.after(_test);
+		//	item.scrollTop(item[0].scrollHeight);
+		//}
+		//else $(".MeasuresList").append(_test);
+		item.append(_test);
+		item.scrollTop(item[0].scrollHeight);
+	}
+	else $(".MeasuresList").append(_test);
+	
+	create_custom_dropdowns();
+}
+
+$("#addTests").unbind( "click" );
+$("#addTests").click(function() {
+	var index = $('.TestContainer').last().find(".TestItem").first().find(".MesurementTitle").text().replace("Measurement ","");
+	if(index.length == 0)index = 1;
+	else index = parseInt(index)+1;
+	
+	add_measurement('Measurement '+index, null);
+	
+	$('.TestPage').scrollTop($('.TestPage')[0].scrollHeight);
+});
+
+
+$(".save").unbind( "click" );
+$(".save").click(function(){	
+	$(".save .submenu").hide();
+	$(".save").attr('id', '');
+	
+	add_test('Fake Test');
+	
+});
+
+$(".save").mouseup(function(){
+	return false;
+});
+$(".submenu").mouseup(function(){
+	return false;
+});
+
+$('.save .submenu .root .nav-button').each(function (index, value) {
+	$(this).click(function(){
+		
+	});
+});
+
+
+
+
+["Aspirate","CSF","Dried Blood Spot","Nasal Swab","Plasma","Plasma EDTA","Rectal Swab","Semen","Serum","Skin","Sputum","Stool","Throat Swab","U/S","Urine","V/S","Whole Blood"].forEach(function(item, index){ 
+	add_specimen(index, item, false, false); 
+}); 
+
+add_test('Fake Test', false);
+
+hideNavigationDropMenu();
+
+closeLoadingPage();
+</script>

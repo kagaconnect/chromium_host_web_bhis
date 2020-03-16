@@ -1,0 +1,1906 @@
+<div class="FlexDisplay FlexColumn container"  style="margin:0px; padding:0px; height:100%;">
+	<div class="FlexDisplay" style="background:#535FD7; height:48px; box-shadow:0 1px 2px rgba(0, 0, 0, 0.3);" >
+		<div id="backBtn"  class="nav-button" >
+			<i class="mdi mdi-apps"></i>
+		</div>
+		<div class="FlexDisplay">
+			<span class="BLIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
+		</div>
+	</div>
+	<div class="FlexDisplay Flex ContentPage  inner-section FadeIn"  style="width:100%; height:1px;">
+		<div class="FlexDisplay FlexColumn FlexGrow FlexBoxSizing-BorderBox" style="height:100%; overflow: hidden; position:relative;">
+			<div class="FlexDisplay Flex FlexGrow" style="margin:16px 16px 0px 16px; height:calc(50% - 0px);">
+				<div class="page-container Flex FlexColumn Overflow-Hidden Round Shadow" style="position:relative; height:100%; background:white;  width:100%;">
+					 <div id="mapid" style="width: 100%; height: 100%;"></div>
+				</div>
+			</div>
+			<div class="FlexDisplay Flex FlexGrow" style="margin:16px 16px 16px 16px; height:calc(50% - 0px);">
+				<div class="page-container Flex FlexColumn Overflow-Hidden inner-container Round Shadow" style="position:relative; height:calc(100% - 0px);  width:100%;">
+					<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
+						<div class="FlexDisplay Flex">
+							<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">FACILITIES</h4>
+						</div>
+						<div id="addFacility" tooltip="add facility" flow="left" class="FlexDisplay btn-clear">
+							<div style="margin:auto auto; width:16px height:16px; padding:0px 16px;"><i class="mdi mdi-file-document-box-plus-outline" /></div>
+						</div>
+					</div>
+					<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 32px); z-index:2;">
+						<div class="FlexDisplay FlexColumn"  style="width:100%; min-height: 24px; max-height: 24px;">
+							<div class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden " style="width:100%; padding:0px;">
+								<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; min-height: 32px; max-height: 32px; padding:7px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:9px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;"></div>
+								<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; min-height: 32px; max-height: 32px; padding:7px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:9px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">GPS</div>
+								<!--<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; min-height: 32px; max-height: 32px; padding:7px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:9px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">MAP</div>-->
+								<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; min-height: 32px; max-height: 32px; padding:7px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:9px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">ID</span></div>
+								<!--<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; min-height: 32px; max-height: 32px; padding:7px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:9px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">LOCATION</span></div>-->
+								<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">REGION</span></div>
+								<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">DISTRICT</span></div>
+								<!--<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">COUNCIL</span></div>-->
+								<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">TYPE</span></div>
+								<div class="FlexDisplay" style="width:100%; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">NAME</span></div>			
+							</div>	
+						</div>
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2 FacilitiesList" style="overflow-y:auto; height:calc(100% - 56px);">
+						
+						</div>
+						<div id="pagingBox" class="FlexDisplay Divider-Top FlexRow" style="width:100%; min-height:32px; max-height:32px;"></div>
+					</div>			
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+var fac_dlg = null;
+var map = null;
+var mapMarkers = null;
+var facilities = null;
+var config = null;
+
+$("#backBtn").unbind( "click" );
+$('#backBtn').click(function(){
+	var page = System.IO.Path.Combine("web","blis","views",backNavigation);
+	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
+});
+	
+function proceedTo(item, index){
+	var navigateFrom = $('.animated-sub-page.active');
+	var indexFrom = navigateFrom.data("path").replace("section-","");	
+	
+	navigateFrom.removeClass('transition-enter');
+	navigateFrom.removeClass('transition-grow');
+	navigateFrom.removeClass('transition-shrink');
+	navigateFrom.removeClass('transition-enter-right');
+	navigateFrom.removeClass('transition-enter-left');
+	navigateFrom.addClass('transition-busy');
+	navigateFrom.addClass('transition-shrink');
+	
+	setTimeout(function(){
+		if(index != indexFrom){					
+			var navigateTo = $("#mainPage").find(`[data-path='section-${index}']`);
+										
+			navigateFrom.removeClass('transition-busy');
+			navigateFrom.removeClass('transition-enter');
+			navigateFrom.removeClass('transition-grow');
+			navigateFrom.removeClass('transition-shrink');
+			navigateFrom.removeClass('transition-enter-right');
+			navigateFrom.removeClass('transition-enter-left');
+			if(indexFrom < index) navigateFrom.addClass('transition-leave-left');
+			else navigateFrom.addClass('transition-leave-right');
+			  
+			navigateTo.removeClass('transition-busy');
+			navigateTo.removeClass('transition-leave');
+			navigateTo.removeClass('transition-grow');
+			navigateTo.removeClass('transition-shrink');
+			navigateTo.removeClass('transition-leave-right');
+			navigateTo.removeClass('transition-leave-left');
+			if(indexFrom < index) navigateTo.addClass('transition-enter-right');
+			else navigateTo.addClass('transition-enter-left');
+			
+			navigateFrom.removeClass("active");
+			navigateTo.addClass('active');
+		}
+		else {
+			navigateFrom.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
+				navigateFrom.removeClass('transition-shrink');
+				navigateFrom.removeClass('transition-grow');
+			});
+			
+			navigateFrom.addClass('transition-grow');					
+		}
+	}, 500);
+}
+
+function load(item, section){
+	if(section == "region"){
+	
+	}
+	else if(section == "district"){
+	
+	}
+	else if(section == "council"){
+	
+	}
+	else if(section == "type"){
+	
+	}
+}
+
+function preparePager(){
+	$("#pagingBox").html('');
+
+	var pages = '';
+	pages += '<div id="Page_0_9" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager Disabled" style="height:32px;">';
+	pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">0-9</span>';
+	pages += '</div>';
+
+	var selected = "Page_";
+	for(x=65;x<65+26;x++){
+		var c = String.fromCharCode(x);
+		pages += '<div id="Page_'+c+'" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager Divider-Left Disabled" style="height:32px;">';
+		pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">'+c+'</span>';
+		pages += '</div>';
+	}
+	$("#pagingBox").html(pages);
+}
+
+function populateData(id, options){
+	$(".FacilitiesList").html('');
+	
+	var _facilities = facilities.filter(function(fac){
+		var _id = fac.FacilityName[0];
+		if(_id >= 0 && _id <= 9)_id = "0_9";
+		
+		return _id.toUpperCase() == id.toUpperCase();
+	});
+	
+	for(var x=0; x<_facilities.length; x++){
+		var facility = _facilities[x];
+		
+		var isChecked = false;
+		if(options != undefined && options != null){
+			if(options.FacilityNumber != undefined && options.FacilityNumber != null &&
+			   options.Location != undefined && options.Location != null){
+				if(facility.FacilityNumber == options.FacilityNumber && facility.Location == options.Location){
+					isChecked = true;
+				}
+			}
+		}
+		
+		var statusType = "mdi-map-marker";
+		var statusColor = "#01579B";
+		
+		if(facility.Latitude == "" || facility.Longitude == ""){
+			statusType = "mdi-map-marker-off";
+			statusColor = "rgba(0,0,0,0.4)";
+		}
+		
+		var operating = "mdi-help-circle";
+		var operatingColor = "#4A148C";
+		
+		if(facility.OperatingStatus == "Closed"){
+			operating = "mdi-cancel";
+			operatingColor = "red";
+		}
+		else if(facility.OperatingStatus == "Closed (Temporary)"){
+			operating = "mdi-alert-circle";
+			operatingColor = "#FFD600";
+		}
+		else if(facility.OperatingStatus == "Operating" || facility.OperatingStatus == "Opert"){
+			operating = "mdi-check-circle";
+			operatingColor = "#669900";
+		}
+		else if(facility.OperatingStatus == "Pending Operation - Under Construction" || facility.OperatingStatus == "Pending Operation - Construction Complete"){
+			operating = "mdi-clock-alert";
+			operatingColor = "#C51162";
+		}
+		
+		//var mappedType = "mdi-link-off";
+		//if(item.IsMapped == "Yes")mappedType = "mdi-link";
+		
+		var FacilityNumber = facility.FacilityNumber;
+		var Location = facility.Location;
+		var Zone = facility.Zone;				
+		var Region  = facility.Region;	
+		var District  = facility.District;	
+		var Council  = facility.Council;	
+		var FacilityType  = facility.FacilityType;
+		var FacilityName = facility.FacilityName;
+		
+		var Latitude = facility.Latitude;
+		var Longitude = facility.Longitude;
+		
+		var facility = '<div data-facilitynumber="'+FacilityNumber+'" data-facilityname="'+FacilityName+'" data-location="'+Location+'" data-zone="'+Zone+'" data-region="'+Region+'" data-district="'+District+'" data-council="'+Council+'" data-facilitytype="'+FacilityType+'" data-latitude="'+Latitude+'" data-longitude="'+Longitude+'" onclick="facility_selected(this)" class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden CheckBoxBold FacilityItem '+(isChecked ? "Checked" : "")+'" style="width:100%; min-width:100%; min-height: 32px; max-height: 32px;" >'; 
+			facility += '	<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; height:100%; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi '+operating+'"></i></span></div>';
+			facility += '	<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; height:100%; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; color:'+statusColor+';"><i class="mdi '+statusType+'"></i></span></div>';
+			facility += '	<div class="FacilityNumber FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; height:100%; padding:8px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:11px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+FacilityNumber+'</span></div>';
+			facility += '	<div class="FacilityRegion FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+Region+'</span></div>';
+			facility += '	<div class="FacilityDistrict FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+District+'</span></div>';
+			facility += '	<div class="FacilityType FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+FacilityType+'</span></div>';
+			facility += '	<div class="FacilityName FlexDisplay" style="width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+FacilityName+'</span></div>';						
+			facility += '	<div class="FlexDisplay" tooltip="Edit" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;" onclick="event.stopPropagation(); edit_facility(this)"><i class="mdi mdi-square-edit-outline" style="margin:0px; padding:0px;"></i></div>';
+			facility += '	<div class="FlexDisplay" tooltip="Delete" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;" onclick="event.stopPropagation(); delete_facility(this)"><i class="mdi mdi-delete-sweep" style="margin:0px; padding:0px;"></i></div>';
+			facility += '</div>';	
+			
+		$(".FacilitiesList").append(facility);
+	}
+	
+	$(".FacilitiesList").scrollTop(0);
+}
+
+function loadData(){
+	preparePager();
+	
+	var config_file = System.IO.Path.Combine("web","blis","configurations","facilities.json");
+	if(System.IO.File.Exists(config_file)){
+		config = JSON.parse(System.IO.File.ReadAllText(config_file));
+		facilities = config.Facilities;
+		
+		var pagerList = [];
+		for(var x=0; x<facilities.length; x++){
+			var facility = facilities[x];
+			
+			var id = facility.FacilityName[0];
+			
+			if(id >= 0 && id <= 9)id = "0_9";
+			if(pagerList.indexOf(id) == -1)pagerList.push(id);
+		}
+		pagerList.sort();
+		
+		for(var x=0; x<pagerList.length; x++){
+			var id = pagerList[x];
+			
+			$('#Page_'+id).removeClass('Disabled');						
+			$('#Page_'+id).off("click");
+			$('#Page_'+id).click(function(){
+				if(!$(this).hasClass('Disabled')){
+					configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+					facilities = config.Facilities;
+					
+					$("#pagingBox").find('.Pager').each(function(){
+						$(this).removeClass('Selected');
+					});
+					$(this).addClass('Selected');
+					
+					var _id = $(this).attr('id').replace('Page_','');	
+					populateData(_id);
+				}
+			});
+			
+			if(x==0){
+				$('#Page_'+id).addClass('Selected');
+				populateData(id);
+			}
+		}
+	}
+}
+
+function facility_selected(item){
+	$(".FacilitiesList .CheckBoxBold").each(function(){
+		$(this).removeClass('Checked');
+	});
+
+	$(item).addClass('Checked');
+
+	var _FacilityNumber = $(item).children().eq(1).text();
+	var _Region = $(item).children().eq(2).text();
+	var _District = $(item).children().eq(3).text();
+	var _FacilityType = $(item).children().eq(4).text();
+	var _FacilityName = $(item).children().eq(5).text();
+	
+	var _Latitude = $(item).data("latitude");
+	var _Longitude = $(item).data("longitude");
+		
+	if(map != undefined && map != null){
+		if(_Latitude.toString() != "" && _Longitude != ""){
+			var latlong = _Longitude+","+_Latitude;				
+			var reCenter = getLatLong(latlong);	
+
+			map.options.maxZoom = 18;
+			map.eachLayer(function(layer) {
+				if(layer instanceof L.TileLayer )
+					layer.options.maxZoom = 18;
+			});
+
+			map.flyTo([reCenter[0]-0.002,reCenter[1]],17);
+			
+			mapMarkers.clearLayers();
+			var marker = L.marker(reCenter);
+			marker.addTo(mapMarkers);
+		}
+		else {
+			mapMarkers.clearLayers();
+			map.options.maxZoom = 2;
+			map.eachLayer(function(layer) {
+				if(layer instanceof L.TileLayer )
+					layer.options.maxZoom = 2;
+			});
+			map.setView([-50.109307, 6.434463],2);
+		}
+	}
+
+}
+
+function loadMap(){
+	/*var mymap = L.map('mapid').setView([6.7924, 39.2083], 13);
+		L.tileLayer(
+		//'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
+		'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+		{
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		maxZoom: 18,
+		//id: 'mapbox.streets',
+		//accessToken: 'your.mapbox.access.token'
+	}).addTo(mymap);*/
+
+	var map = L.map('mapid').setView([48.464717, 35.046183], 12);
+
+	var layer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+	  maxZoom: 18,
+	  useCache: true
+	});
+
+	// Listen to cache hits and misses and spam the console
+	// The cache hits and misses are only from this layer, not from the WMS layer.
+	layer.on('tilecachehit', function(ev) {
+	  console.log('Cache hit: ', ev.url);
+	});
+	layer.on('tilecachemiss', function(ev) {
+	  console.log('Cache miss: ', ev.url);
+	});
+
+	layer.addTo(map);
+
+	// L.TileLayer.PouchDBCached
+	L.TileLayer.addInitHook(function() {
+		if (!this.options.useCache) {
+			this._db = null;
+			this._canvas = null;
+			return;
+		}
+
+		this._db = new PouchDB('offline-tiles');
+		this._canvas = document.createElement('canvas');
+
+		if (!(this._canvas.getContext && this._canvas.getContext('2d'))) {
+			// HTML5 canvas is needed to pack the tiles as base64 data. If
+			// the browser doesn't support canvas, the code will forcefully
+			// skip caching the tiles.
+			this._canvas = null;
+		}
+	});
+
+	L.TileLayer.prototype.options.useCache = false;
+	L.TileLayer.prototype.options.saveToCache = true;
+	L.TileLayer.prototype.options.useOnlyCache = false;
+	L.TileLayer.prototype.options.cacheFormat = 'image/png';
+	L.TileLayer.prototype.options.cacheMaxAge = 24 * 3600 * 1000;
+
+	L.TileLayer.include({
+		// Overwrites L.TileLayer.prototype.createTile
+		createTile: function(coords, done) {
+		var tile = document.createElement('img');
+
+		tile.onerror = L.bind(this._tileOnError, this, done, tile);
+
+		if (this.options.crossOrigin) {
+			tile.crossOrigin = '';
+		}
+
+		/*
+		 Alt tag is *set to empty string to keep screen readers from reading URL and for compliance reasons
+		 http://www.w3.org/TR/WCAG20-TECHS/H67
+		 */
+		tile.alt = '';
+
+		var tileUrl = this.getTileUrl(coords);
+
+		if (this.options.useCache && this._canvas) {
+			this._db.get(tileUrl, {
+				revs_info: true
+			}, this._onCacheLookup(tile, tileUrl, done));
+		} else {
+			// Fall back to standard behaviour
+			tile.onload = L.bind(this._tileOnLoad, this, done, tile);
+		}
+
+		tile.src = tileUrl;
+		return tile;
+	},
+
+	// Returns a callback (closure over tile/key/originalSrc) to be run when the DB
+	// backend is finished with a fetch operation.
+	_onCacheLookup: function(tile, tileUrl, done) {
+		return function(err, data) {
+			if (data) {
+				this.fire('tilecachehit', {
+					tile: tile,
+					url: tileUrl
+				});
+				
+				if (Date.now() > data.timestamp + this.options.cacheMaxAge && !this.options.useOnlyCache) {
+					// Tile is too old, try to refresh it
+					// console.log('Tile is too old: ', tileUrl);
+
+					if (this.options.saveToCache) {
+						tile.onload = L.bind(this._saveTile, this, tile, tileUrl, data._revs_info[0].rev, done);
+					}
+					tile.crossOrigin = 'Anonymous';
+					tile.src = tileUrl;
+					tile.onerror = function(ev) {
+						// If the tile is too old but couldn't be fetched from the network,
+						// serve the one still in cache.
+						this.src = data.dataUrl;
+					}
+				} else {
+					// Serve tile from cached data
+					// console.log('Tile is cached: ', tileUrl);
+					tile.onload = L.bind(this._tileOnLoad, this, done, tile);
+					tile.src = data.dataUrl; // data.dataUrl is already a base64-encoded PNG image.
+				}
+			} else {
+				this.fire('tilecachemiss', {
+					tile: tile,
+					url: tileUrl
+				});
+				
+				if (this.options.useOnlyCache) {
+					// Offline, not cached
+					// console.log('Tile not in cache', tileUrl);
+					tile.onload = L.Util.falseFn;
+					tile.src = L.Util.emptyImageUrl;
+				} else {
+					// Online, not cached, request the tile normally
+					// console.log('Requesting tile normally', tileUrl);
+					if (this.options.saveToCache) {
+						tile.onload = L.bind(this._saveTile, this, tile, tileUrl, null, done);
+					} else {
+						tile.onload = L.bind(this._tileOnLoad, this, done, tile);
+					}
+					tile.crossOrigin = 'Anonymous';
+					tile.src = tileUrl;
+				}
+			}
+		}.bind(this);
+	},
+
+	// Returns an event handler (closure over DB key), which runs
+	// when the tile (which is an <img>) is ready.
+	// The handler will delete the document from pouchDB if an existing revision is passed.
+	// This will keep just the latest valid copy of the image in the cache.
+	_saveTile: function(tile, tileUrl, existingRevision, done) {
+		if (this._canvas === null) return;
+		this._canvas.width = tile.naturalWidth || tile.width;
+		this._canvas.height = tile.naturalHeight || tile.height;
+
+		var context = this._canvas.getContext('2d');
+		context.drawImage(tile, 0, 0);
+
+		var dataUrl = this._canvas.toDataURL(this.options.cacheFormat);
+		var doc = {
+			dataUrl: dataUrl,
+			timestamp: Date.now()
+		};
+
+		if (existingRevision) {
+			this._db.remove(tileUrl, existingRevision);
+		}
+		this._db.put(doc, tileUrl, doc.timestamp);
+
+		if (done) {
+			done();
+		}
+	},
+
+	// Seeds the cache given a bounding box (latLngBounds), and
+	// the minimum and maximum zoom levels
+	// Use with care! This can spawn thousands of requests and
+	// flood tileservers!
+	seed: function(bbox, minZoom, maxZoom) {
+		if (!this.options.useCache) return;
+		if (minZoom > maxZoom) return;
+		if (!this._map) return;
+
+		var queue = [];
+
+		for (var z = minZoom; z <= maxZoom; z++) {
+
+			var northEastPoint = this._map.project(bbox.getNorthEast(), z);
+			var southWestPoint = this._map.project(bbox.getSouthWest(), z);
+
+			// Calculate tile indexes as per L.TileLayer._update and
+			// L.TileLayer._addTilesFromCenterOut
+			var tileSize = this.getTileSize();
+			var tileBounds = L.bounds(
+			L.point(Math.floor(northEastPoint.x / tileSize.x), Math.floor(northEastPoint.y / tileSize.y)),
+			L.point(Math.floor(southWestPoint.x / tileSize.x), Math.floor(southWestPoint.y / tileSize.y)));
+
+			for (var j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
+				for (var i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
+					point = new L.Point(i, j);
+					point.z = z;
+					queue.push(this._getTileUrl(point));
+				}
+			}
+		}
+
+		var seedData = {
+			bbox: bbox,
+			minZoom: minZoom,
+			maxZoom: maxZoom,
+			queueLength: queue.length
+		}
+		this.fire('seedstart', seedData);
+		var tile = this._createTile();
+		tile._layer = this;
+		this._seedOneTile(tile, queue, seedData);
+	},
+
+	_createTile: function() {
+		return document.createElement('img');
+	},
+
+	// Modified L.TileLayer.getTileUrl, this will use the zoom given by the parameter coords
+	// instead of the maps current zoomlevel.
+	_getTileUrl: function(coords) {
+		var zoom = coords.z;
+		if (this.options.zoomReverse) {
+			zoom = this.options.maxZoom - zoom;
+		}
+		zoom += this.options.zoomOffset;
+		return L.Util.template(this._url, L.extend({
+			r: this.options.detectRetina && L.Browser.retina && this.options.maxZoom > 0 ? '@2x' : '',
+			s: this._getSubdomain(coords),
+			x: coords.x,
+			y: this.options.tms ? this._globalTileRange.max.y - coords.y : coords.y,
+			z: this.options.maxNativeZoom ? Math.min(zoom, this.options.maxNativeZoom) : zoom
+		}, this.options));
+	},
+
+	// Uses a defined tile to eat through one item in the queue and
+	// asynchronously recursively call itself when the tile has
+	// finished loading.
+	_seedOneTile: function(tile, remaining, seedData) {
+		if (!remaining.length) {
+			this.fire('seedend', seedData);
+			return;
+		}
+		this.fire('seedprogress', {
+			bbox: seedData.bbox,
+			minZoom: seedData.minZoom,
+			maxZoom: seedData.maxZoom,
+			queueLength: seedData.queueLength,
+			remainingLength: remaining.length
+		});
+
+		var url = remaining.pop();
+
+		this._db.get(url, function(err, data) {
+			if (!data) {
+				/// FIXME: Do something on tile error!!
+				tile.onload = function(ev) {
+					this._saveTile(tile, url, null); //(ev)
+					this._seedOneTile(tile, remaining, seedData);
+				}.bind(this);
+				tile.crossOrigin = 'Anonymous';
+				tile.src = url;
+			} else {
+				this._seedOneTile(tile, remaining, seedData);
+			}
+		}.bind(this));
+	  }
+	});
+}
+
+function getLatLong(data){
+	if(data == undefined) return null;
+	var d = data.split(",");
+	return [d[1], d[0]];
+}
+
+function Render(item){
+	
+	var maxZoom = 2;
+	var latlong = "";
+	
+	if(item.Latitude != "" && item.Longitude != ""){
+		latlong = item.Longitude+","+item.Latitude;	
+		maxZoom = 18;
+	}
+	
+	L.Icon.Default.imagePath = "images/";	
+	
+	mapMarkers = new L.LayerGroup();
+	var _map = L.map('mapid', { zoomControl:false, layers: [mapMarkers] });	
+	//var layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	var layer = L.tileLayer('/openstreetmap/BLIS 3.6/{s}/{z}/{x}/{y}', { //Using an extension to allow User-Agent to be passed
+		maxZoom: maxZoom,
+		minZoom: 2,
+		attribution: '&copy; <u style="color:#0078A8;">OpenStreetMap</u> contributors',
+		id: 'mapbox.streets'
+	});
+	layer.addTo(_map);
+	
+	if(item.Latitude != "" && item.Longitude != ""){
+		var reCenter = getLatLong(latlong);	
+		_map.setView([reCenter[0],reCenter[1]-0.002],17);
+		
+		//var marker = L.marker(getLatLong(latlong)).addTo(_map);
+		var marker = L.marker(reCenter);
+		marker.addTo(mapMarkers);
+		
+		//mapMarkers = L.layerGroup(marker);
+		//mapMarkers.addTo(_map);
+	}
+	else {
+		//_map.setView([-50.109307, 6.434463],2);
+		_map.setView([0.31573, 13.007813],2);
+		//map.setView([0,0],2);
+		//map.panTo([0,0]);
+	}
+	
+	//map.on("moveend", function () {
+	//  console.log(map.getCenter().toString());
+	//});
+	
+	
+	//$('.leaflet-control-attribution').children().first().hide();
+	$('.leaflet-control-attribution').html('<span style="pointer-events: none;"><u style="color:#0078A8;">Leaflet</u> | &copy; <u style="color:#0078A8;">OpenStreetMap</u> contributors</span>');
+	
+	/*_map.on('dragend', function onDragEnd(){
+		var width = _map.getBounds().getEast() - _map.getBounds().getWest();
+		var height = _map.getBounds().getNorth() - _map.getBounds().getSouth();
+
+		console.log (
+			'center:' + _map.getCenter() +'\n'+
+			'width:' + width +'\n'+
+			'height:' + height +'\n'+
+			'size in pixels:' + _map.getSize()
+		)
+	});*/
+		
+	return _map;
+}
+
+loadData();
+
+function reset_dropdown(item, name, title, items){
+	var _selector = $(item).find(".select-dropdown."+name);
+	if(_selector != undefined && _selector != null){
+		_selector.remove();			
+		$(item).find("select."+name).html('<option selected="">'+title+'...</option>');
+		items.forEach(function(element, index){
+			$(item).find("select."+name).append('<option>'+element+'</option>');
+		});
+	}
+}
+
+function add_dropdown_scroll(item, name, options){
+	var _selector = $(item).find(".select-dropdown."+name).find(".list");
+	if(_selector != undefined && _selector != null){
+		_selector.addClass("scroll scroll2");
+		_selector.css(options);
+	}
+}
+
+function location_selected(item){
+	$(item).parent().removeClass("is-invalid");
+	$(item).parent().attr("tooltip","");
+						
+	var _location = $(fac_dlg.el).find(".select-dropdown.locationsSelector").find(".current").text();
+	if(_location != undefined && _location != null && _location != "Locations..."){
+	
+		var _area = null;
+		
+		var ii = config.Locations.map(function(d){ 
+			if(d.Name == _location){
+				var _ddd = d.Zones.map(function(dd){ return dd.Name; });
+				_ddd.sort();
+				return _ddd;
+			}
+			else return[];				
+		})
+		.filter(function(d){ return d != ""; })
+		.shift();
+		
+		if(ii == undefined || ii == null){
+			_area = "regions";
+			ii = config.Locations.map(function(d){ 
+				if(d.Name == _location){
+					var _ddd = d.Zones.map(function(dd){  
+						return dd.Regions.map(function(ddd){ 
+							return ddd.Name; 
+						});//.shift(); 
+					}).filter(function(d){ return d != ""; });
+					
+					_ddd.sort();
+					return _ddd;
+				}
+				else return[];				
+			})
+			.filter(function(d){ return d != ""; })
+			.shift();
+		}
+		else _area = "zones";
+	
+		if(ii != undefined && ii != null){
+			if(_area == "zones") reset_dropdown($(fac_dlg.el), "zonesSelector", "Zones", ii);
+			else if(_area == "regions") reset_dropdown($(fac_dlg.el), "regionsSelector", "Regions", ii);
+		}
+		
+		create_custom_dropdowns();
+		
+		add_dropdown_scroll($(fac_dlg.el), "zonesSelector", {"overflow-y": "auto", "max-height": "200px"});
+		add_dropdown_scroll($(fac_dlg.el), "regionsSelector", {"overflow-y": "auto", "max-height": "200px"});
+		
+	}
+	else{
+		reset_dropdown($(fac_dlg.el), "zonesSelector", "Zones", []);
+		reset_dropdown($(fac_dlg.el), "regionsSelector", "Regions", []);		
+		reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", []);
+		reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);
+
+		create_custom_dropdowns();
+	}
+}
+
+function zone_selected(item){
+	$(item).parent().removeClass("is-invalid");
+	$(item).parent().attr("tooltip","");
+	
+	var _location = $(fac_dlg.el).find(".select-dropdown.locationsSelector").find(".current").text();
+	var _zone = $(fac_dlg.el).find(".select-dropdown.zonesSelector").find(".current").text();
+	
+	if(_location != undefined && _location != null && _location != "Locations..."){
+		if(_zone != undefined && _zone != null && _zone != "Zones..."){
+		
+			var ii = config.Locations.map(function(d){ 
+				if(d.Name == _location){
+					var _ddd = d.Zones.map(function(dd){ 
+						if(dd.Name == _zone){
+							return dd.Regions.map(function(ddd){ return ddd.Name; });
+						}
+					}).filter(function(d){ return d != undefined; }).shift();
+					
+					return _ddd;
+				}				
+			})
+			.filter(function(d){ return d != undefined; })
+			.shift();
+			
+			if(ii != undefined && ii != null){
+				ii.sort();
+				reset_dropdown($(fac_dlg.el), "regionsSelector", "Regions", ii);
+			}
+			
+			create_custom_dropdowns();
+			
+			add_dropdown_scroll($(fac_dlg.el), "regionsSelector", {"overflow-y": "auto", "max-height": "200px"});
+			
+		}
+		else {
+			reset_dropdown($(fac_dlg.el), "regionsSelector", "Regions", []);		
+			reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", []);
+			reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);		
+			create_custom_dropdowns();
+		}
+	}
+	else  {
+		reset_dropdown($(fac_dlg.el), "regionsSelector", "Regions", []);		
+		reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", []);
+		reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);	
+		create_custom_dropdowns();	
+	}
+}
+
+function region_selected(item){
+	$(item).parent().removeClass("is-invalid");
+	$(item).parent().attr("tooltip","");
+	
+	var _location = $(fac_dlg.el).find(".select-dropdown.locationsSelector").find(".current").text();
+	var _zone = $(fac_dlg.el).find(".select-dropdown.zonesSelector").find(".current").text();
+	var _region = $(fac_dlg.el).find(".select-dropdown.regionsSelector").find(".current").text();
+	
+	if(_location != undefined && _location != null && _location != "Locations..."){
+		if(_zone != undefined && _zone != null && _zone != "Zones..."){
+			var ii = config.Locations.map(function(d){ 
+				if(d.Name == _location){
+					var _ddd = d.Zones.map(function(dd){ 
+						if(dd.Name == _zone){
+							var _dddd = dd.Regions.map(function(ddd){ 
+								if(ddd.Name == _region){
+									return ddd.Districts.map(function(dddd){ return dddd.Name; });
+								}
+							}).filter(function(d){ return d != undefined; }).shift()
+							
+							return _dddd;
+						}
+					}).filter(function(d){ return d != undefined; }).shift();
+					
+					return _ddd;
+				}				
+			})
+			.filter(function(d){ return d != undefined; })
+			.shift();
+			
+			if(ii != undefined && ii != null){
+				ii.sort();
+				reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", ii);
+			}
+			
+			create_custom_dropdowns();			
+			add_dropdown_scroll($(fac_dlg.el), "districtsSelector", {"overflow-y": "auto", "max-height": "200px"});
+		}
+		else if(_region != undefined && _region != null && _region != "Regions..."){
+			var ii = config.Locations.map(function(d){ 
+				if(d.Name == _location){
+					var _ddd = d.Zones.map(function(dd){ 
+						var _dddd = dd.Regions.map(function(ddd){ 
+							if(ddd.Name == _region){
+								return ddd.Districts.map(function(dddd){ return dddd.Name; });
+							}
+						}).filter(function(d){ return d != undefined; }).shift()
+						
+						return _dddd;
+					}).filter(function(d){ return d != undefined; }).shift();
+					
+					return _ddd;
+				}				
+			})
+			.filter(function(d){ return d != undefined; })
+			.shift();
+
+			if(ii != undefined && ii != null){
+				ii.sort();
+				reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", ii);
+			}
+			
+			create_custom_dropdowns();			
+			add_dropdown_scroll($(fac_dlg.el), "districtsSelector", {"overflow-y": "auto", "max-height": "200px"});
+		}
+		else {
+			reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", []);
+			reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);	
+			create_custom_dropdowns();	
+		}
+	}
+	else {
+		reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", []);
+		reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);		
+		create_custom_dropdowns();	
+	}
+}
+
+function district_selected(item){
+	$(item).parent().removeClass("is-invalid");
+	$(item).parent().attr("tooltip","");
+	
+	var _location = $(fac_dlg.el).find(".select-dropdown.locationsSelector").find(".current").text();
+	var _zone = $(fac_dlg.el).find(".select-dropdown.zonesSelector").find(".current").text();
+	var _region = $(fac_dlg.el).find(".select-dropdown.regionsSelector").find(".current").text();
+	var _district = $(fac_dlg.el).find(".select-dropdown.districtsSelector").find(".current").text();
+	
+	if(_location != undefined && _location != null && _location != "Locations..."){
+		if(_zone != undefined && _zone != null && _zone != "Zones..."){
+			if(_region != undefined && _region != null && _region != "Regions..."){
+				if(_district != undefined && _district != null && _district != "Districts..."){
+					
+					var ii = config.Locations.map(function(d){ 
+						if(d.Name == _location){
+							var _ddd = d.Zones.map(function(dd){ 
+								if(dd.Name == _zone){
+									var _dddd = dd.Regions.map(function(ddd){ 
+										if(ddd.Name == _region){
+											var _ddddd = ddd.Districts.map(function(dddd){ 
+												if(dddd.Name == _district){
+													return dddd.Councils.map(function(ddddd){ return ddddd.Name; });
+												}
+											}).filter(function(d){ return d != undefined; }).shift();
+											
+											return _ddddd;
+										}
+									}).filter(function(d){ return d != undefined; }).shift()
+									
+									return _dddd;
+								}
+							}).filter(function(d){ return d != undefined; }).shift();
+							
+							return _ddd;
+						}				
+					})
+					.filter(function(d){ return d != undefined; })
+					.shift();
+					
+					if(ii != undefined && ii != null){
+						ii.sort();
+						reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", ii);
+					}
+					
+					create_custom_dropdowns();			
+					add_dropdown_scroll($(fac_dlg.el), "councilsSelector", {"overflow-y": "auto", "max-height": "200px"});
+					
+				}
+				else {
+					reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);	
+					create_custom_dropdowns();	
+				}
+			}
+			else {
+				reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);	
+				create_custom_dropdowns();	
+			}
+		}
+		else if(_region != undefined && _region != null && _region != "Regions..."){
+			if(_district != undefined && _district != null && _district != "Districts..."){
+				
+				var ii = config.Locations.map(function(d){ 
+					if(d.Name == _location){
+						var _ddd = d.Zones.map(function(dd){ 
+							var _dddd = dd.Regions.map(function(ddd){ 
+								if(ddd.Name == _region){
+									var _ddddd = ddd.Districts.map(function(dddd){ 
+										if(dddd.Name == _district){
+											return dddd.Councils.map(function(ddddd){ return ddddd.Name; });
+										}
+									}).filter(function(d){ return d != undefined; }).shift();
+									
+									return _ddddd;
+								}
+							}).filter(function(d){ return d != undefined; }).shift()
+							
+							return _dddd;
+						}).filter(function(d){ return d != undefined; }).shift();
+						
+						return _ddd;
+					}				
+				})
+				.filter(function(d){ return d != undefined; })
+				.shift();
+
+				if(ii != undefined && ii != null){
+					ii.sort();
+					reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", ii);
+				}
+				
+				create_custom_dropdowns();			
+				add_dropdown_scroll($(fac_dlg.el), "districtsSelector", {"overflow-y": "auto", "max-height": "200px"});
+				
+			}
+			else {
+				reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);	
+				create_custom_dropdowns();	
+			}
+		}
+		else {
+			reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);	
+			create_custom_dropdowns();	
+		}
+	}
+	else {
+		reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);	
+		create_custom_dropdowns();	
+	}
+}
+
+function council_selected(item){
+	$(item).parent().removeClass("is-invalid");
+	$(item).parent().attr("tooltip","");
+	
+	var _location = $(fac_dlg.el).find(".select-dropdown.locationsSelector").find(".current").text();
+	var _zone = $(fac_dlg.el).find(".select-dropdown.zonesSelector").find(".current").text();
+	var _region = $(fac_dlg.el).find(".select-dropdown.regionsSelector").find(".current").text();
+	var _district = $(fac_dlg.el).find(".select-dropdown.districtsSelector").find(".current").text();
+	var _council = $(fac_dlg.el).find(".select-dropdown.councilsSelector").find(".current").text();
+	
+	if(_location != undefined && _location != null && _location != "Locations..."){
+		if(_zone != undefined && _zone != null && _zone != "Zones..."){
+			if(_district != undefined && _district != null && _district != "Districts..."){
+				if(_council != undefined && _council != null && _council != "Councils..."){
+		
+				}
+			}
+		}
+		else if(_region != undefined && _region != null && _region != "Regions..."){
+			if(_district != undefined && _district != null && _district != "Districts..."){
+				if(_council != undefined && _council != null && _council != "Councils..."){
+		
+				}
+			}
+		}
+	}
+}
+
+function facility_type_selected(item){
+	$(item).parent().removeClass("is-invalid");
+	$(item).parent().attr("tooltip","");
+}
+
+function delete_facility(item){
+	var _parent = $(item).parents(".FacilityItem");
+	if(_parent != undefined && _parent != null){
+		var FacilityNumber = _parent.data("facilitynumber");
+		var Location = _parent.data("location").trim();
+		
+		var content = '';
+			content += '<div class="bar-container" style="margin:0px;">';
+			content += '	<div class="bar-progress"></div>';
+			content += '</div>'; 
+			
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:48px; margin-bottom:8px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<h4 class="feature-title mt-0" style="margin:auto auto; font-size: 12px; font-weight:normal; line-height:1;">Are you sure you want to delete facility with id "'+FacilityNumber+'" and location "'+Location+'"</h4>';
+			content += '		</div>';
+			content += '	</div>';
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:56px; margin-bottom:8px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<div class="FlexDisplay" style="margin:auto auto;">';
+			content += '				<div class="yesButton button button-primary" style="margin:0px 4px 0px 0px;">Yes</div>';
+			content += '				<div class="noButton button button-primary" style="margin:0px 0px 0px 4px;">No</div>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			
+			
+			content += '</div>';
+
+
+		var fac_dlg = ShowDialog('<i class="mdi mdi-hospital-marker"></i>', "Delete facility", content,{
+			onCloseDialog : function() {
+				fac_dlg = null;
+				return false; 
+			}
+		},"400px");	
+		
+		$(fac_dlg.el).find(".yesButton").unbind( "click" );
+		$(fac_dlg.el).find(".yesButton").click(function() {
+			
+			if(FacilityNumber != undefined && FacilityNumber != null &&
+				Location != undefined && Location != null && Location.length > 0){		
+				var config_file = System.IO.Path.Combine("web","blis","configurations","facilities.json");
+				if(System.IO.File.Exists(config_file)){
+					var _config = JSON.parse(System.IO.File.ReadAllText(config_file));
+		
+					for(var x=0; x<_config.Facilities.length; x++){
+						var fac = _config.Facilities[x];
+						if(FacilityNumber.toString().trim().toLowerCase() == fac.FacilityNumber.toString().trim().toLowerCase() &&
+						   Location.trim().toLowerCase() == fac.Location.trim().toLowerCase()){
+							_config.Facilities.splice(x, 1);
+							
+							System.IO.File.WriteAllText(config_file,JSON.stringify(_config));
+							
+							var id = fac.FacilityName[0].toUpperCase();
+							if(id >= 0 && id <= 9)id = "0_9";
+							
+							var hasItems = false;
+							for(var x=0; x<_config.Facilities.length; x++){
+								var _conf = _config.Facilities[x];
+								var _id = _conf.FacilityName[0].toUpperCase();
+								if(id == _id){
+									hasItems = true;
+									break;
+								}
+							}
+							
+							if(hasItems){
+								populateData(id);
+							}
+							else{
+								$('#Page_'+id).addClass('Disabled');
+								$("#pagingBox").find('.Pager').each(function(){
+									$(this).removeClass('Selected');
+								});
+								
+								var _id = "0_9";
+								var foundOne = false;
+								$("#pagingBox").find('.Pager').each(function(){
+									if(!$(this).hasClass('Disabled')){
+										if(!foundOne){
+											foundOne = true;
+											_id = $(this).attr('id').replace('Page_','');
+										}
+									}
+								});	
+								
+								$('#Page_'+_id).addClass('Selected');
+								populateData(_id);
+							}
+							
+							
+							if(map != undefined && map != null && _parent.hasClass("Checked")){
+								mapMarkers.clearLayers();
+								map.options.maxZoom = 2;
+								map.eachLayer(function(layer) {
+									if(layer instanceof L.TileLayer )
+										layer.options.maxZoom = 2;
+								});
+								map.setView([-50.109307, 6.434463],2);
+							}
+							
+							fac_dlg.toggle();
+							fac_dlg = null;						
+							
+							break;
+						}
+					}		
+				}
+			}
+		});
+		
+		$(fac_dlg.el).find(".noButton").unbind( "click" );
+		$(fac_dlg.el).find(".noButton").click(function() {
+			fac_dlg.toggle();
+			fac_dlg = null;		
+		});
+		
+	}
+}
+
+function edit_facility(item){
+	var _parent = $(item).parents(".FacilityItem");
+	if(_parent != undefined && _parent != null){
+	
+		var options = {};
+
+		options.ID = _parent.data("facilitynumber");
+		options.Name = _parent.data("facilityname");
+		options.Latitude = _parent.data("latitude");
+		options.Longitude = _parent.data("longitude");
+		
+		options.Location = _parent.data("location");
+		options.Zone = _parent.data("zone");
+		options.Region = _parent.data("region");
+		options.District = _parent.data("district");
+		options.Council = _parent.data("council");
+		options.Facilitytype = _parent.data("facilitytype");
+		
+		options.Locations = config.Locations.map(function(d){ return d.Name; }).filter(function(d){ return d != ""; });
+		if(options.Locations == undefined || options.Locations == null)options.Locations = [];
+		options.Locations.sort();
+
+		options.Facilitytypes = config.FacilityTypes.map(function(d){ return d.replace('Hospital - ','').replace('Clinic - ',''); }).filter(function(d){ return d != ""; }); 
+		if(options.Facilitytypes == undefined || options.Facilitytypes == null)options.Facilitytypes = [];
+		options.Facilitytypes.sort();
+		
+		//Zones
+		options.Zones = config.Locations.map(function(d){ 
+			if(options.Location != undefined && options.Location != null && d.Name == options.Location){
+				var _ddd = d.Zones.map(function(dd){ return dd.Name; });
+				_ddd.sort();
+				return _ddd;
+			}
+			else return[];				
+		})
+		.filter(function(d){ return d != ""; })
+		.shift();
+		
+		//Regions
+		if(options.Zones == undefined || options.Zones == null){
+			options.Zones = [];
+			options.Regions = config.Locations.map(function(d){ 
+				if(options.Location != undefined && options.Location != null && d.Name == options.Location){
+					var _ddd = d.Zones.map(function(dd){  
+						return dd.Regions.map(function(ddd){ 
+							return ddd.Name; 
+						});
+					}).filter(function(d){ return d != ""; });
+					
+					_ddd.sort();
+					return _ddd;
+				}
+				else return[];				
+			})
+			.filter(function(d){ return d != ""; })
+			.shift();
+			
+			if(options.Regions == undefined || options.Regions == null)options.Regions = [];
+		}
+		else {
+			options.Regions = config.Locations.map(function(d){ 
+				if(options.Location != undefined && options.Location != null && d.Name == options.Location){
+					var _ddd = d.Zones.map(function(dd){ 
+						if(options.Zone != undefined && options.Zone != null && dd.Name == options.Zone){
+							return dd.Regions.map(function(ddd){ return ddd.Name; });
+						}
+					}).filter(function(d){ return d != undefined; }).shift();
+					
+					return _ddd;
+				}				
+			})
+			.filter(function(d){ return d != undefined; })
+			.shift();
+			
+			if(options.Regions == undefined || options.Regions == null)options.Regions = [];
+		}
+		
+		//Districts
+		if(options.Location != undefined && options.Location != null){
+			if(options.Zone != undefined && options.Zone != null){
+				options.Districts = config.Locations.map(function(d){ 
+					if(d.Name == options.Location){
+						var _ddd = d.Zones.map(function(dd){ 
+							if(dd.Name == options.Zone){
+								var _dddd = dd.Regions.map(function(ddd){ 
+									if(ddd.Name == options.Region){
+										return ddd.Districts.map(function(dddd){ return dddd.Name; });
+									}
+								}).filter(function(d){ return d != undefined; }).shift()
+								
+								return _dddd;
+							}
+						}).filter(function(d){ return d != undefined; }).shift();
+						
+						return _ddd;
+					}				
+				})
+				.filter(function(d){ return d != undefined; })
+				.shift();
+			}
+			else if(options.Region != undefined && options.Region != null){
+				options.Districts = config.Locations.map(function(d){ 
+					if(d.Name == options.Location){
+						var _ddd = d.Zones.map(function(dd){ 
+							var _dddd = dd.Regions.map(function(ddd){ 
+								if(ddd.Name == options.Region){
+									return ddd.Districts.map(function(dddd){ return dddd.Name; });
+								}
+							}).filter(function(d){ return d != undefined; }).shift()
+							
+							return _dddd;
+						}).filter(function(d){ return d != undefined; }).shift();
+						
+						return _ddd;
+					}				
+				})
+				.filter(function(d){ return d != undefined; })
+				.shift();
+			}
+		}
+		if(options.Districts == undefined || options.Districts == null)options.Districts = [];
+		
+		//Councils
+		if(options.Location != undefined && options.Location != null){
+			if(options.Zones != undefined && options.Zones != null){
+				if(options.Region != undefined && options.Region != null){
+					if(options.District != undefined && options.District != null){
+						options.Councils = config.Locations.map(function(d){ 
+							if(d.Name == options.Location){								
+								var _ddd = d.Zones.map(function(dd){ 
+									if(dd.Name == options.Zone){										
+										var _dddd = dd.Regions.map(function(ddd){ 
+											if(ddd.Name == options.Region){
+												var _ddddd = ddd.Districts.map(function(dddd){ 
+													if(dddd.Name == options.District){
+														return dddd.Councils.map(function(ddddd){ return ddddd.Name; });
+													}
+												}).filter(function(d){ return d != undefined; }).shift();
+												
+												return _ddddd;
+											}
+										}).filter(function(d){ return d != undefined; }).shift()
+										
+										return _dddd;
+									}
+								}).filter(function(d){ return d != undefined; }).shift();
+								
+								return _ddd;
+							}				
+						})
+						.filter(function(d){ return d != undefined; })
+						.shift();
+					}
+				}
+			}
+			else if(options.Region != undefined && options.Region != null){
+				if(options.District != undefined && options.District != null){
+					
+					options.Councils = config.Locations.map(function(d){ 
+						if(d.Name == options.Location){
+							var _ddd = d.Zones.map(function(dd){ 
+								var _dddd = dd.Regions.map(function(ddd){ 
+									if(ddd.Name == options.Region){
+										var _ddddd = ddd.Districts.map(function(dddd){ 
+											if(dddd.Name == options.District){
+												return dddd.Councils.map(function(ddddd){ return ddddd.Name; });
+											}
+										}).filter(function(d){ return d != undefined; }).shift();
+										
+										return _ddddd;
+									}
+								}).filter(function(d){ return d != undefined; }).shift()
+								
+								return _dddd;
+							}).filter(function(d){ return d != undefined; }).shift();
+							
+							return _ddd;
+						}				
+					})
+					.filter(function(d){ return d != undefined; })
+					.shift();
+				}
+			}
+		}
+		if(options.Councils == undefined || options.Councils == null)options.Councils = [];
+		
+		options.Title = "Edit facility";
+		options.Mode = "Edit";
+		
+		//console.log(options);
+		facility_popup(options);
+	}
+}
+
+function facility_popup(options){
+	if(options != undefined && options != null){
+		var content = '';
+			content += '<div class="bar-container" style="margin:0px;">';
+			content += '	<div class="bar-progress"></div>';
+			content += '</div>';
+			content += '<div class="FlexDisplay FlexColumn" style="width:100%; min-height:128px;  margin:8px 0px 8px 0px;" >';
+
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;margin-bottom:8px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+			content += '				<div class="icon" style="padding-top:0px;">';	
+			content += '					<i class="mdi mdi-hospital-building" />';	
+			content += '				</div>';	
+			content += '				<input type="text" placeholder="Id" value="'+options.ID+'"  class="id-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '			</div>';
+			content += '		</div>';
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+			content += '				<div class="icon" style="padding-top:0px;">';	
+			content += '					<i class="mdi mdi-hospital-building" />';	
+			content += '				</div>';	
+			content += '				<input type="text" placeholder="Name" value="'+options.Name+'"  class="name-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex FlexColumn" style="min-width:150px;">';
+			content += '			<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px;">';
+			content += '				<div class="icon">';
+			content += '					<i class="mdi mdi-map-marker" />';
+			content += '				</div>';
+			content += '				<select class="locationsSelector" onchange="location_selected(this)">';
+			content += '					<option '+(options.Location == null ? 'selected=""' : '' )+'>Locations...</option>';			
+			options.Locations.forEach(function(item, index){
+				content += '					<option '+(options.Location != null && options.Location == item ? 'selected=""' : '' )+'>'+item+'</option>';
+			});
+			content += '				</select>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '		<div class="FlexDisplay Flex FlexColumn" style="min-width:150px;">';
+			content += '			<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px;">';
+			content += '				<div class="icon">';
+			content += '					<i class="mdi mdi-map-marker" />';
+			content += '				</div>';
+			content += '				<select class="zonesSelector" onchange="zone_selected(this)">';
+			content += '					<option '+(options.Zone == null ? 'selected=""' : '' )+'>Zones...</option>';	
+			options.Zones.forEach(function(item, index){
+				content += '					<option '+(options.Zone != null && options.Zone == item ? 'selected=""' : '' )+'>'+item+'</option>';
+			});
+			content += '				</select>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+				
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex FlexColumn" style="min-width:150px;">';
+			content += '			<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px;">';
+			content += '				<div class="icon">';
+			content += '					<i class="mdi mdi-map-marker" />';
+			content += '				</div>';
+			content += '				<select class="regionsSelector" onchange="region_selected(this)">';
+			content += '					<option '+(options.Region == null ? 'selected=""' : '' )+'>Regions...</option>';
+			options.Regions.forEach(function(item, index){
+				content += '					<option '+(options.Region != null && options.Region == item ? 'selected=""' : '' )+'>'+item+'</option>';
+			});
+			content += '				</select>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '		<div class="FlexDisplay Flex FlexColumn" style="min-width:150px;">';
+			content += '			<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px;">';
+			content += '				<div class="icon">';
+			content += '					<i class="mdi mdi-map-marker" />';
+			content += '				</div>';
+			content += '				<select class="districtsSelector" onchange="district_selected(this)">';
+			content += '					<option '+(options.District == null ? 'selected=""' : '' )+'>Districts...</option>';
+			options.Districts.forEach(function(item, index){
+				content += '					<option '+(options.District != null && options.District == item ? 'selected=""' : '' )+'>'+item+'</option>';
+			});
+			content += '				</select>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex FlexColumn" style="min-width:150px;">';
+			content += '			<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px;">';
+			content += '				<div class="icon">';
+			content += '					<i class="mdi mdi-map-marker" />';
+			content += '				</div>';
+			content += '				<select class="councilsSelector" onchange="council_selected(this)">';
+			content += '					<option '+(options.Council == null ? 'selected=""' : '' )+'>Councils...</option>';
+			options.Councils.forEach(function(item, index){
+				content += '					<option '+(options.Council != null && options.Council == item ? 'selected=""' : '' )+'>'+item+'</option>';
+			});
+			content += '				</select>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '		<div class="FlexDisplay Flex FlexColumn" style="min-width:150px;">';
+			content += '			<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px;">';
+			content += '				<div class="icon">';
+			content += '					<i class="mdi mdi-map-marker" />';
+			content += '				</div>';
+			content += '				<select class="facilityTypesSelector" onchange="facility_type_selected(this)">';
+			content += '					<option '+(options.Facilitytype == null ? 'selected=""' : '' )+'>Facility Types...</option>';
+			
+			options.Facilitytypes.forEach(function(item, index){
+				content += '					<option '+(options.Facilitytype != null && options.Facilitytype == item ? 'selected=""' : '' )+'>'+item+'</option>';
+			});
+			
+			content += '				</select>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;margin-bottom:8px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+			content += '				<div class="icon" style="padding-top:0px;">';	
+			content += '					<i class="mdi mdi-map-marker" />';	
+			content += '				</div>';	
+			content += '				<input type="text" placeholder="Latitude" value="'+options.Latitude+'" class="lat-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '			</div>';
+			content += '		</div>';
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+			content += '				<div class="icon" style="padding-top:0px;">';	
+			content += '					<i class="mdi mdi-map-marker" />';	
+			content += '				</div>';	
+			content += '				<input type="text" placeholder="Longitude" value="'+options.Longitude+'" class="long-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			
+			content += '</div>';
+			content += '<div class="FlexDisplay FlexRow" style="width:100%; height:auto; margin:4px 0px 8px 0px;" >';
+			content += '	<div class="FlexDisplay Flex"></div>';
+			content += '	<div class="FlexDisplay FlexRow" style="margin:8px 12px; height:auto;" >';
+			content += '			<div class="saveFacilityButton button button-primary" style="margin:0px;">SAVE</div>';
+			content += '	</div>';
+			content += '</div>';
+			
+			
+			content += '</div>';
+
+
+		fac_dlg = ShowDialog('<i class="mdi mdi-domain-plus"></i>', options.Title, content,{
+			onCloseDialog : function() {
+				fac_dlg = null;
+				return false; 
+			}
+		},"720px");
+		
+		$(fac_dlg.el).find(".lat-input").on('change keydown paste input', function(){
+			var val = $(fac_dlg.el).find(".lat-input").val();
+			if(val.trim().length > 0){
+				if(val == "-" || val == "+"){
+					$(this).parent().removeClass("is-invalid");
+					$(this).parent().attr("tooltip","");
+				}
+				else{		
+					var item = parseFloat(val.trim());
+					if (isNaN(item)) {
+						$(this).parent().addClass("is-invalid");
+						$(this).parent().attr("tooltip","Latitude value is invalid");
+					}
+					else if(item >= -90 && item <= 90){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					}
+					else {
+						$(this).parent().addClass("is-invalid");
+						$(this).parent().attr("tooltip","Latitude value is invalid");
+					}
+				}
+			}
+			else {
+				$(this).parent().removeClass("is-invalid");
+				$(this).parent().attr("tooltip","");
+			}
+		});
+		
+		$(fac_dlg.el).find(".long-input").on('change keydown paste input', function(){
+			var val = $(fac_dlg.el).find(".long-input").val();
+			if(val.trim().length > 0){
+				if(val == "-" || val == "+"){
+					$(this).parent().removeClass("is-invalid");
+					$(this).parent().attr("tooltip","");
+				}
+				else{		
+					var item = parseFloat(val.trim());
+					if (isNaN(item)) {
+						$(this).parent().addClass("is-invalid");
+						$(this).parent().attr("tooltip","Longitude value is invalid");
+					}
+					else if(item >= -180 && item <= 180){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					}
+					else {
+						$(this).parent().addClass("is-invalid");
+						$(this).parent().attr("tooltip","Longitude value is invalid");
+					}
+				}
+			}
+			else {
+				$(this).parent().removeClass("is-invalid");
+				$(this).parent().attr("tooltip","");
+			}
+		});
+		
+		
+		$(fac_dlg.el).find(".saveFacilityButton").unbind( "click" );
+		$(fac_dlg.el).find(".saveFacilityButton").click(function() {
+			var _id = $(fac_dlg.el).find(".id-input").val().trim();
+			var _name = $(fac_dlg.el).find(".name-input").val().trim();
+			var _latitude = $(fac_dlg.el).find(".lat-input").val().trim();
+			var _longitude = $(fac_dlg.el).find(".long-input").val().trim();
+			
+			var _location 		=  $(fac_dlg.el).find(".select-dropdown.locationsSelector .current").text();
+			var _zone 			=  $(fac_dlg.el).find(".select-dropdown.zonesSelector .current").text();
+			var _region 		=  $(fac_dlg.el).find(".select-dropdown.regionsSelector .current").text();
+			var _district 		=  $(fac_dlg.el).find(".select-dropdown.districtsSelector .current").text();
+			var _council 		=  $(fac_dlg.el).find(".select-dropdown.councilsSelector .current").text();
+			var _facilityTypes 	=  $(fac_dlg.el).find(".select-dropdown.facilityTypesSelector .current").text();
+			
+			var hasZone = true;
+			if(_zone == "Zones..."){
+				if(_location != "Locations..."){
+					var ii = config.Locations.map(function(d){ 
+						if(d.Name == _location){
+							var _ddd = d.Zones.map(function(dd){ return dd.Name; });
+							_ddd.sort();
+							return _ddd;
+						}
+						else return[];				
+					})
+					.filter(function(d){ return d != ""; })
+					.shift();
+					
+					if(ii == undefined || ii == null){
+						_area = "regions";
+						ii = config.Locations.map(function(d){ 
+							if(d.Name == _location){
+								var _ddd = d.Zones.map(function(dd){  
+									return dd.Regions.map(function(ddd){ 
+										return ddd.Name; 
+									}).shift(); 
+								}).filter(function(d){ return d != ""; });
+								
+								_ddd.sort();
+								return _ddd;
+							}
+							else return[];				
+						})
+						.filter(function(d){ return d != ""; })
+						.shift();
+					}
+					else hasZone = false;
+				}
+				else hasZone = false;
+			}
+					 
+			if(_id.trim().length > 0 &&
+				_name.trim().length > 0 &&
+				_location != "Locations..."  && 
+				_region != "Regions..."  && 
+				_district != "Districts..."  &&
+				_council != "Councils..."  &&
+				_facilityTypes != "Facility Types..." &&
+				hasZone){
+			
+			
+			
+				var config_file = System.IO.Path.Combine("web","blis","configurations","facilities.json");
+				if(System.IO.File.Exists(config_file)){
+					if(options.Mode == "New"){
+						var _config = JSON.parse(System.IO.File.ReadAllText(config_file));
+						facilities = _config.Facilities;
+				
+						var id = _name[0].toUpperCase();
+						if(id >= 0 && id <= 9)id = "0_9";
+						
+						var exists = false;
+						for(var x=0; x<facilities.length; x++){
+							var fac = facilities[x];
+							if(_id.trim().toLowerCase() == fac.FacilityNumber.trim().toLowerCase()){
+								exists = true;
+								break;
+							}
+						}
+						
+						if(!exists){
+							_name = _name.charAt(0).toUpperCase() + _name.slice(1);
+							
+							facilities.push({
+								"FacilityNumber": _id,
+								"FacilityName": _name,
+								"CommonName": "",
+								"Zone": _zone == "Zones..." ? "" : _zone,
+								"Region": _region,
+								"District": _district,
+								"Council": _council,
+								"Ward": "Not set",
+								"VillageStreet": "Not set",
+								"FacilityType": _facilityTypes,
+								"OperatingStatus": "Operating",
+								"Latitude": _latitude,
+								"Longitude": _longitude,
+								"Location": _location
+							});
+												
+							_config.Facilities = facilities;
+							
+							System.IO.File.WriteAllText(config_file,JSON.stringify(_config));
+							
+							$('#Page_'+id).removeClass('Disabled');	
+							$("#pagingBox").find('.Pager').each(function(){
+								$(this).removeClass('Selected');
+							});			
+							$('#Page_'+id).addClass('Selected');
+							
+							
+							if(map != undefined && map != null && _latitude.toString() != "" && _longitude != ""){
+								var latlong = _longitude+","+_latitude;				
+								var reCenter = getLatLong(latlong);	
+
+								map.options.maxZoom = 18;
+								map.eachLayer(function(layer) {
+									if(layer instanceof L.TileLayer )
+										layer.options.maxZoom = 18;
+								});
+
+								map.flyTo([reCenter[0]-0.002,reCenter[1]],17);
+								
+								mapMarkers.clearLayers();
+								var marker = L.marker(reCenter);
+								marker.addTo(mapMarkers);
+							}
+							
+							populateData(id, { FacilityNumber:_id, Location:_location });
+							
+							fac_dlg.toggle();
+							fac_dlg = null;
+							
+						}
+						else{
+							var item = $(fac_dlg.el).find(".id-input");
+							if(item != undefined && item != null){
+								item.parent().addClass("is-invalid");
+								item.parent().attr("tooltip","Facility already exists");
+								item.focus(function(){
+									$(this).parent().removeClass("is-invalid");
+									$(this).parent().attr("tooltip","");
+								});
+							}
+						}
+					}
+					else{
+						var _config = JSON.parse(System.IO.File.ReadAllText(config_file));
+
+						var id = _name[0].toUpperCase();
+						if(id >= 0 && id <= 9)id = "0_9";
+						
+						for(var x=0; x<_config.Facilities.length; x++){
+							var fac = _config.Facilities[x];
+							if(options.ID.toString().trim().toLowerCase() == fac.FacilityNumber.toString().trim().toLowerCase() &&
+							   options.Location.trim().toLowerCase() == fac.Location.trim().toLowerCase()){
+								
+								_config.Facilities[x] = {
+									"FacilityNumber": _id,
+									"FacilityName": _name,
+									"CommonName": "",
+									"Zone": _zone == "Zones..." ? "" : _zone,
+									"Region": _region,
+									"District": _district,
+									"Council": _council,
+									"Ward": "Not set",
+									"VillageStreet": "Not set",
+									"FacilityType": _facilityTypes,
+									"OperatingStatus": "Operating",
+									"Latitude": _latitude,
+									"Longitude": _longitude,
+									"Location": _location
+								};
+								
+								facilities = _config.Facilities;
+								_config.Facilities = facilities;
+								config = _config;
+								
+								System.IO.File.WriteAllText(config_file,JSON.stringify(_config));
+							
+								$('#Page_'+id).removeClass('Disabled');	
+								$("#pagingBox").find('.Pager').each(function(){
+									$(this).removeClass('Selected');
+								});			
+								$('#Page_'+id).addClass('Selected');
+								
+								
+								if(map != undefined && map != null && _latitude.toString() != "" && _longitude != ""){
+									var latlong = _longitude+","+_latitude;				
+									var reCenter = getLatLong(latlong);	
+
+									map.options.maxZoom = 18;
+									map.eachLayer(function(layer) {
+										if(layer instanceof L.TileLayer )
+											layer.options.maxZoom = 18;
+									});
+
+									map.flyTo([reCenter[0]-0.002,reCenter[1]],17);
+									
+									mapMarkers.clearLayers();
+									var marker = L.marker(reCenter);
+									marker.addTo(mapMarkers);
+								}
+								
+								populateData(id, { FacilityNumber:_id, Location:_location });
+								
+								fac_dlg.toggle();
+								fac_dlg = null;
+								
+								break;
+							}
+						}
+					}			
+				}
+			}
+			else{
+				if(_id.trim().length == 0){
+					var item = $(fac_dlg.el).find(".id-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Facility id is required");
+						item.focus(function(){
+							$(this).parent().removeClass("is-invalid");
+							$(this).parent().attr("tooltip","");
+						});
+					}
+				}
+				
+				if(_name.trim().length == 0){
+					var item = $(fac_dlg.el).find(".name-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Facility name is required");
+						item.focus(function(){
+							$(this).parent().removeClass("is-invalid");
+							$(this).parent().attr("tooltip","");
+						});
+					}
+				}
+				
+				
+				if(_location == "Locations..."){
+					var item =  $(fac_dlg.el).find(".select-dropdown.locationsSelector");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Location is required");
+					}
+				}
+				
+				if(!hasZone){
+					var item =  $(fac_dlg.el).find(".select-dropdown.zonesSelector");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Zone is required");
+					}
+				}			
+				
+				if(_region == "Regions..."){
+					var item =  $(fac_dlg.el).find(".select-dropdown.regionsSelector");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Region is required");
+					}
+				}
+				
+				if(_district == "Districts..."){
+					var item =  $(fac_dlg.el).find(".select-dropdown.districtsSelector");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","District is required");
+					}
+				}
+				
+				if(_council == "Councils..."){
+					var item =  $(fac_dlg.el).find(".select-dropdown.councilsSelector");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Council is required");
+					}
+				}
+				
+				if(_facilityTypes == "Facility Types..."){
+					var item =  $(fac_dlg.el).find(".select-dropdown.facilityTypesSelector");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Facility type is required");
+					}
+				}			
+			}
+			
+		});
+		
+		
+		create_custom_dropdowns();
+		
+		var _regions = $(fac_dlg.el).find(".select-dropdown.regionsSelector").find(".list");
+		if(_regions != undefined && _regions != null){
+			_regions.addClass("scroll scroll2");
+			_regions.css({"overflow-y": "auto", "max-height": "200px"});
+		}
+		
+		var _districts = $(fac_dlg.el).find(".select-dropdown.districtsSelector").find(".list");
+		if(_districts != undefined && _districts != null){
+			_districts.addClass("scroll scroll2");
+			_districts.css({"overflow-y": "auto", "max-height": "200px"});
+		}
+		
+		var _councils = $(fac_dlg.el).find(".select-dropdown.councilsSelector").find(".list");
+		if(_councils != undefined && _councils != null){
+			_councils.addClass("scroll scroll2");
+			_councils.css({"overflow-y": "auto", "max-height": "200px"});
+		}
+		
+		var _facilityTypes = $(fac_dlg.el).find(".select-dropdown.facilityTypesSelector").find(".list");
+		if(_facilityTypes != undefined && _facilityTypes != null){
+			_facilityTypes.addClass("scroll scroll2");
+			_facilityTypes.css({"overflow-y": "auto", "max-height": "200px"});
+		}
+	}	
+}
+
+$("#addFacility").unbind( "click" );
+$('#addFacility').click(function(){ 
+	var options = {};
+	
+	options.Location = null;
+	options.Locations = config.Locations.map(function(d){ return d.Name; }).filter(function(d){ return d != ""; }); 
+	options.Locations.sort();
+	
+	options.Facilitytype = null;
+	options.Facilitytypes = config.FacilityTypes.map(function(d){ return d.replace('Hospital - ','').replace('Clinic - ',''); }).filter(function(d){ return d != ""; }); 
+	options.Facilitytypes.sort();
+	
+	options.Zone = null;
+	options.Zones = []; 
+	
+	options.Region = null;
+	options.Regions = []; 
+	
+	options.District = null;
+	options.Districts = []; 
+	
+	options.Council = null;
+	options.Councils = []; 
+	
+	options.ID = "";
+	options.Name = "";
+	options.Latitude = "";
+	options.Longitude = "";
+	
+	options.Title = "Add facility";
+	options.Mode = "New";
+
+	facility_popup(options);
+});
+	
+
+//map = Render({Latitude:"-6.812102",Longitude:"39.297465"});
+map = Render({Latitude:"",Longitude:""});
+
+closeLoadingPage();
+	
+</script>

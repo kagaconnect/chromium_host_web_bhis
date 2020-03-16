@@ -1,0 +1,1040 @@
+<div class="FlexDisplay FlexColumn container"  style="margin:0px; padding:0px; height:100%;">
+	<div class="FlexDisplay" style="background:#535FD7; height:48px; box-shadow:0 1px 2px rgba(0, 0, 0, 0.3);" >
+		<div id="backBtn"  class="nav-button" >
+			<i class="mdi mdi-apps"></i>
+		</div>
+		<div class="FlexDisplay">
+			<span class="BLIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
+		</div>
+		<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
+		<div class="add-item dropdown" tooltip="add item" flow="left">
+			<div class="nav-button transparent dropdown">
+				<i class="mdi mdi-plus-box-multiple-outline"></i>
+			</div>
+			<div class="submenu">
+				<ul class="root"/>
+			</div>
+		</div>
+	</div>
+	<div class="FlexDisplay Flex ContentPage  inner-section FadeIn"  style="width:100%; height:1px;">
+		<div class="FlexDisplay FlexBoxSizing-BorderBox" style="width:100%; height:100%; overflow: hidden; position:relative;">
+			<div style="width:100%; height:100%; margin:16px 16px 16px 16px;">
+				<div class="page-container Flex FlexColumn Overflow-Hidden inner-container Round Shadow" style="position:relative; height:calc(100% - 32px);  width:100%;">
+					<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
+						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal;">INVENTORY</h4>
+					</div>
+					<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 32px); z-index:2;">
+						<div class="FlexDisplay FlexColumn"  style="width:100%; min-height: 24px; max-height: 24px;">
+							<div class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden " style="width:100%; padding:0px;">
+								<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; min-height: 32px; max-height: 32px; padding:7px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:9px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;"></div>
+								<div class="FlexDisplay Divider-Right" style="min-width:200px; max-width:200px; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">ITEM</span></div>
+								<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">QUANTITY</span></div>
+								<div class="FlexDisplay" style="width:100%; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">UNIT</span></div>			
+							</div>	
+						</div>
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2 StocksList" style="overflow-y:auto; height:calc(100% - 24px);"></div>
+					</div>			
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+
+$("#backBtn").unbind( "click" );
+$('#backBtn').click(function(){
+	var page = System.IO.Path.Combine("web","blis","views",backNavigation);
+	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
+});
+
+function hideNavigationDropMenu(){
+	$(".add-item .submenu").hide();
+	$(".add-item").attr('id', '');
+}
+
+function edit_item(item, name){
+	hideNavigationDropMenu();
+	var config_file = System.IO.Path.Combine("web","blis","configurations","stocks.json");
+	if(System.IO.File.Exists(config_file)){
+		var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+		for(var x=0; x<configs.length; x++){
+			var config = configs[x];
+			if(config.Name == name){
+				var content = '';
+					content += '<div class="bar-container" style="margin:0px;">';
+					content += '	<div class="bar-progress"></div>';
+					content += '</div>';
+					
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-clipboard-text-outline" />';	
+					content += '				</div>';	
+					content += '				<input type="text" placeholder="Name"  class="name-input" value="'+config.Name+'" style="padding:0px 0px 0px 8px;"/>';	
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-clipboard-text-outline" />';	
+					content += '				</div>';	
+					content += '				<input type="text" placeholder="Unit"  class="unit-input" value="'+config.Unit+'" style="padding:0px 0px 0px 8px;"/>';	
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-clipboard-text-outline" />';	
+					content += '				</div>';	
+					content += '				<input type="text" placeholder="Remarks"  class="remarks-input"  value="'+config.Remarks+'" style="padding:0px 0px 0px 8px;"/>';	
+					content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+					content += '					<i class="mdi mdi-playlist-plus" />';
+					content += '				</div>';
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					
+					
+					content += '</div>';
+					
+					var stock_dlg = ShowDialog('<i class="mdi mdi-clipboard-list-outline"></i>', "Edit Item", content,{
+						onCloseDialog : function() {
+							stock_dlg = null;
+							return false; 
+						}
+					},"320px");	
+					
+					focusEvents($(stock_dlg.el).find(".name-input"),
+						function(){
+							$(this).parent().removeClass("is-invalid");
+						},
+						function(){
+						
+						}
+					);
+
+					focusEvents($(stock_dlg.el).find(".unit-input"),
+						function(){
+							$(this).parent().removeClass("is-invalid");
+						},
+						function(){
+							
+						}
+					);
+					
+					$(stock_dlg.el).find(".enter-value").unbind( "click" );
+					$(stock_dlg.el).find(".enter-value").click(function() {
+					var _name = $(stock_dlg.el).find(".name-input").val().trim();
+					var _unit = $(stock_dlg.el).find(".unit-input").val().trim();
+					var _remarks = $(stock_dlg.el).find(".remarks-input").val().trim();
+					
+					if(_name.length > 0 && _unit.length > 0){
+					
+						_name = _name.charAt(0).toUpperCase() + _name.slice(1);
+							
+						config.Name = _name;
+						config.Unit = _unit;
+						config.Remarks = _remarks;
+						
+						System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+						
+						loadData();
+						
+						stock_dlg.toggle();
+						stock_dlg = null;
+					}
+					else{
+						if(_name.length == 0){
+							var item = $(stock_dlg.el).find(".name-input");
+							if(item != undefined && item != null){
+								item.parent().addClass("is-invalid");
+								item.parent().attr("tooltip","Name is required");
+								item.focus(function(){
+									$(this).parent().removeClass("is-invalid");
+									$(this).parent().attr("tooltip","");
+								});
+							}
+						}
+						
+						if( _unit.length == 0){
+							var item = $(stock_dlg.el).find(".unit-input");
+							if(item != undefined && item != null){
+								item.parent().addClass("is-invalid");
+								item.parent().attr("tooltip","Unit is required");
+								item.focus(function(){
+									$(this).parent().removeClass("is-invalid");
+									$(this).parent().attr("tooltip","");
+								});
+							}
+						}
+					}
+				});
+				
+				break;
+			}
+		}
+	}
+}
+
+function delete_item(item, name){
+	var content = '';
+		content += '<div class="bar-container" style="margin:0px;">';
+		content += '	<div class="bar-progress"></div>';
+		content += '</div>'; 
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:48px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<h4 class="feature-title mt-0" style="margin:auto auto; font-size: 12px; font-weight:normal;">Are you sure you want to delete item "'+name+'"</h4>';
+		content += '		</div>';
+		content += '	</div>';
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:56px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay" style="margin:auto auto;">';
+		content += '				<div class="yesButton button button-primary" style="margin:0px 4px 0px 0px;">Yes</div>';
+		content += '				<div class="noButton button button-primary" style="margin:0px 0px 0px 4px;">No</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '</div>';
+
+	var stock_dlg = ShowDialog('<i class="mdi mdi-account-minus"></i>', "Delete item", content,{
+		onCloseDialog : function() {
+			stock_dlg = null;
+			return false; 
+		}
+	},"400px");	
+	
+	$(stock_dlg.el).find(".yesButton").unbind( "click" );
+	$(stock_dlg.el).find(".yesButton").click(function() {
+		var config_file = System.IO.Path.Combine("web","blis","configurations","stocks.json");
+		if(System.IO.File.Exists(config_file)){
+			var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+			for(var x=0; x<configs.length; x++){
+				var config = configs[x];
+				if(config.Name == name){					
+					configs.splice(x, 1);
+		
+					System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+					
+					loadData();
+										
+					stock_dlg.toggle();
+					stock_dlg = null;
+					
+					break;
+				}			
+			}			
+		}
+	});
+	
+	$(stock_dlg.el).find(".noButton").unbind( "click" );
+	$(stock_dlg.el).find(".noButton").click(function() {
+		stock_dlg.toggle();
+		stock_dlg = null;		
+	});
+}
+
+function lotnumber_selected(item, name){
+	var parent = $(item).parents(".Lots");
+	
+	var available_quantity = parent.find('.available-quantity-input');
+	var lotnumber =  $(item).parent().find(".select-dropdown.lotnumbers .current").text();	
+	
+	var config_file = System.IO.Path.Combine("web","blis","configurations","stocks.json");
+	if(available_quantity != undefined && available_quantity != null && System.IO.File.Exists(config_file)){
+		var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+		var quantity = 0;	
+		for(var x=0; x<configs.length; x++){
+			var config = configs[x];
+			if(config.Name == name){
+				for(var xx=0; xx<config.Stocks.length; xx++){
+					var stock = config.Stocks[xx];
+					if(stock.LotNumber == lotnumber){
+						quantity = parseInt(stock.QuantitySupplied);
+						stock.Usage.forEach(function(usage){
+							quantity -= parseInt(usage.QuantitySignedOut);
+						});
+					}
+				}
+			}
+		}
+		available_quantity.val(quantity);
+	}
+}
+
+function update_stock(item, name, unit){
+	hideNavigationDropMenu();
+	var config_file = System.IO.Path.Combine("web","blis","configurations","stocks.json");
+	if(System.IO.File.Exists(config_file)){
+		var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+
+		var content = '';
+			content += '<div class="bar-container" style="margin:0px;">';
+			content += '	<div class="bar-progress"></div>';
+			content += '</div>';
+			
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+			content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+			content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+			content += '					<div class="icon" style="padding-top:4px;">';	
+			content += '						<i class="mdi mdi-clipboard-text-outline" />';	
+			content += '					</div>';	
+			content += '					<input type="text" placeholder="Name" disabled value="'+name+'"  class="name-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '				</div>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px; ">';						
+			content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+			content += '					<div class="icon" style="padding-top:4px;">';	
+			content += '						<i class="mdi mdi-clipboard-text-outline" />';	
+			content += '					</div>';	
+			content += '					<input type="text" placeholder="Unit" disabled value="'+unit+'" class="unit-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '				</div>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			
+			content += '	<div class="FlexDisplay FlexRow Lots"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+			content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+			content += '			<div class="FlexDisplay Flex" style="min-width:178px;">';
+			content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+			content += '					<div class="icon" style="padding-top:4px;">';	
+			content += '						<i class="mdi mdi-pound-box" />';	
+			content += '					</div>';
+			content += '					<select class="lotnumbers" onchange="lotnumber_selected(this, \''+name+'\')">';
+			for(var x=0; x<configs.length; x++){
+				var config = configs[x];
+				if(config.Name == name){
+					for(var xx=0; xx<config.Stocks.length; xx++){
+						var stock = config.Stocks[xx];					
+						content += '<option '+(xx == 0 ? 'selected=""' : '')+' >'+stock.LotNumber+'</option>';
+					}
+				}
+			}
+			content += '					</select>';
+			content += '				</div>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+			content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '				<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+			content += '					<div class="icon" style="padding-top:4px;">';	
+			content += '						<i class="mdi mdi-counter" />';	
+			content += '					</div>';
+			var quantity = 0;
+			for(var x=0; x<configs.length; x++){
+				var config = configs[x];
+				if(config.Name == name){					
+					if(config.Stocks.length > 0){
+						var stock = config.Stocks[0];
+						quantity = parseInt(stock.QuantitySupplied);
+						stock.Usage.forEach(function(usage){
+							quantity -= parseInt(usage.QuantitySignedOut);
+						});
+					}				
+				}
+			}
+			content += '					<input type="text" placeholder="Available Quantity" disabled value="'+quantity+'" class="available-quantity-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '				</div>';
+			content += '			</div>';
+			content += '		</div>';		
+			content += '	</div>';
+			
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+			content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+			content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '				<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+			content += '					<div class="icon" style="padding-top:4px;">';	
+			content += '						<i class="mdi mdi-counter" />';	
+			content += '					</div>';	
+			content += '					<input onkeypress="return isNumberKey(event)" type="text" placeholder="Quantity Signed Out" class="quantity-signed-out-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '				</div>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+			content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+			content += '					<div class="icon" style="padding-top:4px;">';	
+			content += '						<i class="mdi mdi-calendar-today" />';	
+			content += '					</div>';	
+			content += '					<input type="text" placeholder="Date of Usage" class="date-of-usage-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '				</div>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+			content += '				<div class="icon" style="padding-top:0px;">';	
+			content += '					<i class="mdi mdi-clipboard-text-outline" />';	
+			content += '				</div>';	
+			content += '				<input type="text" placeholder="Remarks"  class="remarks-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+			content += '					<i class="mdi mdi-playlist-plus" />';
+			content += '				</div>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			
+			
+			content += '</div>';
+			
+			var stock_dlg = ShowDialog('<i class="mdi mdi-clipboard-list-outline"></i>', "Update Stock", content,{
+				onCloseDialog : function() {
+					stock_dlg = null;
+					return false; 
+				}
+			},"480px");	
+			
+			create_custom_dropdowns();
+			
+			var dateOptions = {language: 'en' ,dateFormat: 'dd/mm/yyyy', position: "top right" };
+			var date_of_usage_datepicker = InitDatePicker($('.date-of-usage-input'), dateOptions);
+			
+			focusEvents($(stock_dlg.el).find(".date-of-usage-input"),
+				function(){
+					$(this).parent().removeClass("is-invalid");
+					$(this).parent().attr("tooltip","");
+				},
+				function(){
+					var val = $(this).val();
+					if(val.trim().length > 0){
+						if (/^\d{2}[.\/-]\d{2}[.\/-]\d{4}$/im.test(val.trim())){
+							$(this).parent().removeClass("is-invalid");
+						}
+						else $(this).parent().addClass("is-invalid");
+					}
+					else $(this).parent().removeClass("is-invalid");
+				}
+			);
+			
+			$(stock_dlg.el).find(".enter-value").unbind( "click" );
+			$(stock_dlg.el).find(".enter-value").click(function() {
+				var _quantity_signed_out = $(stock_dlg.el).find(".quantity-signed-out-input").val().trim();
+				var _date_of_usage = $(stock_dlg.el).find(".date-of-usage-input").val().trim();
+				var _remarks = $(stock_dlg.el).find(".remarks-input").val().trim();	
+				var lotnumber =  $(stock_dlg.el).find(".select-dropdown.lotnumbers .current").text();	
+				
+				if(_quantity_signed_out.length > 0 && _date_of_usage.length > 0 &&
+				   !$(stock_dlg.el).find(".date-of-usage-input").hasClass("is-invalid")){
+					for(var y=0; y<configs.length; y++){
+						var config = configs[y];
+						if(config.Name == name){
+							for(var xx=0; xx<config.Stocks.length; xx++){
+								var stock = config.Stocks[xx];
+								if(stock.LotNumber == lotnumber){
+								
+									var available = parseInt(stock.QuantitySupplied);
+									for(var yy=0; yy<stock.Usage.length; yy++){
+										var usage = stock.Usage[yy];
+										available -= parseInt(usage.QuantitySignedOut);
+									}
+									
+									if(available - parseInt(_quantity_signed_out) >= 0){
+										stock.Usage.push({
+											"QuantitySignedOut": _quantity_signed_out,
+											"DateOfUsage": _date_of_usage,
+											"Remarks": _remarks
+										});
+										
+										System.IO.File.WriteAllText(config_file,JSON.stringify(configs));						
+							
+										loadData();
+										
+										stock_dlg.toggle();
+										stock_dlg = null;
+									}
+									else{
+										var item = $(stock_dlg.el).find(".quantity-signed-out-input");
+										if(item != undefined && item != null){
+											item.parent().addClass("is-invalid");
+											item.parent().attr("tooltip","Only "+available+" remaining");
+											item.focus(function(){
+												$(this).parent().removeClass("is-invalid");
+												$(this).parent().attr("tooltip","");
+											});
+										}
+									}
+									
+									break;
+								}
+							}
+						}
+					}
+					
+				}
+				else{
+					if( _quantity_signed_out.length == 0){
+						var item = $(stock_dlg.el).find(".quantity-signed-out-input");
+						if(item != undefined && item != null){
+							item.parent().addClass("is-invalid");
+							item.parent().attr("tooltip","Quantity signed out is required");
+							item.focus(function(){
+								$(this).parent().removeClass("is-invalid");
+								$(this).parent().attr("tooltip","");
+							});
+						}
+					}
+					
+					if( _date_of_usage.length == 0){
+						var item = $(stock_dlg.el).find(".date-of-usage-input");
+						if(item != undefined && item != null){
+							item.parent().addClass("is-invalid");
+							item.parent().attr("tooltip","Date of usage is required");
+						}
+					}
+				}				
+			});
+	}
+}
+
+function add_stock(item, name, unit){
+	hideNavigationDropMenu();
+	
+	var content = '';
+		content += '<div class="bar-container" style="margin:0px;">';
+		content += '	<div class="bar-progress"></div>';
+		content += '</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '					</div>';	
+		content += '					<input type="text" placeholder="Name" disabled value="'+name+'"  class="name-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px; ">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '					</div>';	
+		content += '					<input type="text" placeholder="Unit" disabled value="'+unit+'" class="unit-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-pound-box" />';	
+		content += '					</div>';	
+		content += '					<input type="text" placeholder="Lot Number" class="lot-number-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-calendar-outline" />';	
+		content += '					</div>';	
+		content += '					<input type="text" placeholder="Expiry Date" class="expiry-date-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';		
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-counter" />';	
+		content += '					</div>';	
+		content += '					<input onkeypress="return isNumberKey(event)" type="text" placeholder="Quantity Supplied" class="quantity-supplied-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-calendar-today" />';	
+		content += '					</div>';	
+		content += '					<input type="text" placeholder="Date received" class="date-received-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+				
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:3px;">';	
+		content += '						<i class="mdi mdi-factory" />';	
+		content += '					</div>';	
+		content += '					<input type="text" placeholder="Manufacturer" class="manufacturer-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';		
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:3px;">';	
+		content += '						<i class="mdi mdi-factory" />';	
+		content += '					</div>';	
+		content += '					<input type="text" placeholder="Supplier" class="supplier-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px; min-width:210px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-cash-register" />';	
+		content += '					</div>';	
+		content += '					<input onkeypress="return isDecimalKey(event)" type="text" placeholder="Cost per Unit" class="cost-per-unit-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '					</div>';	
+		content += '					<input type="text" placeholder="Remarks"  class="remarks-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '					<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:4px 0px 0px 1px; min-width:32px; max-width:32px;">';
+		content += '						<i class="mdi mdi-playlist-plus" />';
+		content += '					</div>';
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		
+		content += '</div>';
+		
+		var stock_dlg = ShowDialog('<i class="mdi mdi-clipboard-list-outline"></i>', "Add Stock", content,{
+			onCloseDialog : function() {
+				stock_dlg = null;
+				return false; 
+			}
+		},"480px");
+		
+		var expiry_date_datepicker = InitDatePicker($(stock_dlg.el).find('.expiry-date-input')		, {language: 'en' ,dateFormat: 'dd/mm/yyyy', position: "left top" });
+		var date_received_datepicker = InitDatePicker($(stock_dlg.el).find('.date-received-input')	, {language: 'en' ,dateFormat: 'dd/mm/yyyy', position: "left top" });
+		
+		$(stock_dlg.el).find(".cost-per-unit-input").on('change keydown paste input', function(){
+			var val = $(this).val().trim();
+			if(val.length > 0){
+				if(/^\d+(\.\d{1,2})?$/im.test(val.trim()))$(this).parent().removeClass("is-invalid");
+				else $(this).parent().addClass("is-invalid");
+			}
+		});
+		
+		focusEvents($(stock_dlg.el).find(".expiry-date-input"),
+			function(){
+				$(this).parent().removeClass("is-invalid");
+				$(this).parent().attr("tooltip","");
+			},
+			function(){
+				var val = $(this).val();
+				if(val.trim().length > 0){
+					if (/^\d{2}[.\/-]\d{2}[.\/-]\d{4}$/im.test(val.trim())){
+						$(this).parent().removeClass("is-invalid");
+					}
+					else $(this).parent().addClass("is-invalid");
+				}
+				else $(this).parent().removeClass("is-invalid");
+			}
+		);
+		
+		focusEvents($(stock_dlg.el).find(".date-received-input"),
+			function(){
+				$(this).parent().removeClass("is-invalid");
+				$(this).parent().attr("tooltip","");
+			},
+			function(){
+				var val = $(this).val();
+				if(val.trim().length > 0){
+					if (/^\d{2}[.\/-]\d{2}[.\/-]\d{4}$/im.test(val.trim())){
+						$(this).parent().removeClass("is-invalid");
+					}
+					else $(this).parent().addClass("is-invalid");
+				}
+				else $(this).parent().removeClass("is-invalid");
+			}
+		);
+
+		$(stock_dlg.el).find(".enter-value").unbind( "click" );
+		$(stock_dlg.el).find(".enter-value").click(function() {
+			var _lot_number = $(stock_dlg.el).find(".lot-number-input").val().trim();
+			var _expiry_date = $(stock_dlg.el).find(".expiry-date-input").val().trim();
+			var _quantity_supplied = $(stock_dlg.el).find(".quantity-supplied-input").val().trim();			
+			var _date_received = $(stock_dlg.el).find(".date-received-input").val().trim();
+			
+			var _manufacturer = $(stock_dlg.el).find(".manufacturer-input").val().trim();			
+			var _supplier = $(stock_dlg.el).find(".supplier-input").val().trim();
+			var _cost_per_unit = $(stock_dlg.el).find(".cost-per-unit-input").val().trim();
+			var _remarks = $(stock_dlg.el).find(".remarks-input").val().trim();
+						
+			if(_lot_number.length > 0 && _expiry_date.length > 0 && _quantity_supplied.length > 0 && _date_received.length > 0 &&
+				!$(stock_dlg.el).find(".expiry-date-input").hasClass("is-invalid") &&
+				!$(stock_dlg.el).find(".date-received-input").hasClass("is-invalid") &&
+				!$(stock_dlg.el).find(".cost-per-unit-input").hasClass("is-invalid")){
+				var config_file = System.IO.Path.Combine("web","blis","configurations","stocks.json");
+				if(System.IO.File.Exists(config_file)){
+					var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+					for(var x=0; x<configs.length; x++){
+						var config = configs[x];
+						if(config.Name == name){					
+
+							var stock = null;
+							for(var xx=0; xx<config.Stocks.length; xx++){
+								var _stock = config.Stocks[xx];
+								if(_lot_number.trim().toLowerCase() == _stock.LotNumber.trim().toLowerCase()){
+									stock = _stock;
+									break;
+								}
+							}
+							
+							if(stock == null){								
+								config.Stocks.push({
+									"LotNumber": _lot_number,
+									"ExpiryDate": _expiry_date,
+									"Manufacturer": _manufacturer,
+									"Supplier": _supplier,
+									"QuantitySupplied": _quantity_supplied,
+									"CostPerUnit": _cost_per_unit,
+									"DateReceived": _date_received,
+									"Remarks": _remarks,
+									"Usage": []
+								});
+								
+								System.IO.File.WriteAllText(config_file,JSON.stringify(configs));						
+						
+								loadData();
+								
+								stock_dlg.toggle();
+								stock_dlg = null;
+							}
+							else{
+								/*stock.LotNumber = _lot_number;
+								stock.ExpiryDate = _expiry_date;
+								stock.Manufacturer = _manufacturer;
+								stock.Supplier = _supplier;
+								stock.QuantitySupplied = _quantity_supplied;
+								stock.CostPerUnit = _cost_per_unit;
+								stock.DateReceived = _date_received;
+								stock.Remarks = _remarks;
+								
+								System.IO.File.WriteAllText(config_file,JSON.stringify(configs));						
+						
+								loadData();
+								
+								stock_dlg.toggle();
+								stock_dlg = null;*/
+								
+								var item = $(stock_dlg.el).find(".lot-number-input");
+								if(item != undefined && item != null){
+									item.parent().addClass("is-invalid");
+									item.parent().attr("tooltip","Lot number already exists");
+									item.focus(function(){
+										$(this).parent().removeClass("is-invalid");
+										$(this).parent().attr("tooltip","");
+									});
+								}
+							}
+							
+							break;
+						}			
+					}			
+				}
+			}
+			else{
+				if( _lot_number.length == 0){
+					var item = $(stock_dlg.el).find(".lot-number-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Lot number is required");
+						item.focus(function(){
+							$(this).parent().removeClass("is-invalid");
+							$(this).parent().attr("tooltip","");
+						});
+					}
+				}
+				
+				if( _expiry_date.length == 0){
+					var item = $(stock_dlg.el).find(".expiry-date-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Expiry date is required");
+					}
+				}
+				
+				if( _quantity_supplied.length == 0){
+					var item = $(stock_dlg.el).find(".quantity-supplied-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Quantity supplied is required");
+						item.focus(function(){
+							$(this).parent().removeClass("is-invalid");
+							$(this).parent().attr("tooltip","");
+						});
+					}
+				}
+				
+				if( _date_received.length == 0){
+					var item = $(stock_dlg.el).find(".date-received-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Date received is required");
+					}
+				}
+			}
+		});
+
+}
+
+function add_item(item){
+	var isDefault = "mdi-help-circle";
+
+	var name = item.Name;
+	var unit = item.Unit;
+	
+	var lot_number = 1;
+	
+	var quantity = 0;
+	var available = 0;
+	item.Stocks.forEach(function(stock){
+		quantity += parseInt(stock.QuantitySupplied);
+	});	
+	item.Stocks.forEach(function(stock){
+		stock.Usage.forEach(function(usage){
+			quantity -= parseInt(usage.QuantitySignedOut);
+		});
+		
+		available = parseInt(stock.QuantitySupplied);
+		for(var yy=0; yy<stock.Usage.length; yy++){
+			var usage = stock.Usage[yy];
+			available -= parseInt(usage.QuantitySignedOut);
+		}
+	});
+	
+	
+
+	var user  = '<div class="FlexDisplay FlexRow Divider-Bottom" style="width:100%; padding:0px; min-height: 32px; max-height: 32px;">';
+		user += '	<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; min-height: 32px; max-height: 32px; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi '+isDefault+'"></i></span></div>';
+		user += '	<div class="FlexDisplay Divider-Right" style="min-width:200px; max-width:200px; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+name+'</span></div>';
+		user += '	<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+quantity+'</span></div>';
+		user += '	<div class="FlexDisplay" style="width:100%; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+unit+'</span></div>';			
+		user += '	<div onclick="add_stock(this, \''+name+'\', \''+unit+'\')" class="FlexDisplay" tooltip="Add stock" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;"><i class="mdi mdi-folder-plus-outline" style="margin:0px; padding:0px;"></i></div>';
+		if(item.Stocks.length > 0 && available > 0)user += '	<div onclick="update_stock(this, \''+name+'\', \''+unit+'\')" class="FlexDisplay" tooltip="Update stock usage" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;"><i class="mdi mdi-plus-minus-box" style="margin:0px; padding:0px;"></i></div>';
+		user += '	<div onclick="edit_item(this, \''+name+'\')" class="FlexDisplay" tooltip="Edit item" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;"><i class="mdi mdi-square-edit-outline" style="margin:0px; padding:0px;"></i></div>';
+		user += '	<div onclick="delete_item(this, \''+name+'\')" class="FlexDisplay" tooltip="Delete item" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;"><i class="mdi mdi-delete-sweep" style="margin:0px; padding:0px;"></i></div>';
+		user += '</div>';
+
+	$(".StocksList").append(user);
+}
+
+function loadData(){
+	$(".StocksList").html('');
+	
+	var config_file = System.IO.Path.Combine("web","blis","configurations","stocks.json");
+	if(System.IO.File.Exists(config_file)){
+		var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+		
+		for(var x=0; x<configs.length; x++){
+			add_item(configs[x]);
+		}
+		
+	}
+}
+
+$(".add-item").unbind( "click" );
+$(".add-item").click(function(){	
+	hideNavigationDropMenu();
+	
+	var content = '';
+		content += '<div class="bar-container" style="margin:0px;">';
+		content += '	<div class="bar-progress"></div>';
+		content += '</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Name"  class="name-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Unit"  class="unit-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Remarks"  class="remarks-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+		content += '					<i class="mdi mdi-playlist-plus" />';
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		
+		content += '</div>';
+		
+		var stock_dlg = ShowDialog('<i class="mdi mdi-clipboard-list-outline"></i>', "Add Item", content,{
+			onCloseDialog : function() {
+				stock_dlg = null;
+				return false; 
+			}
+		},"320px");	
+		
+		focusEvents($(stock_dlg.el).find(".name-input"),
+			function(){
+				$(this).parent().removeClass("is-invalid");
+			},
+			function(){
+			
+			}
+		);
+
+		focusEvents($(stock_dlg.el).find(".unit-input"),
+			function(){
+				$(this).parent().removeClass("is-invalid");
+			},
+			function(){
+				
+			}
+		);
+		
+		$(stock_dlg.el).find(".enter-value").unbind( "click" );
+		$(stock_dlg.el).find(".enter-value").click(function() {
+			var _name = $(stock_dlg.el).find(".name-input").val().trim();
+			var _unit = $(stock_dlg.el).find(".unit-input").val().trim();
+			var _remarks = $(stock_dlg.el).find(".remarks-input").val().trim();
+			
+			if(_name.length > 0 && _unit.length > 0){
+			
+				var config_file = System.IO.Path.Combine("web","blis","configurations","stocks.json");
+				if(System.IO.File.Exists(config_file)){
+					var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+			
+					var exists = false;
+					for(var x=0; x<configs.length; x++){
+						var config = configs[x];
+						if(_name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
+							exists = true;
+							break;
+						}
+					}
+					
+					if(!exists){
+						_name = _name.charAt(0).toUpperCase() + _name.slice(1);
+						
+						configs.push({
+							"Name": _name,
+							"Unit": _unit,
+							"Remarks": _remarks,
+							"Stocks": []
+						});
+						
+						System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+						
+						loadData();
+											
+						stock_dlg.toggle();
+						stock_dlg = null;
+						
+					}
+					else{
+						var item = $(stock_dlg.el).find(".name-input");
+						if(item != undefined && item != null){
+							item.parent().addClass("is-invalid");
+							item.parent().attr("tooltip","Item already exists");
+							item.focus(function(){
+								$(this).parent().removeClass("is-invalid");
+								$(this).parent().attr("tooltip","");
+							});
+						}
+					}
+				}
+			}
+			else{
+				if(_name.length == 0){
+					var item = $(stock_dlg.el).find(".name-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Name is required");
+						item.focus(function(){
+							$(this).parent().removeClass("is-invalid");
+							$(this).parent().attr("tooltip","");
+						});
+					}
+				}
+				
+				if( _unit.length == 0){
+					var item = $(stock_dlg.el).find(".unit-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Unit is required");
+						item.focus(function(){
+							$(this).parent().removeClass("is-invalid");
+							$(this).parent().attr("tooltip","");
+						});
+					}
+				}
+			}
+		});
+	
+});
+
+$(".add-item").mouseup(function(){
+	return false;
+});
+$(".submenu").mouseup(function(){
+	return false;
+});
+
+$('.add-item .submenu .root .nav-button').each(function (index, value) {
+	$(this).click(function(){
+		
+	});
+});
+
+loadData();
+
+hideNavigationDropMenu();
+
+closeLoadingPage();	
+</script>

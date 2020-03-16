@@ -1,0 +1,733 @@
+<div class="FlexDisplay FlexColumn container"  style="margin:0px; padding:0px; height:100%;">
+	<div class="FlexDisplay" style="background:#535FD7; height:48px; box-shadow:0 1px 2px rgba(0, 0, 0, 0.3);" >
+		<div id="backBtn"  class="nav-button" >
+			<i class="mdi mdi-apps"></i>
+		</div>
+		<div class="FlexDisplay">
+			<span class="BLIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
+		</div>
+		<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
+		<div class="add-user dropdown" tooltip="add user" flow="left">
+			<div class="nav-button transparent dropdown">
+				<i class="mdi mdi-account-plus"></i>
+			</div>
+			<div class="submenu">
+				<ul class="root"/>
+			</div>
+		</div>
+	</div>
+	<div class="FlexDisplay Flex ContentPage  inner-section FadeIn"  style="width:100%; height:1px;">
+		<div class="FlexDisplay FlexBoxSizing-BorderBox" style="width:100%; height:100%; overflow: hidden; position:relative;">
+			<div style="width:100%; height:100%; margin:16px 16px 16px 16px;">
+				<div class="page-container Flex FlexColumn Overflow-Hidden inner-container Round Shadow" style="position:relative; height:calc(100% - 32px);  width:100%;">
+					<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
+						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal;">USERS</h4>
+					</div>
+					<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 32px); z-index:2;">
+						<div class="FlexDisplay FlexColumn"  style="width:100%; min-height: 24px; max-height: 24px;">
+							<div class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden " style="width:100%; padding:0px;">
+								<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; min-height: 32px; max-height: 32px; padding:7px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:9px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;"></div>
+								<div class="FlexDisplay Divider-Right" style="min-width:200px; max-width:200px; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">EMAIL</span></div>
+								<!--<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">ROLE</span></div>-->
+								<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">NUMBER</span></div>
+								<div class="FlexDisplay" style="width:100%; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">NAME</span></div>			
+							</div>	
+						</div>
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2 UsersList" style="overflow-y:auto; height:calc(100% - 24px);">
+						
+						</div>
+						<!--<div id="pagingBox" class="FlexDisplay Divider-Top FlexRow" style="width:100%; min-height:32px; max-height:32px;"></div>-->
+					</div>			
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+
+$("#backBtn").unbind( "click" );
+$('#backBtn').click(function(){
+	var page = System.IO.Path.Combine("web","blis","views",backNavigation);
+	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
+});
+
+function hideNavigationDropMenu(){
+	$(".add-user .submenu").hide();
+	$(".add-user").attr('id', '');
+}
+
+function getRoles(){
+	return ["TECH_RO","TECH_RW","CLERK","TECH_SHOWPNAME","VERIFIER","READONLY_MODE","PHYSICIAN"];
+}
+
+function getLanguages(){
+	return ["Default","English","Francais"];
+}
+
+function edit_user(item){
+	var language 				= $(item).parent().data("language");
+	var diplay_name_at_result	= $(item).parent().data("diplay-name-at-result");
+	var role 					= $(item).parent().data("role");
+	var password				= $(item).parent().data("password");
+	var name 					= $(item).parent().data("name");
+	var email 					= $(item).parent().data("email");
+	var phone_mobile			= $(item).parent().data("phone-mobile");
+	var username				= $(item).parent().data("username");
+	
+	hideNavigationDropMenu();
+	
+	var content = '';
+		content += '<div class="bar-container" style="margin:0px;">';
+		content += '	<div class="bar-progress"></div>';
+		content += '</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+		content += '				<div class="icon">';
+		content += '					<i class="mdi mdi-account-lock" />';
+		content += '				</div>';
+		content += '				<select class="role">';
+		content += '					<option>Role...</option>';
+		getRoles().forEach(function(r){
+			content += '				<option '+(role == r ? 'selected=""' : '')+'>'+r+'</option>';
+		});
+		content += '				</select>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+		content += '				<div class="icon">';
+		content += '					<i class="mdi mdi-web" />';
+		content += '				</div>';
+		content += '				<select class="language">';
+		getLanguages().forEach(function(l){
+			content += '				<option '+(language == l ? 'selected=""' : '')+'>'+l+'</option>';
+		});
+		content += '				</select>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+		content += '				<div class="icon">';
+		content += '					<i class="mdi mdi-account-question" />';
+		content += '				</div>';
+		content += '				<select class="diplaynameatresult">';
+		content += '					<option '+(diplay_name_at_result == "Diplay Name At Result Entry" ? 'selected=""' : '')+'>Diplay Name At Result Entry</option>';
+		content += '					<option '+(diplay_name_at_result == "Diplay Name At Result Entry" ? '' : 'selected=""')+'>Dont display</option>';
+		content += '				</select>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-account" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Name"  class="name-input" value="'+name+'" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-at" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Email"  class="email-input" value="'+email+'" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-cellphone-basic" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Phone/Mobile"  class="phone-mobile-input" value="'+phone_mobile+'" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-textbox-password" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Username"  class="username-input" value="'+username+'" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-textbox-password" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Password"  class="password-input" value="'+password+'" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+		content += '					<i class="mdi mdi-playlist-plus" />';
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		
+		content += '</div>';
+
+
+	var user_dlg = ShowDialog('<i class="mdi mdi-account"></i>', "Edit User", content,{
+		onCloseDialog : function() {
+			user_dlg = null;
+			return false; 
+		}
+	},"320px");	
+	
+	create_custom_dropdowns();
+	
+	focusEvents($(user_dlg.el).find(".phone-mobile-input"),
+		function(){
+			$(this).parent().removeClass("is-invalid");
+		},
+		function(){
+			var val = $(this).val();
+			if(val.trim().length > 0){
+				if (/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(val.trim())){
+					$(this).parent().removeClass("is-invalid");
+				}
+				else $(this).parent().addClass("is-invalid");
+			}
+			else $(this).parent().removeClass("is-invalid");
+		}
+	);
+
+	focusEvents($(user_dlg.el).find(".email-input"),
+		function(){
+			$(this).parent().removeClass("is-invalid");
+		},
+		function(){
+			var val = $(this).val();
+			if(val.trim().length > 0){
+				if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(val.trim())){
+					$(this).parent().removeClass("is-invalid");
+				}
+				else $(this).parent().addClass("is-invalid");
+			}
+			else $(this).parent().removeClass("is-invalid");
+		}
+	);
+	
+	$(user_dlg.el).find(".enter-value").unbind( "click" );
+	$(user_dlg.el).find(".enter-value").click(function() {
+		var _name = $(user_dlg.el).find(".name-input").val().trim();
+		var _email = $(user_dlg.el).find(".email-input").val().trim();
+		var _phone_mobile = $(user_dlg.el).find(".phone-mobile-input").val().trim();
+		var _username = $(user_dlg.el).find(".username-input").val().trim();		
+		var _password = $(user_dlg.el).find(".password-input").val().trim();		
+		
+		var _role = $(user_dlg.el).find(".select-dropdown.role").find(".current").text();
+		var _diplayNameAtResult = $(user_dlg.el).find(".select-dropdown.diplaynameatresult").find(".current").text();
+		var _language = $(user_dlg.el).find(".select-dropdown.language").find(".current").text();
+		
+		if(_name.length > 0 && _username.length > 0  && _password.length > 0  && _role != "Role..."  && _language != "Language..."  &&
+		   !$(user_dlg.el).find(".phone-mobile-input").parent().hasClass("is-invalid") &&
+		   !$(user_dlg.el).find(".email-input").parent().hasClass("is-invalid")){
+		
+			var config_file = System.IO.Path.Combine("web","blis","configurations","users.json");
+			if(System.IO.File.Exists(config_file)){
+				var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+				
+				for(var x=0; x<configs.length; x++){
+					var config = configs[x];
+					if(name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
+						
+						config.Name = _name;
+						config.Email = _email;
+						config.PhoneMobile = _phone_mobile;
+						config.Username = _username;
+						config.Password = _password;
+						config.Role = _role,
+						config.DiplayNameAtResult = _diplayNameAtResult == "" ? true : false;
+						config.Language = _language;
+						
+						System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+						
+						loadData();
+											
+						user_dlg.toggle();
+						user_dlg = null;						
+						
+						break;
+					}
+				}
+			}
+		}
+		else{
+			if(_name.length == 0){
+				var item = $(user_dlg.el).find(".name-input");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Currency name is required");
+					item.focus(function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					});
+				}
+			}
+			
+			if( _username.length == 0){
+				var item = $(user_dlg.el).find(".username-input");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Username is required");
+					item.focus(function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					});
+				}
+			}
+			
+			if( _password.length == 0){
+				var item = $(user_dlg.el).find(".password-input");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Password is required");
+					item.focus(function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					});
+				}
+			}
+			
+			if(_role == "Role..."){
+				var item =  $(user_dlg.el).find(".select-dropdown.role");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Role is required");
+				}
+			}
+			
+			if(_language == "Language..."){
+				var item =  $(user_dlg.el).find(".select-dropdown.language");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Language is required");
+				}
+			}
+		}
+	});
+	
+}
+
+function delete_user(item){
+	var name 			= $(item).parent().data("name");
+	var config_file = System.IO.Path.Combine("web","blis","configurations","users.json");
+	
+	
+	var content = '';
+		content += '<div class="bar-container" style="margin:0px;">';
+		content += '	<div class="bar-progress"></div>';
+		content += '</div>'; 
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:48px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<h4 class="feature-title mt-0" style="margin:auto auto; font-size: 12px; font-weight:normal;">Are you sure you want to delete user "'+name+'"</h4>';
+		content += '		</div>';
+		content += '	</div>';
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:56px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay" style="margin:auto auto;">';
+		content += '				<div class="yesButton button button-primary" style="margin:0px 4px 0px 0px;">Yes</div>';
+		content += '				<div class="noButton button button-primary" style="margin:0px 0px 0px 4px;">No</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '</div>';
+
+
+	var user_dlg = ShowDialog('<i class="mdi mdi-account-minus"></i>', "Delete user", content,{
+		onCloseDialog : function() {
+			user_dlg = null;
+			return false; 
+		}
+	},"400px");	
+	
+	$(user_dlg.el).find(".yesButton").unbind( "click" );
+	$(user_dlg.el).find(".yesButton").click(function() {
+		if(System.IO.File.Exists(config_file)){
+			var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+
+			for(var x=0; x<configs.length; x++){
+				var config = configs[x];
+				if(name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
+					configs.splice(x, 1);
+					
+					System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+					
+					loadData();
+										
+					user_dlg.toggle();
+					user_dlg = null;						
+					
+					break;
+				}
+			}		
+		}
+	});
+	
+	$(user_dlg.el).find(".noButton").unbind( "click" );
+	$(user_dlg.el).find(".noButton").click(function() {
+		user_dlg.toggle();
+		user_dlg = null;		
+	});
+}
+
+function add_user(name, email, phone_mobile, username, password, role, diplay_name_at_result, language){
+	var isDefault = "mdi-help-circle";
+	//if(!enabled)isDefault = "mdi-close";
+
+	var user  = '<div data-language="'+language+'" data-diplay-name-at-result="'+diplay_name_at_result+'" data-role="'+role+'" data-password="'+password+'" data-name="'+name+'" data-email="'+email+'" data-phone-mobile="'+phone_mobile+'" data-username="'+username+'" class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden " style="width:100%; padding:0px; min-height: 32px; max-height: 32px;">';
+		
+		user += '	<div tooltip="Username: '+username+', Role: '+role+', DiplayNameAtResult: '+(diplay_name_at_result ? "Yes" : "No")+', Language: '+language+'" flow="right" class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; min-height: 32px; max-height: 32px; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi '+isDefault+'"></i></span></div>';
+		user += '	<div class="FlexDisplay Divider-Right" style="min-width:200px; max-width:200px; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+email+'</span></div>';
+		//user += '	<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+role+'</span></div>';
+		user += '	<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+phone_mobile+'</span></div>';
+		user += '	<div class="FlexDisplay" style="width:100%; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+name+'</span></div>';			
+		user += '	<div onclick="edit_user(this)" class="FlexDisplay" tooltip="Edit" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;"><i class="mdi mdi-square-edit-outline" style="margin:0px; padding:0px;"></i></div>';
+		user += '	<div onclick="delete_user(this)" class="FlexDisplay" tooltip="Delete" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;"><i class="mdi mdi-delete-sweep" style="margin:0px; padding:0px;"></i></div>';
+		user += '</div>';
+
+	$(".UsersList").append(user);
+}
+
+function loadData(){
+	$(".UsersList").html('');
+	
+	var config_file = System.IO.Path.Combine("web","blis","configurations","users.json");
+	if(System.IO.File.Exists(config_file)){
+		var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+		
+		for(var x=0; x<configs.length; x++){
+			var config = configs[x];
+			add_user(config.Name,config.Email,config.PhoneMobile,config.Username,config.Password,config.Role,config.DiplayNameAtResult,config.Language );
+		}
+		
+	}
+}
+
+function onSelected(item){
+	$(item).parent().removeClass("is-invalid");
+	$(item).parent().attr("tooltip","");
+}
+
+$(".add-user").unbind( "click" );
+$(".add-user").click(function(){	
+	hideNavigationDropMenu();
+	
+	var content = '';
+		content += '<div class="bar-container" style="margin:0px;">';
+		content += '	<div class="bar-progress"></div>';
+		content += '</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+		content += '				<div class="icon">';
+		content += '					<i class="mdi mdi-account-lock" />';
+		content += '				</div>';
+		content += '				<select onchange="onSelected(this)" class="role">';
+		content += '					<option selected="">Role...</option>';
+		getRoles().forEach(function(r){
+			content += '				<option>'+r+'</option>';
+		});
+		content += '				</select>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+		content += '				<div class="icon">';
+		content += '					<i class="mdi mdi-web" />';
+		content += '				</div>';
+		content += '				<select onchange="onSelected(this)" class="language">';
+		content += '					<option selected="">Language...</option>';
+		getLanguages().forEach(function(l){
+			content += '				<option>'+l+'</option>';
+		});
+		content += '				</select>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+		content += '				<div class="icon">';
+		content += '					<i class="mdi mdi-account-question" />';
+		content += '				</div>';
+		content += '				<select class="diplaynameatresult">';
+		content += '					<option selected="">Diplay Name At Result Entry</option>';
+		content += '					<option>Dont display</option>';
+		content += '				</select>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-account" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Name"  class="name-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-at" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Email"  class="email-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-cellphone-basic" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Phone/Mobile"  class="phone-mobile-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-textbox-password" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Username"  class="username-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-textbox-password" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Password"  class="password-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+		content += '					<i class="mdi mdi-playlist-plus" />';
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		
+		content += '</div>';
+
+
+	var user_dlg = ShowDialog('<i class="mdi mdi-account-plus"></i>', "Add User", content,{
+		onCloseDialog : function() {
+			user_dlg = null;
+			return false; 
+		}
+	},"320px");	
+	
+	create_custom_dropdowns();
+	
+	focusEvents($(user_dlg.el).find(".phone-mobile-input"),
+		function(){
+			$(this).parent().removeClass("is-invalid");
+		},
+		function(){
+			var val = $(this).val();
+			if(val.trim().length > 0){
+				if (/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(val.trim())){
+					$(this).parent().removeClass("is-invalid");
+				}
+				else $(this).parent().addClass("is-invalid");
+			}
+			else $(this).parent().removeClass("is-invalid");
+		}
+	);
+
+	focusEvents($(user_dlg.el).find(".email-input"),
+		function(){
+			$(this).parent().removeClass("is-invalid");
+		},
+		function(){
+			var val = $(this).val();
+			if(val.trim().length > 0){
+				if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(val.trim())){
+					$(this).parent().removeClass("is-invalid");
+				}
+				else $(this).parent().addClass("is-invalid");
+			}
+			else $(this).parent().removeClass("is-invalid");
+		}
+	);
+	
+	$(user_dlg.el).find(".enter-value").unbind( "click" );
+	$(user_dlg.el).find(".enter-value").click(function() {
+		var _name = $(user_dlg.el).find(".name-input").val().trim();
+		var _email = $(user_dlg.el).find(".email-input").val().trim();
+		var _phone_mobile = $(user_dlg.el).find(".phone-mobile-input").val().trim();
+		var _username = $(user_dlg.el).find(".username-input").val().trim();		
+		var _password = $(user_dlg.el).find(".password-input").val().trim();		
+		
+		var _role = $(user_dlg.el).find(".select-dropdown.role").find(".current").text();
+		var _diplayNameAtResult = $(user_dlg.el).find(".select-dropdown.diplaynameatresult").find(".current").text();
+		var _language = $(user_dlg.el).find(".select-dropdown.language").find(".current").text();
+		
+		if(_name.length > 0 && _username.length > 0  && _password.length > 0  && _role != "Role..."  && _language != "Language..." &&
+		   !$(user_dlg.el).find(".phone-mobile-input").parent().hasClass("is-invalid") &&
+		   !$(user_dlg.el).find(".email-input").parent().hasClass("is-invalid")){
+		
+			var config_file = System.IO.Path.Combine("web","blis","configurations","users.json");
+			if(System.IO.File.Exists(config_file)){
+				var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+		
+				var exists = false;
+				for(var x=0; x<configs.length; x++){
+					var config = configs[x];
+					if(_name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
+						exists = true;
+						break;
+					}
+				}
+				
+				if(!exists){
+					_name = _name.charAt(0).toUpperCase() + _name.slice(1);
+					
+					configs.push({
+						"Name": _name,
+						"Email": _email,
+						"PhoneMobile": _phone_mobile,
+						"Username": _username,
+						"Password": _password,
+						"Role": _role,
+						"DiplayNameAtResult": _diplayNameAtResult == "" ? true : false,
+						"Language": _language
+					});
+					
+					System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+					
+					loadData();
+					
+					user_dlg.toggle();
+					user_dlg = null;
+					
+				}
+				else{
+					var item = $(user_dlg.el).find(".name-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","User already exists");
+						item.focus(function(){
+							$(this).parent().removeClass("is-invalid");
+							$(this).parent().attr("tooltip","");
+						});
+					}
+				}
+			}
+		}
+		else{
+			if(_name.length == 0){
+				var item = $(user_dlg.el).find(".name-input");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Currency name is required");
+					item.focus(function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					});
+				}
+			}
+			
+			if( _username.length == 0){
+				var item = $(user_dlg.el).find(".username-input");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Username is required");
+					item.focus(function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					});
+				}
+			}
+			
+			if( _password.length == 0){
+				var item = $(user_dlg.el).find(".password-input");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Password is required");
+					item.focus(function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					});
+				}
+			}
+			
+			if(_role == "Role..."){
+				var item =  $(user_dlg.el).find(".select-dropdown.role");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Role is required");
+				}
+			}
+			
+			if(_language == "Language..."){
+				var item =  $(user_dlg.el).find(".select-dropdown.language");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Language is required");
+				}
+			}
+		}
+	});
+	
+});
+
+$(".add-user").mouseup(function(){
+	return false;
+});
+$(".submenu").mouseup(function(){
+	return false;
+});
+
+$('.add-user .submenu .root .nav-button').each(function (index, value) {
+	$(this).click(function(){
+		
+	});
+});
+
+loadData();
+
+hideNavigationDropMenu();
+
+closeLoadingPage();	
+</script>
