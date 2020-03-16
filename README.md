@@ -20,3 +20,12 @@ For more info about the original application, please refer to the [C4G BLIS](htt
 
 ##### Reception
 ![](https://github.com/kagaconnect/chromium_host_web_blis/blob/master/assets/images/reception.jpg)
+
+### Setup structure
+    .
+    ├── extensions
+    │   └── ChromiumHost.Extensions.OpenStreetMap.dll
+    ├── web
+    │   └── blis
+    │       └── ...
+    └── Configurations.xml
