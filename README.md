@@ -6,6 +6,6 @@ Redesign of Basic Laboratory Information System
 For more info about the original application, please refer to the [C4G BLIS](http://blis.cc.gatech.edu/index.php) website.
 
 ### To-Do
-- [x] Build a [shell](https://github.com/kagaconnect/chromium_host) to host web application
-- [x] Use a response html [template](https://cruip.com/switch)
+- [x] Setup [chromium host shell](https://github.com/kagaconnect/chromium_host/releases/latest/download/chromium_host_78.0.3904.108_x64.zip) with its dependencies for [windows](https://github.com/kagaconnect/chromium_host/releases/latest/download/cef_binary_78.0.3904.108_windows64.zip) or [linux](https://github.com/kagaconnect/chromium_host/releases/latest/download/cef_binary_78.0.3904.108_linux64.zip), to host web application
+- [x] Use a response html template like [this](https://cruip.com/switch) and transform it into BLIS
 - [ ] Add database connectivity
