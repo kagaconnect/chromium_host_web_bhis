@@ -1,5 +1,5 @@
 # Chromium Host - BLIS
-Redesign of Basic Laboratory Information System
+Redesign of Basic Laboratory Information System using [chromium host](https://github.com/kagaconnect/chromium_host)
 
 ![](https://github.com/kagaconnect/chromium_host_web_blis/blob/master/assets/svgs/release.svg) ![](https://github.com/kagaconnect/chromium_host_web_blis/blob/master/assets/svgs/linux.svg) ![](https://github.com/kagaconnect/chromium_host_web_blis/blob/master/assets/svgs/windows.svg)
 
