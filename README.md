@@ -28,4 +28,7 @@ For more info about the original application, please refer to the [C4G BLIS](htt
     ├── web
     │   └── blis
     │       └── ...
+    ├── ChromiumHost.Installer.exe
+    ├── System.Security.Cryptography.Algorithms.dll
+    ├── System.Security.Cryptography.Primitives.dll
     └── Configurations.xml
