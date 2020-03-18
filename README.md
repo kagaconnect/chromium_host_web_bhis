@@ -32,3 +32,10 @@ For more info about the original application, please refer to the [C4G BLIS](htt
     ├── System.Security.Cryptography.Algorithms.dll
     ├── System.Security.Cryptography.Primitives.dll
     └── Configurations.xml
+
+### Start Up : windows
+Double clicking the **ChromiumHost.Installer.exe** will download the latest release.
+
+### Start Up : linux
+From the terminal type and execute **mono ChromiumHost.Installer.exe** will download the latest release
+
