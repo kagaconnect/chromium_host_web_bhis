@@ -33,7 +33,6 @@ For more info about the original application, please refer to the [C4G BLIS](htt
     ├── System.Security.Cryptography.Primitives.dll
     └── Configurations.xml
 
-### Initial setup
 #### Windows
 Double clicking the **ChromiumHost.Installer.exe** will download the latest release. If already setup, then by double clicking the **ChromiumHost.exe** will read the arguments from **Configuration.xml**, otherwise can pass arguments like
 
