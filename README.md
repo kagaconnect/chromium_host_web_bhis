@@ -33,9 +33,24 @@ For more info about the original application, please refer to the [C4G BLIS](htt
     ├── System.Security.Cryptography.Primitives.dll
     └── Configurations.xml
 
-### Start Up : windows
+### Initial setup
+#### Windows
 Double clicking the **ChromiumHost.Installer.exe** will download the latest release.
 
-### Start Up : linux
+#### Linux
 From the terminal type and execute **mono ChromiumHost.Installer.exe** will download the latest release
 
+### Start Up
+#### windows
+Double clicking the **ChromiumHost.exe** will read the arguments from **Configuration.xml** otherwise can pass arguments like
+
+`ChromiumHost.exe --url=https://blis/index.htm --internal=true --remotedebuggingport=20480 --verbose=false`
+
+#### linux
+This will read the arguments from **Configuration.xml**
+
+`mono ChromiumHost.exe`
+
+Otherwise can pass arguments like
+
+`mono ChromiumHost.exe --url=https://blis/index.htm --internal=true --remotedebuggingport=20480 --verbose=false`
