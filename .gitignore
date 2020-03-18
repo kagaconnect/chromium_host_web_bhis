@@ -9,3 +9,6 @@
 /locales
 /resources
 /swiftshader
+!/ChromiumHost.Installer.exe
+!/System.Security.Cryptography.Algorithms.dll
+!/System.Security.Cryptography.Primitives.dll
