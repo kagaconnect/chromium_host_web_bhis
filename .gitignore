@@ -4,12 +4,15 @@
 /*.exe
 /*.lib
 /*.pak
+/*.config
 /Logs
 /logo.ico
 /locales
 /binaries
 /resources
 /swiftshader
+/x64
+/x86
 !/ChromiumHost.Installer.exe
 !/System.Security.Cryptography.Algorithms.dll
 !/System.Security.Cryptography.Primitives.dll
