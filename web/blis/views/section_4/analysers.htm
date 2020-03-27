@@ -143,303 +143,451 @@
 		$(item).parents(".dialog__body").find(".SubDirectoryFormat .sub-directory-format-input").val("");
 	}
 	
+	function getBaudRates(){
+		return ["110","300","600","1200","2400","4800","9600","14400","19200","38400","57600","115200","128000","256000"];
+	}
+	
+	function getParities(){
+		return ["None","Odd","Even","Mark","Space"];
+	}
+	
+	function getStopBits(){
+		return ["1","1.5","2"];
+	}
+	
+	function getDataBits(){
+		return ["5","6","7","8","9"];
+	}
+	
 	function settings_analyser(item){
 		hideNavigationDropMenu();
 		
-		var _FeedSource = $(item).parent().data("feed");
-		if(_FeedSource != "TCP/IP" && _FeedSource != "Serial" &&
-		   _FeedSource != "File" && _FeedSource != "DataSource") return;
-		   
-		var _Equipment_Name = $(item).parent().data("name");
-		
-		var content = '';
-			content += '<div class="bar-container" style="margin:0px;">';
-			content += '	<div class="bar-progress"></div>';
-			content += '</div>';
+		var config_file = System.IO.Path.Combine("web","blis","configurations","analysers.json");
+		if(System.IO.File.Exists(config_file)){
+			var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+	
+			var _FeedSource = $(item).parent().data("feed");
+			if(_FeedSource != "TCP/IP" && _FeedSource != "Serial" &&
+			   _FeedSource != "File" && _FeedSource != "DataSource") return;
+			   
+			var _Equipment_Name = $(item).parent().data("name");
 			
-			if(_FeedSource == "TCP/IP"){
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-server-network" />';	
-				content += '				</div>';
-				content += '				<select class="modeType" onchange="mode_changed(this)">';
-				content += '					<option selected="">Client</option>';
-				content += '					<option>Server</option>';
-				content += '				</select>';
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-server-network-off" />';	
-				content += '				</div>';
-				content += '				<select class="autoConnectionType">';
-				content += '					<option selected="">Auto Reconnect</option>';
-				content += '					<option>Yes</option>';
-				content += '					<option>No</option>';
-				content += '				</select>';
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-				content += '	<div class="FlexHidden FlexRow IP"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-ip-network-outline" />';	
-				content += '				</div>';	
-				content += '				<input onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46" type="text" placeholder="IP"  class="ip-input" style="padding:0px 0px 0px 8px;"/>';	
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-network-outline" />';	
-				content += '				</div>';	
-				content += '				<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" type="text" placeholder="Port"  class="tcp_ip_port-input" style="padding:0px 0px 0px 8px;"/>';	
-				content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
-				content += '					<i class="mdi mdi-playlist-check" />';
-				content += '				</div>';
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-			}
-			else if(_FeedSource == "Serial"){
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-serial-port" />';	
-				content += '				</div>';	
-				content += '				<select class="baudRate">';
-				content += '					<option selected="">Baud Rate</option>';
-				content += '					<option value="110">110</option>';
-				content += '					<option value="300">300</option>';
-				content += '					<option value="600">600</option>';
-				content += '					<option value="1200">1200</option>';
-				content += '					<option value="2400">2400</option>';
-				content += '					<option value="4800">4800</option>';
-				content += '					<option value="9600">9600</option>';
-				content += '					<option value="14400">14400</option>';
-				content += '					<option value="19200">19200</option>';
-				content += '					<option value="38400">38400</option>';
-				content += '					<option value="57600">57600</option>';
-				content += '					<option value="115200">115200</option>';
-				content += '					<option value="128000">128000</option>';
-				content += '					<option value="256000">256000</option>';
-				content += '				</select>';	
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-serial-port" />';	
-				content += '				</div>';	
-				content += '				<select class="parity">';
-				content += '					<option selected="">Parity</option>';
-				content += '					<option value="None">None</option>';
-				content += '					<option value="Odd">Odd</option>';
-				content += '					<option value="Even">Even</option>';
-				content += '					<option value="Mark">Mark</option>';
-				content += '					<option value="Space">Space</option>';
-				content += '				</select>';	
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-serial-port" />';	
-				content += '				</div>';	
-				content += '				<select class="stopBits">';
-				content += '					<option selected="">Stop Bits</option>';
-				content += '					<option value="1">1</option>';
-				content += '					<option value="1.5">1.5</option>';
-				content += '					<option value="2">2</option>';
-				content += '				</select>';	
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-serial-port" />';	
-				content += '				</div>';	
-				content += '				<input type="text" placeholder="Port"  class="serial_port-input" style="padding:0px 0px 0px 8px;"/>';	
-				content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
-				content += '					<i class="mdi mdi-playlist-check" />';
-				content += '				</div>';
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-			}
-			else if(_FeedSource == "File"){
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-folder-table" />';	
-				content += '				</div>';	
-				content += '				<select class="useSubDirectories" onchange="sub_directory_changed(this)">';
-				content += '					<option selected="">Use Sub Directories</option>';
-				content += '					<option value="Yes">Yes</option>';
-				content += '					<option value="No">No</option>';
-				content += '				</select>';	
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-				content += '	<div class="FlexHidden FlexRow SubDirectoryFormat"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-folder-table" />';	
-				content += '				</div>';	
-				content += '				<input type="text" placeholder="Sub Directory Format"  class="sub-directory-format-input" style="padding:0px 0px 0px 8px;"/>';	
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-file" />';	
-				content += '				</div>';	
-				content += '				<input type="text" placeholder="File Name Format"  class="file-name-format-input" style="padding:0px 0px 0px 8px;"/>';	
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-file-settings-outline" />';	
-				content += '				</div>';	
-				content += '				<input type="text" placeholder="File Extension"  class="file-extension-input" style="padding:0px 0px 0px 8px;"/>';	
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-file-delimited-outline" />';	
-				content += '				</div>';	
-				content += '				<input type="text" placeholder="File Seperator"  class="file-seperator-input" style="padding:0px 0px 0px 8px;"/>';	
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-folder" />';	
-				content += '				</div>';	
-				content += '				<input type="text" placeholder="Base Directory"  class="base-directory-input" style="padding:0px 0px 0px 8px;"/>';	
-				content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
-				content += '					<i class="mdi mdi-playlist-plus" />';
-				content += '				</div>';
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-			}
-			else if(_FeedSource == "DataSource"){
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-file-link" />';	
-				content += '				</div>';	
-				content += '				<input type="text" placeholder="Data Source"  class="data-source-input" style="padding:0px 0px 0px 8px;"/>';	
-				content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
-				content += '					<i class="mdi mdi-playlist-check" />';
-				content += '				</div>';
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
-			}
+			var settings = {};
+			var _config = configs.filter(function(element){ return element.Name.trim().toLowerCase() == _Equipment_Name.toString().trim().toLowerCase() && 
+							element.FeedSource.trim().toLowerCase() == _FeedSource.toString().trim().toLowerCase();}).shift();
+			if (_config != undefined && _config != null) settings = _config.Settings;
 			
-			content += '</div>';
+			var content = '';
+				content += '<div class="bar-container" style="margin:0px;">';
+				content += '	<div class="bar-progress"></div>';
+				content += '</div>';
+				
+				if(_FeedSource == "TCP/IP"){
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-server-network" />';	
+					content += '				</div>';
+					content += '				<select class="modeType" onchange="mode_changed(this)">';
+					content += '					<option '+(settings.Mode == 'Client' ? 'selected=""' : '')+'>Client</option>';
+					content += '					<option '+(settings.Mode == 'Server' ? 'selected=""' : '')+'>Server</option>';
+					content += '				</select>';
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-server-network-off" />';	
+					content += '				</div>';
+					content += '				<select class="autoConnectionType">';
+					content += '					<option '+(settings.AutoReconnect != 'Yes' && settings.AutoReconnect != 'No' ? 'selected=""' : '')+'>Auto Reconnect</option>';
+					content += '					<option '+(settings.AutoReconnect == 'Yes' ? 'selected=""' : '')+'>Yes</option>';
+					content += '					<option '+(settings.AutoReconnect == 'No' ? 'selected=""' : '')+'>No</option>';
+					content += '				</select>';
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '	<div class="FlexHidden FlexRow IP '+(settings.Mode == 'Server' ? 'FlexDisplay' : '')+'"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-ip-network-outline" />';	
+					content += '				</div>';	
+					content += '				<input value="'+settings.IP+'" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46" type="text" placeholder="IP"  class="ip-input" style="padding:0px 0px 0px 8px;"/>';	
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-network-outline" />';	
+					content += '				</div>';	
+					content += '				<input value="'+settings.Port+'" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type="text" placeholder="Port"  class="tcp-ip-port-input" style="padding:0px 0px 0px 8px;"/>';	
+					content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+					content += '					<i class="mdi mdi-playlist-check" />';
+					content += '				</div>';
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+				}
+				else if(_FeedSource == "Serial"){								
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-serial-port" />';	
+					content += '				</div>';	
+					content += '				<select class="baudRate">';
+					content += '					<option '+(settings.BaudRate == '' ? 'selected=""' : '')+'>Baud Rate</option>';
+					getBaudRates().forEach(function(baud){
+						content += '				<option '+(settings.BaudRate == baud ? 'selected=""' : '')+' value="'+baud+'">'+baud+'</option>';
+					});
+					content += '				</select>';	
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-serial-port" />';	
+					content += '				</div>';	
+					content += '				<select class="parity">';
+					content += '					<option '+(settings.Parity == '' ? 'selected=""' : '')+'>Parity</option>';
+					getParities().forEach(function(parity){
+						content += '				<option '+(settings.Parity == parity ? 'selected=""' : '')+' value="'+parity+'">'+parity+'</option>';
+					});
+					content += '				</select>';	
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-serial-port" />';	
+					content += '				</div>';	
+					content += '				<select class="stopBits">';
+					content += '					<option '+(settings.StopBits == '' ? 'selected=""' : '')+'>Stop Bits</option>';
+					getStopBits().forEach(function(stopbit){
+						content += '				<option '+(settings.StopBits == stopbit ? 'selected=""' : '')+' value="'+stopbit+'">'+stopbit+'</option>';
+					});
+					content += '				</select>';	
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-serial-port" />';	
+					content += '				</div>';	
+					content += '				<select class="dataBits">';
+					content += '					<option '+(settings.DataBits == '' ? 'selected=""' : '')+'>Data Bits</option>';
+					getDataBits().forEach(function(databit){
+						content += '				<option '+(settings.DataBits == databit ? 'selected=""' : '')+' value="'+databit+'">'+databit+'</option>';
+					});
+					content += '				</select>';	
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-serial-port" />';	
+					content += '				</div>';	
+					content += '				<input value="'+settings.Port+'" type="text" placeholder="Port"  class="serial-port-input" style="padding:0px 0px 0px 8px;"/>';	
+					content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+					content += '					<i class="mdi mdi-playlist-check" />';
+					content += '				</div>';
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+				}
+				else if(_FeedSource == "File"){
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-folder-table" />';	
+					content += '				</div>';	
+					content += '				<select class="useSubDirectories" onchange="sub_directory_changed(this)">';
+					content += '					<option '+(settings.IncludeSubDirectory == "" ? 'selected=""' : '')+'>Use Sub Directories</option>';
+					content += '					<option '+(settings.IncludeSubDirectory == "Yes" ? 'selected=""' : '')+' value="Yes">Yes</option>';
+					content += '					<option '+(settings.IncludeSubDirectory == "No" ? 'selected=""' : '')+' value="No">No</option>';
+					content += '				</select>';	
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '	<div class="FlexHidden FlexRow SubDirectoryFormat"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-folder-table" />';	
+					content += '				</div>';	
+					content += '				<input value="'+settings.SubDirectoryFormat+'" type="text" placeholder="Sub Directory Format"  class="sub-directory-format-input" style="padding:0px 0px 0px 8px;"/>';	
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-file" />';	
+					content += '				</div>';	
+					content += '				<input value="'+settings.FileNameFormat+'" type="text" placeholder="File Name Format"  class="file-name-format-input" style="padding:0px 0px 0px 8px;"/>';	
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-file-settings-outline" />';	
+					content += '				</div>';	
+					content += '				<input value="'+settings.FileExtension+'" type="text" placeholder="File Extension"  class="file-extension-input" style="padding:0px 0px 0px 8px;"/>';	
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-file-delimited-outline" />';	
+					content += '				</div>';	
+					content += '				<input value="'+settings.FileSeparator+'" type="text" placeholder="File Seperator"  class="file-seperator-input" style="padding:0px 0px 0px 8px;"/>';	
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-folder" />';	
+					content += '				</div>';	
+					content += '				<input value="'+settings.BaseDirectory+'" type="text" placeholder="Base Directory"  class="base-directory-input" style="padding:0px 0px 0px 8px;"/>';	
+					content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+					content += '					<i class="mdi mdi-playlist-plus" />';
+					content += '				</div>';
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+				}
+				else if(_FeedSource == "DataSource"){
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-file-link" />';	
+					content += '				</div>';	
+					content += '				<input type="text" value="'+settings.Source+'" placeholder="Data Source"  class="data-source-input" style="padding:0px 0px 0px 8px;"/>';	
+					content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+					content += '					<i class="mdi mdi-playlist-check" />';
+					content += '				</div>';
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+				}
+				
+				content += '</div>';
 
 
-		var ana_dlg = ShowDialog('<i class="mdi mdi-file-tree"></i>', _Equipment_Name+" Settings - "+_FeedSource, content,{
-			onCloseDialog : function() {
-				ana_dlg = null;
-				return false; 
-			}
-		},"320px");
-		
-		create_custom_dropdowns();
-		
-		if(_FeedSource == "TCP/IP"){			
-			focusEvents($(ana_dlg.el).find(".ip-input"),
-				function(){
-					$(this).parent().removeClass("is-invalid");
-					$(this).parent().attr("tooltip","");
-				},
-				function(){
-					var val = $(this).val();
-					if(val.trim().length > 0){
-						if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/im.test(val.trim())){
-							$(this).parent().removeClass("is-invalid");
-						}
-						else {
-							$(this).parent().addClass("is-invalid");
-							$(this).parent().attr("tooltip","Invalid IP address");
+			var ana_dlg = ShowDialog('<i class="mdi mdi-file-tree"></i>', _Equipment_Name+" Settings - "+_FeedSource, content,{
+				onCloseDialog : function() {
+					ana_dlg = null;
+					return false; 
+				}
+			},"320px");
+			
+			$(ana_dlg.el).find(".enter-value").unbind( "click" );
+			$(ana_dlg.el).find(".enter-value").click(function() {				
+				var config_file = System.IO.Path.Combine("web","blis","configurations","analysers.json");
+				if(System.IO.File.Exists(config_file)){
+					var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+					
+					for(var x=0; x<configs.length; x++){
+						var config = configs[x];
+						if( config.Name.trim().toLowerCase() == _Equipment_Name.toString().trim().toLowerCase() && 
+							config.FeedSource.trim().toLowerCase() == _FeedSource.toString().trim().toLowerCase()){
+							
+							if(_FeedSource == "TCP/IP"){
+								var _modeType = $(ana_dlg.el).find(".select-dropdown.modeType").find(".current").text();
+								var _autoConnectionType = $(ana_dlg.el).find(".select-dropdown.autoConnectionType").find(".current").text();
+								var _ip = $(ana_dlg.el).find(".ip-input").val().trim();
+								var _port = $(ana_dlg.el).find(".tcp-ip-port-input").val().trim();
+								
+								if(_port.toString().trim().length > 0){
+									if(_modeType == "Server"){
+										if(_ip.toString().trim().length > 0){
+											config.Settings = {
+												"IP": _ip,
+												"Port": _port,
+												"AutoReconnect": _autoConnectionType,
+												"Mode": _modeType
+											};
+											
+											System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+											
+											ana_dlg.toggle();
+											ana_dlg = null;	
+										}
+									}
+									else if(_modeType == "Client"){
+										config.Settings = {
+											"IP": "",
+											"Port": _port,
+											"AutoReconnect": _autoConnectionType,
+											"Mode": _modeType
+										};
+										
+										System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+										
+										ana_dlg.toggle();
+										ana_dlg = null;	
+									}
+								}
+								
+							}
+							else if(_FeedSource == "Serial"){
+								var _baudRate = $(ana_dlg.el).find(".select-dropdown.baudRate").find(".current").text();
+								var _parity = $(ana_dlg.el).find(".select-dropdown.parity").find(".current").text();
+								var _stopBits = $(ana_dlg.el).find(".select-dropdown.stopBits").find(".current").text();
+								var _dataBits = $(ana_dlg.el).find(".select-dropdown.dataBits").find(".current").text();
+								var _port = $(ana_dlg.el).find(".serial-port-input").val().trim();
+								
+								if(_port.toString().trim().length > 0 &&
+								   _baudRate == "Baud Rate" && 
+								   _parity == "Parity" && 
+								   _stopBits == "Stop Bits" && 
+								   _dataBits == "Data Bits"){
+								   
+									config.Settings = {
+										"BaudRate": _baudRate,
+										"Parity": _parity,
+										"StopBits": _stopBits,
+										"DataBits": _dataBits,
+										"Port": _port.toString()
+									};
+									
+									System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+									
+									ana_dlg.toggle();
+									ana_dlg = null;	
+								}								
+							}
+							else if(_FeedSource == "File"){
+								var _useSubDirectories = $(ana_dlg.el).find(".select-dropdown.useSubDirectories").find(".current").text();
+								var _subDirectoryFormat = $(ana_dlg.el).find(".sub-directory-format-input").val().trim();
+								var _fileNameFormat = $(ana_dlg.el).find(".file-name-format-input").val().trim();								
+								var _fileExtension = $(ana_dlg.el).find(".file-extension-input").val().trim();
+								var _fileSeperator = $(ana_dlg.el).find(".file-seperator-input").val().trim();
+								var _baseDirectory = $(ana_dlg.el).find(".base-directory-input").val().trim();
+								
+								if(_baseDirectory.toString().trim().length > 0){
+									config.Settings = {
+										"BaseDirectory": _baseDirectory,
+										"IncludeSubDirectory": _useSubDirectories,
+										"SubDirectoryFormat": _subDirectoryFormat,
+										"FileNameFormat": _fileNameFormat,
+										"FileExtension": _fileExtension,
+										"FileSeparator": _fileSeperator
+									};
+									
+									System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+									
+									ana_dlg.toggle();
+									ana_dlg = null;	
+								}
+							}
+							else if(_FeedSource == "DataSource"){
+								var _data_source = $(ana_dlg.el).find(".data-source-input").val().trim();
+								
+								if(_data_source.toString().trim().length > 0){
+									config.Settings = {
+										"Source": _data_source
+									};
+									
+									System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+									
+									ana_dlg.toggle();
+									ana_dlg = null;		
+								}
+							}
+
+							break;
 						}
 					}
-					else $(this).parent().removeClass("is-invalid");
-				}
-			);
+				}						
+			});
 			
-			focusEvents($(ana_dlg.el).find(".tcp_ip_port-input"),
-				function(){
-					$(this).parent().removeClass("is-invalid");
-					$(this).parent().attr("tooltip","");
-				},
-				function(){
-					var val = $(this).val();
-					if(val.trim().length > 0){
-						if (/^()([1-9]|[1-5]?[0-9]{2,4}|6[1-4][0-9]{3}|65[1-4][0-9]{2}|655[1-2][0-9]|6553[1-5])$/gm.test(val.trim())){
-							$(this).parent().removeClass("is-invalid");
+			create_custom_dropdowns();
+			
+			if(_FeedSource == "TCP/IP"){			
+				focusEvents($(ana_dlg.el).find(".ip-input"),
+					function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					},
+					function(){
+						var val = $(this).val();
+						if(val.trim().length > 0){
+							if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/im.test(val.trim())){
+								$(this).parent().removeClass("is-invalid");
+							}
+							else {
+								$(this).parent().addClass("is-invalid");
+								$(this).parent().attr("tooltip","Invalid IP address");
+							}
 						}
-						else {
-							$(this).parent().addClass("is-invalid");
-							$(this).parent().attr("tooltip","Valid port range is 0 to 65535");
-						}
+						else $(this).parent().removeClass("is-invalid");
 					}
-					else $(this).parent().removeClass("is-invalid");
+				);
+				
+				focusEvents($(ana_dlg.el).find(".tcp-ip-port-input"),
+					function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					},
+					function(){
+						var val = $(this).val();
+						if(val.trim().length > 0){
+							if (/^()([1-9]|[1-5]?[0-9]{2,4}|6[1-4][0-9]{3}|65[1-4][0-9]{2}|655[1-2][0-9]|6553[1-5])$/gm.test(val.trim())){
+								$(this).parent().removeClass("is-invalid");
+							}
+							else {
+								$(this).parent().addClass("is-invalid");
+								$(this).parent().attr("tooltip","Valid port range is 0 to 65535");
+							}
+						}
+						else $(this).parent().removeClass("is-invalid");
+					}
+				);
+			}
+			else if(_FeedSource == "Serial"){	
+				var _baudRate = $(ana_dlg.el).find(".select-dropdown.baudRate").find(".list");
+				if(_baudRate != undefined && _baudRate != null){
+					_baudRate.addClass("scroll scroll2");
+					_baudRate.css({"overflow-y": "auto", "max-height": "200px"});
 				}
-			);
-		}
-		else if(_FeedSource == "Serial"){	
-			var _baudRate = $(ana_dlg.el).find(".select-dropdown.baudRate").find(".list");
-			if(_baudRate != undefined && _baudRate != null){
-				_baudRate.addClass("scroll scroll2");
-				_baudRate.css({"overflow-y": "auto", "max-height": "200px"});
-			}
-			
-			var _parity = $(ana_dlg.el).find(".select-dropdown.parity").find(".list");
-			if(_parity != undefined && _parity != null){
-				_parity.addClass("scroll scroll2");
-				_parity.css({"overflow-y": "auto", "max-height": "200px"});
-			}
-			
-			var _stopBits = $(ana_dlg.el).find(".select-dropdown.stopBits").find(".list");
-			if(_stopBits != undefined && _stopBits != null){
-				_stopBits.addClass("scroll scroll2");
-				_stopBits.css({"overflow-y": "auto", "max-height": "200px"});
+				
+				var _parity = $(ana_dlg.el).find(".select-dropdown.parity").find(".list");
+				if(_parity != undefined && _parity != null){
+					_parity.addClass("scroll scroll2");
+					_parity.css({"overflow-y": "auto", "max-height": "200px"});
+				}
+				
+				var _stopBits = $(ana_dlg.el).find(".select-dropdown.stopBits").find(".list");
+				if(_stopBits != undefined && _stopBits != null){
+					_stopBits.addClass("scroll scroll2");
+					_stopBits.css({"overflow-y": "auto", "max-height": "200px"});
+				}
 			}
 		}
-		
 	}
 	
 	function edit_analyser(item){
@@ -500,15 +648,7 @@
 								var old_id = _Equipment_Name.toString().trim()[0].toUpperCase();
 								if(old_id >= 0 && old_id <= 9)old_id = "0_9";
 								
-								var hasItems = false;
-								for(var x=0; x<configs.length; x++){
-									var config = configs[x];
-									var _id = config.Name[0].toUpperCase();
-									if(old_id == _id){
-										hasItems = true;
-										break;
-									}
-								}
+								
 								
 								for(var x=0; x<configs.length; x++){
 									var config = configs[x];
@@ -526,6 +666,16 @@
 										config.FeedSource=_feedSource;
 
 										System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+										
+										var hasItems = false;
+										for(var x=0; x<configs.length; x++){
+											var config = configs[x];
+											var _id = config.Name[0].toUpperCase();
+											if(old_id == _id){
+												hasItems = true;
+												break;
+											}
+										}
 										
 										if(!hasItems)$('#Page_'+old_id).addClass('Disabled');
 										
@@ -887,6 +1037,40 @@
 						
 						if(!exists){
 							_name = _name.charAt(0).toUpperCase() + _name.slice(1);
+							
+							var settings = {};
+							if(_feedSource == "TCP/IP"){
+								settings = {
+									"IP": "",
+									"Port": "",
+									"AutoReconnect": "",
+									"Mode": ""
+								};								
+							}
+							else if(_feedSource == "Serial"){
+								settings = {
+									"BaudRate": "",
+									"Parity": "",
+									"StopBits": "",
+									"DataBits": "",
+									"Port": ""
+								};
+							}
+							else if(_feedSource == "File"){
+								settings = {
+									"BaseDirectory": "",
+									"IncludeSubDirectory": "",
+									"SubDirectoryFormat": "",
+									"FileNameFormat": "",
+									"FileExtension": "",
+									"FileSeparator": ""
+								};
+							}
+							else if(_feedSource == "DataSource"){
+								settings = {
+									"Source": ""
+								};
+							}
 						
 							configs.push({
 								"Name": _name,
@@ -895,7 +1079,7 @@
 								"LabSection": _labSection,
 								"CommunicationType": _communicationType,
 								"FeedSource": _feedSource,
-								"Settings": {}
+								"Settings": settings
 							});
 							
 							System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
