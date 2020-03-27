@@ -1,56 +1,60 @@
-[
-{
-	"Name": "1",
-	"Version": "1.0.0.0",
-	"ConfigFile": "1.json",
-	"LabSection": "Chemistry",
-	"CommunicationType": "Bi-directional",
-	"FeedSource": "TCP IP",
-	"Settings": {
-		"IP": "127.0.0.1",
-		"Port": "1234",
-		"AutoConnect": "true"
-	}
-},
-{
-	"Name": "2",
-	"Version": "1.0.0.0",
-	"ConfigFile": "2.json",
-	"LabSection": "Heamatology",
-	"CommunicationType": "Bi-directional",
-	"FeedSource": "Serial",
-	"Settings": {
-		"BaudRate": "9600",
-		"Parity": "Even",
-		"StopBits": "1",
-		"DataBits": "7"
-	}
-},
-{
-	"Name": "3",
-	"Version": "1.0.0.0",
-	"ConfigFile": "3.json",
-	"LabSection": "Serology",
-	"CommunicationType": "Uni-directional",
-	"FeedSource": "File",
-	"Settings": {
-		"BaseDirectory": "Fascs",
-		"IncludeSubDirectory": "true",
-		"SubDirectoryFormat": "",
-		"FileNameFormat": "facs(*.)Data",
-		"FileExtension": "fac",
-		"FileSeparator": ","
-	}
-},
-{
-	"Name": "4",
-	"Version": "1.0.0.0",
-	"ConfigFile": "4.json",
-	"LabSection": "Pathology",
-	"CommunicationType": "Bi-directional",
-	"FeedSource": "DataSource",
-	"Settings": {
-		"Source": "SERVER=127.0.0.1;UID=root;PASSWORD=admin123$"
-	}
-}
+[{
+        "Name": "Aka",
+        "Version": "1.0.0.0",
+        "ConfigFile": "1.json",
+        "LabSection": "Chemistry",
+        "CommunicationType": "Bi-directional",
+        "FeedSource": "TCP/IP",
+        "Settings": {
+            "IP": "127.0.0.1",
+            "Port": "1234",
+            "AutoReconnect": "true"
+        }
+    }, {
+        "Name": "Babu",
+        "Version": "1.0.0.0",
+        "ConfigFile": "2.json",
+        "LabSection": "Hematology",
+        "CommunicationType": "Bi-directional",
+        "FeedSource": "Serial",
+        "Settings": {
+            "BaudRate": "9600",
+            "Parity": "Even",
+            "StopBits": "1",
+            "DataBits": "7"
+        }
+    }, {
+        "Name": "Dada",
+        "Version": "1.0.0.0",
+        "ConfigFile": "3.json",
+        "LabSection": "Serology",
+        "CommunicationType": "Uni-directional",
+        "FeedSource": "File",
+        "Settings": {
+            "BaseDirectory": "Fascs",
+            "IncludeSubDirectory": "true",
+            "SubDirectoryFormat": "",
+            "FileNameFormat": "facs(*.)Data",
+            "FileExtension": "fac",
+            "FileSeparator": ","
+        }
+    }, {
+        "Name": "Jack",
+        "Version": "1.0.0.0",
+        "ConfigFile": "4.json",
+        "LabSection": "Parasitology",
+        "CommunicationType": "Bi-directional",
+        "FeedSource": "DataSource",
+        "Settings": {
+            "Source": "SERVER=127.0.0.1;UID=root;PASSWORD=admin123$"
+        }
+    }, {
+        "Name": "Cc",
+        "Version": "1",
+        "ConfigFile": "cc.json",
+        "LabSection": "HIV",
+        "CommunicationType": "Bi-directional",
+        "FeedSource": "DataSource",
+        "Settings": {}
+    }
 ]

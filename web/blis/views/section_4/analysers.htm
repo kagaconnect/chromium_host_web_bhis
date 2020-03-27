@@ -49,12 +49,12 @@
 		loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
 	});
 	
-	function populateData(id, options){
+	function populateData(configs, id, options){
 		$(".AnalysersList").html('');
 		
-		var config_file = System.IO.Path.Combine("web","blis","configurations","analysers.json");
-		if(System.IO.File.Exists(config_file)){
-			var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+		//var config_file = System.IO.Path.Combine("web","blis","configurations","analysers.json");
+		//if(System.IO.File.Exists(config_file)){
+		//	var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
 			
 			var _analysers = configs.filter(function(analyser){
 				var _id = analyser.Name[0];
@@ -104,7 +104,7 @@
 				var Equipment_Name  = analyser.Name;
 				var Config_File  = analyser.ConfigFile;
 				
-				var analyzer = '<div data-feed="'+Feed_Source+'" class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden CheckBoxBold" style="width:100%; min-width:100%; min-height: 32px; max-height: 32px;" >'; 
+				var analyzer = '<div data-name="'+Equipment_Name+'" data-feed="'+Feed_Source+'" class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden CheckBoxBold" style="width:100%; min-width:100%; min-height: 32px; max-height: 32px;" >'; 
 					analyzer += '	<div tooltip="'+Config_File+'" flow="right" class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; height:100%; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi '+operating+'"></i></span></div>';
 					analyzer += '	<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; height:100%; padding:8px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:11px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+Version+'</span></div>';
 					analyzer += '	<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+Lab_Section+'</span></div>';
@@ -118,37 +118,476 @@
 					
 				$(".AnalysersList").append(analyzer);
 			}
-		}		
+		//}		
+	}
+	
+	function mode_changed(item){
+		if(item.value == "Client"){
+			$(item).parents(".dialog__body").find(".IP").removeClass("FlexDisplay");
+		}
+		else if(item.value == "Server"){
+			$(item).parents(".dialog__body").find(".IP").addClass("FlexDisplay");
+		}
+		
+		$(item).parents(".dialog__body").find(".IP .ip-input").val("");
+	}
+	
+	function sub_directory_changed(item){
+		if(item.value == "No"){
+			$(item).parents(".dialog__body").find(".SubDirectoryFormat").removeClass("FlexDisplay");
+		}
+		else if(item.value == "Yes"){
+			$(item).parents(".dialog__body").find(".SubDirectoryFormat").addClass("FlexDisplay");
+		}
+		
+		$(item).parents(".dialog__body").find(".SubDirectoryFormat .sub-directory-format-input").val("");
 	}
 	
 	function settings_analyser(item){
 		hideNavigationDropMenu();
+		
+		var _FeedSource = $(item).parent().data("feed");
+		if(_FeedSource != "TCP/IP" && _FeedSource != "Serial" &&
+		   _FeedSource != "File" && _FeedSource != "DataSource") return;
+		   
+		var _Equipment_Name = $(item).parent().data("name");
 		
 		var content = '';
 			content += '<div class="bar-container" style="margin:0px;">';
 			content += '	<div class="bar-progress"></div>';
 			content += '</div>';
 			
-			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+			if(_FeedSource == "TCP/IP"){
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-server-network" />';	
+				content += '				</div>';
+				content += '				<select class="modeType" onchange="mode_changed(this)">';
+				content += '					<option selected="">Client</option>';
+				content += '					<option>Server</option>';
+				content += '				</select>';
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-server-network-off" />';	
+				content += '				</div>';
+				content += '				<select class="autoConnectionType">';
+				content += '					<option selected="">Auto Reconnect</option>';
+				content += '					<option>Yes</option>';
+				content += '					<option>No</option>';
+				content += '				</select>';
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexHidden FlexRow IP"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-ip-network-outline" />';	
+				content += '				</div>';	
+				content += '				<input onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46" type="text" placeholder="IP"  class="ip-input" style="padding:0px 0px 0px 8px;"/>';	
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-network-outline" />';	
+				content += '				</div>';	
+				content += '				<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" type="text" placeholder="Port"  class="tcp_ip_port-input" style="padding:0px 0px 0px 8px;"/>';	
+				content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+				content += '					<i class="mdi mdi-playlist-check" />';
+				content += '				</div>';
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+			}
+			else if(_FeedSource == "Serial"){
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-serial-port" />';	
+				content += '				</div>';	
+				content += '				<select class="baudRate">';
+				content += '					<option selected="">Baud Rate</option>';
+				content += '					<option value="110">110</option>';
+				content += '					<option value="300">300</option>';
+				content += '					<option value="600">600</option>';
+				content += '					<option value="1200">1200</option>';
+				content += '					<option value="2400">2400</option>';
+				content += '					<option value="4800">4800</option>';
+				content += '					<option value="9600">9600</option>';
+				content += '					<option value="14400">14400</option>';
+				content += '					<option value="19200">19200</option>';
+				content += '					<option value="38400">38400</option>';
+				content += '					<option value="57600">57600</option>';
+				content += '					<option value="115200">115200</option>';
+				content += '					<option value="128000">128000</option>';
+				content += '					<option value="256000">256000</option>';
+				content += '				</select>';	
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-serial-port" />';	
+				content += '				</div>';	
+				content += '				<select class="parity">';
+				content += '					<option selected="">Parity</option>';
+				content += '					<option value="None">None</option>';
+				content += '					<option value="Odd">Odd</option>';
+				content += '					<option value="Even">Even</option>';
+				content += '					<option value="Mark">Mark</option>';
+				content += '					<option value="Space">Space</option>';
+				content += '				</select>';	
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-serial-port" />';	
+				content += '				</div>';	
+				content += '				<select class="stopBits">';
+				content += '					<option selected="">Stop Bits</option>';
+				content += '					<option value="1">1</option>';
+				content += '					<option value="1.5">1.5</option>';
+				content += '					<option value="2">2</option>';
+				content += '				</select>';	
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-serial-port" />';	
+				content += '				</div>';	
+				content += '				<input type="text" placeholder="Port"  class="serial_port-input" style="padding:0px 0px 0px 8px;"/>';	
+				content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+				content += '					<i class="mdi mdi-playlist-check" />';
+				content += '				</div>';
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+			}
+			else if(_FeedSource == "File"){
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-folder-table" />';	
+				content += '				</div>';	
+				content += '				<select class="useSubDirectories" onchange="sub_directory_changed(this)">';
+				content += '					<option selected="">Use Sub Directories</option>';
+				content += '					<option value="Yes">Yes</option>';
+				content += '					<option value="No">No</option>';
+				content += '				</select>';	
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexHidden FlexRow SubDirectoryFormat"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-folder-table" />';	
+				content += '				</div>';	
+				content += '				<input type="text" placeholder="Sub Directory Format"  class="sub-directory-format-input" style="padding:0px 0px 0px 8px;"/>';	
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-file" />';	
+				content += '				</div>';	
+				content += '				<input type="text" placeholder="File Name Format"  class="file-name-format-input" style="padding:0px 0px 0px 8px;"/>';	
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-file-settings-outline" />';	
+				content += '				</div>';	
+				content += '				<input type="text" placeholder="File Extension"  class="file-extension-input" style="padding:0px 0px 0px 8px;"/>';	
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;  margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-file-delimited-outline" />';	
+				content += '				</div>';	
+				content += '				<input type="text" placeholder="File Seperator"  class="file-seperator-input" style="padding:0px 0px 0px 8px;"/>';	
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-folder" />';	
+				content += '				</div>';	
+				content += '				<input type="text" placeholder="Base Directory"  class="base-directory-input" style="padding:0px 0px 0px 8px;"/>';	
+				content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+				content += '					<i class="mdi mdi-playlist-plus" />';
+				content += '				</div>';
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+			}
+			else if(_FeedSource == "DataSource"){
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-file-link" />';	
+				content += '				</div>';	
+				content += '				<input type="text" placeholder="Data Source"  class="data-source-input" style="padding:0px 0px 0px 8px;"/>';	
+				content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+				content += '					<i class="mdi mdi-playlist-check" />';
+				content += '				</div>';
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+			}
+			
+			content += '</div>';
+
+
+		var ana_dlg = ShowDialog('<i class="mdi mdi-file-tree"></i>', _Equipment_Name+" Settings - "+_FeedSource, content,{
+			onCloseDialog : function() {
+				ana_dlg = null;
+				return false; 
+			}
+		},"320px");
+		
+		create_custom_dropdowns();
+		
+		if(_FeedSource == "TCP/IP"){			
+			focusEvents($(ana_dlg.el).find(".ip-input"),
+				function(){
+					$(this).parent().removeClass("is-invalid");
+					$(this).parent().attr("tooltip","");
+				},
+				function(){
+					var val = $(this).val();
+					if(val.trim().length > 0){
+						if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/im.test(val.trim())){
+							$(this).parent().removeClass("is-invalid");
+						}
+						else {
+							$(this).parent().addClass("is-invalid");
+							$(this).parent().attr("tooltip","Invalid IP address");
+						}
+					}
+					else $(this).parent().removeClass("is-invalid");
+				}
+			);
+			
+			focusEvents($(ana_dlg.el).find(".tcp_ip_port-input"),
+				function(){
+					$(this).parent().removeClass("is-invalid");
+					$(this).parent().attr("tooltip","");
+				},
+				function(){
+					var val = $(this).val();
+					if(val.trim().length > 0){
+						if (/^()([1-9]|[1-5]?[0-9]{2,4}|6[1-4][0-9]{3}|65[1-4][0-9]{2}|655[1-2][0-9]|6553[1-5])$/gm.test(val.trim())){
+							$(this).parent().removeClass("is-invalid");
+						}
+						else {
+							$(this).parent().addClass("is-invalid");
+							$(this).parent().attr("tooltip","Valid port range is 0 to 65535");
+						}
+					}
+					else $(this).parent().removeClass("is-invalid");
+				}
+			);
+		}
+		else if(_FeedSource == "Serial"){	
+			var _baudRate = $(ana_dlg.el).find(".select-dropdown.baudRate").find(".list");
+			if(_baudRate != undefined && _baudRate != null){
+				_baudRate.addClass("scroll scroll2");
+				_baudRate.css({"overflow-y": "auto", "max-height": "200px"});
+			}
+			
+			var _parity = $(ana_dlg.el).find(".select-dropdown.parity").find(".list");
+			if(_parity != undefined && _parity != null){
+				_parity.addClass("scroll scroll2");
+				_parity.css({"overflow-y": "auto", "max-height": "200px"});
+			}
+			
+			var _stopBits = $(ana_dlg.el).find(".select-dropdown.stopBits").find(".list");
+			if(_stopBits != undefined && _stopBits != null){
+				_stopBits.addClass("scroll scroll2");
+				_stopBits.css({"overflow-y": "auto", "max-height": "200px"});
+			}
+		}
+		
+	}
+	
+	function edit_analyser(item){
+		hideNavigationDropMenu();
+		
+		var _FeedSource = $(item).parent().data("feed");
+		if(_FeedSource != "TCP/IP" && _FeedSource != "Serial" &&
+		   _FeedSource != "File" && _FeedSource != "DataSource") return;
+		   
+		var _Equipment_Name = $(item).parent().data("name");
+		
+		var config_file = System.IO.Path.Combine("web","blis","configurations","analysers.json");
+		if(System.IO.File.Exists(config_file)){
+			var configs_1 = JSON.parse(System.IO.File.ReadAllText(config_file));
+			
+			var config = configs_1.filter(function(element){ return element.Name == _Equipment_Name && element.FeedSource == _FeedSource;}).shift();
+			if (config != undefined && config != null){
+				config_file = System.IO.Path.Combine("web","blis","configurations","lab_sections.json");
+				if(System.IO.File.Exists(config_file)){
+					var lab_sections = JSON.parse(System.IO.File.ReadAllText(config_file));
+					
+					var content = equptment_details(config, lab_sections);
+					var ana_dlg = ShowDialog('<i class="mdi mdi-file-tree"></i>', "Add equipment", content,{
+						onCloseDialog : function() {
+							ana_dlg = null;
+							return false; 
+						}
+					},"320px");	
+					
+					create_custom_dropdowns();
+				
+					var _labSections = $(ana_dlg.el).find(".select-dropdown.labSections").find(".list");
+					if(_labSections != undefined && _labSections != null){
+						_labSections.addClass("scroll scroll2");
+						_labSections.css({"overflow-y": "auto", "max-height": "200px"});
+					}
+					
+					$(ana_dlg.el).find(".enter-value").unbind( "click" );
+					$(ana_dlg.el).find(".enter-value").click(function() {
+					
+						var _feedSource = $(ana_dlg.el).find(".select-dropdown.connectionType").find(".current").text();				
+						var _name = $(ana_dlg.el).find(".name-input").val().trim();
+						var _version = $(ana_dlg.el).find(".version-input").val().trim();				
+						var _labSection = $(ana_dlg.el).find(".select-dropdown.labSections").find(".current").text();
+						var _communicationType = $(ana_dlg.el).find(".select-dropdown.CommunicationType").find(".current").text();				
+						var _config_file = $(ana_dlg.el).find(".config-file-input").val().trim();
+												
+						if(_feedSource != "Connection Type" && _name.length > 0 && _version.length && _labSection != "Lab Section" &&
+						   _communicationType != "Communication Type" && _config_file.length > 0){
+						   
+							config_file = System.IO.Path.Combine("web","blis","configurations","analysers.json");
+							if(System.IO.File.Exists(config_file)){
+								var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+								
+								var id = _name[0].toUpperCase();
+								if(id >= 0 && id <= 9)id = "0_9";
+								
+								var old_id = _Equipment_Name.toString().trim()[0].toUpperCase();
+								if(old_id >= 0 && old_id <= 9)old_id = "0_9";
+								
+								var hasItems = false;
+								for(var x=0; x<configs.length; x++){
+									var config = configs[x];
+									var _id = config.Name[0].toUpperCase();
+									if(old_id == _id){
+										hasItems = true;
+										break;
+									}
+								}
+								
+								for(var x=0; x<configs.length; x++){
+									var config = configs[x];
+									
+									if(_Equipment_Name.toString().trim().toLowerCase() == config.Name.trim().toLowerCase() &&
+									    _FeedSource.toString().trim().toLowerCase() == config.FeedSource.trim().toLowerCase()){
+										
+										_name = _name.charAt(0).toUpperCase() + _name.slice(1);
+								
+										config.Name=_name;
+										config.Version=_version;
+										config.ConfigFile=_config_file;
+										config.LabSection=_labSection;
+										config.CommunicationType=_communicationType;
+										config.FeedSource=_feedSource;
+
+										System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+										
+										if(!hasItems)$('#Page_'+old_id).addClass('Disabled');
+										
+										$('#Page_'+id).removeClass('Disabled');	
+										$("#pagingBox").find('.Pager').each(function(){
+											$(this).removeClass('Selected');
+										});			
+										$('#Page_'+id).addClass('Selected');
+										
+										$('#Page_'+id).off("click");
+										$('#Page_'+id).click(function(){
+											if(!$(this).hasClass('Disabled')){
+												$("#pagingBox").find('.Pager').each(function(){
+													$(this).removeClass('Selected');
+												});
+												$(this).addClass('Selected');
+												
+												var _id = $(this).attr('id').replace('Page_','');	
+												populateData(configs, _id);
+											}
+										});
+										
+										populateData(configs, id);
+															
+										ana_dlg.toggle();
+										ana_dlg = null;	
+										
+										break;
+									}
+								}
+							}
+						}
+					});
+				}
+			}
+		}
+	}
+	
+	function delete_analyser(item){
+		hideNavigationDropMenu();
+		
+		var _FeedSource = $(item).parent().data("feed");
+		if(_FeedSource != "TCP/IP" && _FeedSource != "Serial" &&
+		   _FeedSource != "File" && _FeedSource != "DataSource") return;
+		   
+		var _Equipment_Name = $(item).parent().data("name");
+				
+		var content = '';
+			content += '<div class="bar-container" style="margin:0px;">';
+			content += '	<div class="bar-progress"></div>';
+			content += '</div>'; 
+			
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:48px; margin-bottom:8px; padding:2px 8px;">';						
 			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-			content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-			content += '				<div class="icon" style="padding-top:0px;">';	
-			content += '					<i class="mdi mdi-cellphone-link" />';	
-			content += '				</div>';	
-			content += '				<input type="text" placeholder="Name"  class="name-input" style="padding:0px 0px 0px 8px;"/>';	
-			content += '			</div>';
+			content += '			<h4 class="feature-title mt-0" style="margin:auto auto; font-size: 12px; font-weight:normal;">Are you sure you want to delete equipment "'+_Equipment_Name+'" of type "'+_FeedSource+'"</h4>';
 			content += '		</div>';
-			content += '	</div>';			
-			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+			content += '	</div>';
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:56px; margin-bottom:8px; padding:2px 8px;">';						
 			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-			content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-			content += '				<div class="icon" style="padding-top:0px;">';	
-			content += '					<i class="mdi mdi-file-link" />';	
-			content += '				</div>';	
-			content += '				<input type="text" placeholder="Configuration File"  class="config-file-input" style="padding:0px 0px 0px 8px;"/>';	
-			content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
-			content += '					<i class="mdi mdi-playlist-plus" />';
-			content += '				</div>';
+			content += '			<div class="FlexDisplay" style="margin:auto auto;">';
+			content += '				<div class="yesButton button button-primary" style="margin:0px 4px 0px 0px;">Yes</div>';
+			content += '				<div class="noButton button button-primary" style="margin:0px 0px 0px 4px;">No</div>';
 			content += '			</div>';
 			content += '		</div>';
 			content += '	</div>';
@@ -157,28 +596,79 @@
 			content += '</div>';
 
 
-		var ana_dlg = ShowDialog('<i class="mdi mdi-file-tree"></i>', "Equipment settings", content,{
+		var ana_dlg = ShowDialog('<i class="mdi mdi-flask-minus-outline"></i>', "Delete equipment", content,{
 			onCloseDialog : function() {
 				ana_dlg = null;
 				return false; 
 			}
-		},"320px");
-	}
-	
-	function edit_analyser(item){
-	
-	}
-	
-	function delete_analyser(item){
-	
-	}
-	
-	function lab_section_selected(item){
-	
-	}
-	
-	function communication_type_selected(item){
-	
+		},"400px");	
+		
+		$(ana_dlg.el).find(".yesButton").unbind( "click" );
+		$(ana_dlg.el).find(".yesButton").click(function() {	
+		
+			var config_file = System.IO.Path.Combine("web","blis","configurations","analysers.json");
+			if(System.IO.File.Exists(config_file)){
+				var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+				
+				for(var x=0; x<configs.length; x++){
+					var config = configs[x];
+					if( config.Name.trim().toLowerCase() == _Equipment_Name.toString().trim().toLowerCase() && config.FeedSource.trim().toLowerCase() == _FeedSource.toString().trim().toLowerCase()){
+						configs.splice(x, 1);
+						
+						System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+						
+						var id = config.Name[0].toUpperCase();
+						if(id >= 0 && id <= 9)id = "0_9";
+						
+						var hasItems = false;
+						for(var x=0; x<configs.length; x++){
+							var config = configs[x];
+							var _id = config.Name[0].toUpperCase();
+							if(id == _id){
+								hasItems = true;
+								break;
+							}
+						}
+						
+						if(hasItems){
+							populateData(configs, id);
+						}
+						else{
+							$('#Page_'+id).addClass('Disabled');
+							$("#pagingBox").find('.Pager').each(function(){
+								$(this).removeClass('Selected');
+							});
+							
+							var _id = "0_9";
+							var foundOne = false;
+							$("#pagingBox").find('.Pager').each(function(){
+								if(!$(this).hasClass('Disabled')){
+									if(!foundOne){
+										foundOne = true;
+										_id = $(this).attr('id').replace('Page_','');
+									}
+								}
+							});	
+							
+							$('#Page_'+_id).addClass('Selected');
+							populateData(configs, _id);
+						}
+						
+						ana_dlg.toggle();
+						ana_dlg = null;						
+						
+						break;
+						
+					}
+				}
+			}		
+		});
+		
+		$(ana_dlg.el).find(".noButton").unbind( "click" );
+		$(ana_dlg.el).find(".noButton").click(function() {
+			ana_dlg.toggle();
+			ana_dlg = null;		
+		});
 	}
 	
 	function hideNavigationDropMenu(){
@@ -235,22 +725,20 @@
 						$(this).addClass('Selected');
 						
 						var _id = $(this).attr('id').replace('Page_','');	
-						populateData(_id);
+						populateData(configs, _id);
 					}
 				});
 				
 				if(x==0){
 					$('#Page_'+id).addClass('Selected');
-					populateData(id);
+					populateData(configs, id);
 				}
 			}
 		}	
 	}
 	
-	$(".add-equipment").unbind( "click" );
-	$(".add-equipment").click(function(){	
-		hideNavigationDropMenu();
-		
+	function equptment_details(item, sections){
+						
 		var content = '';
 			content += '<div class="bar-container" style="margin:0px;">';
 			content += '	<div class="bar-progress"></div>';
@@ -263,11 +751,11 @@
 			content += '					<i class="mdi mdi-monitor-cellphone-star" />';	
 			content += '				</div>';
 			content += '				<select class="connectionType">';
-			content += '					<option selected="">Connection Type</option>';
-			content += '					<option>TCP/IP</option>';
-			content += '					<option>Serial</option>';
-			content += '					<option>File</option>';
-			content += '					<option>Data Source</option>';
+			content += '					<option '+(item.FeedSource == "" ? 'selected=""' : '')+'>Connection Type</option>';
+			content += '					<option '+(item.FeedSource == "TCP/IP" ? 'selected=""' : '')+'>TCP/IP</option>';
+			content += '					<option '+(item.FeedSource == "Serial" ? 'selected=""' : '')+'>Serial</option>';
+			content += '					<option '+(item.FeedSource == "File" ? 'selected=""' : '')+'>File</option>';
+			content += '					<option '+(item.FeedSource == "DataSource" ? 'selected=""' : '')+'>DataSource</option>';
 			content += '				</select>';
 			content += '			</div>';
 			content += '		</div>';
@@ -278,7 +766,7 @@
 			content += '				<div class="icon" style="padding-top:0px;">';	
 			content += '					<i class="mdi mdi-cellphone-link" />';	
 			content += '				</div>';	
-			content += '				<input type="text" placeholder="Name"  class="name-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '				<input type="text" placeholder="Name" value="'+item.Name+'" class="name-input" style="padding:0px 0px 0px 8px;"/>';	
 			content += '			</div>';
 			content += '		</div>';
 			content += '	</div>';
@@ -288,7 +776,7 @@
 			content += '				<div class="icon" style="padding-top:0px;">';	
 			content += '					<i class="mdi mdi-cellphone-link" />';	
 			content += '				</div>';	
-			content += '				<input type="text" placeholder="Version"  class="version-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '				<input type="text" placeholder="Version" value="'+item.Version+'"  class="version-input" style="padding:0px 0px 0px 8px;"/>';	
 			content += '			</div>';
 			content += '		</div>';
 			content += '	</div>';
@@ -298,8 +786,12 @@
 			content += '				<div class="icon" style="padding-top:0px;">';	
 			content += '					<i class="mdi mdi-flask-outline" />';	
 			content += '				</div>';
-			content += '				<select class="labSections" onchange="lab_section_selected(this)">';
-			content += '					<option selected="">Lab Section</option>';
+			content += '				<select class="labSections">';
+			content += '					<option '+(item.LabSection == "" ? 'selected=""' : '')+'>Lab Section</option>';
+			for(var x=0; x<sections.length; x++){
+				var section = sections[x];
+				content += '				<option '+(item.LabSection == section ? 'selected=""' : '')+'>'+section+'</option>';
+			}
 			content += '				</select>';			
 			content += '			</div>';
 			content += '		</div>';
@@ -310,10 +802,10 @@
 			content += '				<div class="icon" style="padding-top:0px;">';	
 			content += '					<i class="mdi mdi-arrow-decision" />';	
 			content += '				</div>';
-			content += '				<select class="CommunicationType" onchange="communication_type_selected(this)">';
-			content += '					<option selected="">Communication Type</option>';
-			content += '					<option>Bi-directional</option>';
-			content += '					<option>Uni-directional</option>';
+			content += '				<select class="CommunicationType">';
+			content += '					<option '+(item.CommunicationType == "" ? 'selected=""' : '')+'>Communication Type</option>';
+			content += '					<option '+(item.CommunicationType == "Bi-directional" ? 'selected=""' : '')+'>Bi-directional</option>';
+			content += '					<option '+(item.CommunicationType == "Uni-directional" ? 'selected=""' : '')+'>Uni-directional</option>';
 			content += '				</select>';
 			content += '			</div>';
 			content += '		</div>';
@@ -324,9 +816,9 @@
 			content += '				<div class="icon" style="padding-top:0px;">';	
 			content += '					<i class="mdi mdi-file-link" />';	
 			content += '				</div>';	
-			content += '				<input type="text" placeholder="Configuration File"  class="config-file-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '				<input type="text" placeholder="Configuration File" value="'+item.ConfigFile+'"  class="config-file-input" style="padding:0px 0px 0px 8px;"/>';	
 			content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
-			content += '					<i class="mdi mdi-playlist-plus" />';
+			content += '					<i class="mdi mdi-playlist-check" />';
 			content += '				</div>';
 			content += '			</div>';
 			content += '		</div>';
@@ -334,90 +826,126 @@
 			
 			
 			content += '</div>';
-
-
-		var ana_dlg = ShowDialog('<i class="mdi mdi-file-tree"></i>', "Add equipment", content,{
-			onCloseDialog : function() {
-				ana_dlg = null;
-				return false; 
-			}
-		},"320px");	
-		
-		$(ana_dlg.el).find(".enter-value").unbind( "click" );
-		$(ana_dlg.el).find(".enter-value").click(function() {
-			/*var _name = $(ana_dlg.el).find(".name-input").val().trim();
-			var _description = $(ana_dlg.el).find(".description-input").val().trim();
-			if(_name.length > 0){
 			
-				var config_file = System.IO.Path.Combine("web","blis","configurations","specimen_types.json");
-				if(System.IO.File.Exists(config_file)){
-					var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
-			
-					var id = _name[0].toUpperCase();
-					if(id >= 0 && id <= 9)id = "0_9";
-					
-					var exists = false;
-					for(var x=0; x<configs.length; x++){
-						var config = configs[x];
-						if(_name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
-							exists = true;
-							break;
-						}
-					}
-					
-					if(!exists && _name.length > 1){
-						_name = _name.charAt(0).toUpperCase() + _name.slice(1);
-						
-						if(_description.length > 1){
-							_description = _description.charAt(0).toUpperCase() + _description.slice(1);
-						}
-						else if(_description.length == 1){
-							_description = _description.charAt(0).toUpperCase();
-						}
-						
-						configs.push({
-							"Name":_name,
-							"Description":_description,
-							"CompatibleTests":[]
-						});
-						
-						System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
-						
-						$('#Page_'+id).removeClass('Disabled');	
-						$("#pagingBox").find('.Pager').each(function(){
-							$(this).removeClass('Selected');
-						});			
-						$('#Page_'+id).addClass('Selected');
-						
-						populateData(configs, id);
-						
-						ana_dlg.toggle();
-						ana_dlg = null;
-						
-					}
-					else{ //baby aspirate
-						var item = $(ana_dlg.el).find(".name-input");
-						if(item != undefined && item != null){
-							item.parent().addClass("is-invalid");
-							item.parent().attr("tooltip","Specimen type already exists");
-							item.focus(function(){
-								$(this).parent().removeClass("is-invalid");
-								$(this).parent().attr("tooltip","");
-							});
-						}
-					}
-					
-					
-				}
-			}*/
-		});
-		
-		create_custom_dropdowns();
+			return content;
+	}
 	
-		var _labSections = $(dlg.el).find(".select-dropdown.labSections").find(".list");
-		if(_labSections != undefined && _labSections != null){
-			_labSections.addClass("scroll scroll2");
-			_labSections.css({"overflow-y": "auto", "max-height": "200px"});
+	$(".add-equipment").unbind( "click" );
+	$(".add-equipment").click(function(){	
+		hideNavigationDropMenu();
+		
+		var config_file = System.IO.Path.Combine("web","blis","configurations","lab_sections.json");
+		if(System.IO.File.Exists(config_file)){
+			var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+			
+			var content = equptment_details({
+				"Name": "",
+				"Version": "",
+				"ConfigFile": "",
+				"LabSection": "",
+				"CommunicationType": "",
+				"FeedSource": ""
+			}, configs);
+
+
+			var ana_dlg = ShowDialog('<i class="mdi mdi-file-tree"></i>', "Add equipment", content,{
+				onCloseDialog : function() {
+					ana_dlg = null;
+					return false; 
+				}
+			},"320px");	
+			
+			$(ana_dlg.el).find(".enter-value").unbind( "click" );
+			$(ana_dlg.el).find(".enter-value").click(function() {
+			
+				var _feedSource = $(ana_dlg.el).find(".select-dropdown.connectionType").find(".current").text();				
+				var _name = $(ana_dlg.el).find(".name-input").val().trim();
+				var _version = $(ana_dlg.el).find(".version-input").val().trim();				
+				var _labSection = $(ana_dlg.el).find(".select-dropdown.labSections").find(".current").text();
+				var _communicationType = $(ana_dlg.el).find(".select-dropdown.CommunicationType").find(".current").text();				
+				var _config_file = $(ana_dlg.el).find(".config-file-input").val().trim();
+				
+				if(_feedSource != "Connection Type" && _name.length > 0 && _version.length && _labSection != "Lab Section" &&
+				   _communicationType != "Communication Type" && _config_file.length > 0){
+				   
+					var config_file = System.IO.Path.Combine("web","blis","configurations","analysers.json");
+					if(System.IO.File.Exists(config_file)){
+						var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+						
+						var id = _name[0].toUpperCase();
+						if(id >= 0 && id <= 9)id = "0_9";
+						
+						var exists = false;
+						for(var x=0; x<configs.length; x++){
+							var config = configs[x];
+							if(_name.trim().toLowerCase() == config.Name.trim().toLowerCase() &&
+							   _feedSource.trim().toLowerCase() == config.FeedSource.trim().toLowerCase()){
+								exists = true;
+								break;
+							}
+						}
+						
+						if(!exists){
+							_name = _name.charAt(0).toUpperCase() + _name.slice(1);
+						
+							configs.push({
+								"Name": _name,
+								"Version": _version,
+								"ConfigFile": _config_file,
+								"LabSection": _labSection,
+								"CommunicationType": _communicationType,
+								"FeedSource": _feedSource,
+								"Settings": {}
+							});
+							
+							System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+							
+							$('#Page_'+id).removeClass('Disabled');	
+							$("#pagingBox").find('.Pager').each(function(){
+								$(this).removeClass('Selected');
+							});			
+							$('#Page_'+id).addClass('Selected');
+							
+							$('#Page_'+id).off("click");
+							$('#Page_'+id).click(function(){
+								if(!$(this).hasClass('Disabled')){
+									$("#pagingBox").find('.Pager').each(function(){
+										$(this).removeClass('Selected');
+									});
+									$(this).addClass('Selected');
+									
+									var _id = $(this).attr('id').replace('Page_','');	
+									populateData(configs, _id);
+								}
+							});
+							
+							populateData(configs, id);
+							
+							ana_dlg.toggle();
+							ana_dlg = null;
+						}
+						else{
+							var item = $(ana_dlg.el).find(".name-input");
+							if(item != undefined && item != null){
+								item.parent().addClass("is-invalid");
+								item.parent().attr("tooltip","Equipment name already exists");
+								item.focus(function(){
+									$(this).parent().removeClass("is-invalid");
+									$(this).parent().attr("tooltip","");
+								});
+							}
+						}
+					}
+				}
+			});
+			
+			create_custom_dropdowns();
+		
+			var _labSections = $(ana_dlg.el).find(".select-dropdown.labSections").find(".list");
+			if(_labSections != undefined && _labSections != null){
+				_labSections.addClass("scroll scroll2");
+				_labSections.css({"overflow-y": "auto", "max-height": "200px"});
+			}
 		}
 	});
 

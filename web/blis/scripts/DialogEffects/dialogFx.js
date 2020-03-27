@@ -124,6 +124,8 @@
 				 * toggle operation in progress ended
 				 */
 				this_this.inProgress = false;
+				
+				this_this.el.parentNode.removeChild(this_this.el); //remove it from DOM
 			}, this.options.nDefaultTimeCloseDialog);
 		}
 		/**

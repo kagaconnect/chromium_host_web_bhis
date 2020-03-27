@@ -177,7 +177,7 @@ function loadSubPage(sub_file,canNavigate){
 			setTimeout(function(){ 
 				$('#mainPage').html(content);
 				create_custom_dropdowns();
-				console.log($(".BLIS-Title").html())
+				
 				$(".BLIS-Title").html("Basic Laboratory Information System v"+getVersion());
 				//closeLoadingPage();				
 			},1000);
