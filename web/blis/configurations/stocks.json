@@ -1,1 +1,18 @@
-[{"Name":"Arv","Unit":"asd","Remarks":"","Stocks":[{"LotNumber":"1234","ExpiryDate":"adsa","Manufacturer":"","Supplier":"","QuantitySupplied":"1000","CostPerUnit":"1","DateReceived":"asd","Remarks":"","Usage":[]}]}]
+[{
+        "Name": "Arv",
+        "Unit": "asd",
+        "Remarks": "",
+        "Stocks": [{
+                "LotNumber": "1234",
+                "ExpiryDate": "adsa",
+                "Manufacturer": "",
+                "Supplier": "",
+                "QuantitySupplied": "1000",
+                "CostPerUnit": "1",
+                "DateReceived": "asd",
+                "Remarks": "",
+                "Usage": []
+            }
+        ]
+    }
+]

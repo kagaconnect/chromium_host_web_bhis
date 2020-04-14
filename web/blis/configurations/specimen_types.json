@@ -1,1 +1,70 @@
-[{"Name":"Aspirate","Description":"Aspirate Sample","CompatibleTests":["AFB"]},{"Name":"CSF","Description":"","CompatibleTests":["CSF","Total Albumin"]},{"Name":"Dried Blood Spot","Description":"","CompatibleTests":["Bleeding Time (BT)","HIV DNA PCR"]},{"Name":"Nasal Swab","Description":"","CompatibleTests":["examen bacteriologique"]},{"Name":"Plasma","Description":"","CompatibleTests":["FBS","Random Blood Sugar"]},{"Name":"Plasma EDTA","Description":"","CompatibleTests":["HIV DNA PCR","HIV RNA VL"]},{"Name":"Rectal Swab","Description":"","CompatibleTests":[]},{"Name":"Semen","Description":"","CompatibleTests":["Sperm Count"]},{"Name":"Serum","Description":"","CompatibleTests":["ALT/SGPT","ASLO","Phosphorus","Magnesium","Creatine Kinase","Thyroglobulin","AST/SGOT","Alkaline Phosphatase","Total Bilirubin","Blood Urea Nitrogen","Creatinine","Sodium","Potassium","Chloride","CO2 Bicarbonate","Total Cholesterol","Triglycerides","HDL Cholesterol","LDL Cholesterol","Glucose","Amylase","Lactate","Kidney Function Panel","Lipid Panel","Liver Function Panel","HIV Monitoring Panel","UREA","Calcium","RPR","Hepatitis B Surface Antigen","Gamma Glutamyl","UREA","Hepatitis C Antibodies","VDRL","Rheumatoid Factor","Progesterone","ASOT (Streptococcal)","TPHA","Toxoplasma","C-Reactive Protein","Prolactin","Ferritin","Testosterone","HIV Rapid Test","Uric Acid","WIDAL","PSA","Chlamydia","H. pylori","Conjugated/Direct Bilirubin"]},{"Name":"SKIN","Description":"Skin","CompatibleTests":["SKIN SNIP"]},{"Name":"Sputum","Description":"","CompatibleTests":["Zn Stain","TB Smear"]},{"Name":"Stool","Description":"","CompatibleTests":["Stool Analysis"]},{"Name":"Throat Swab","Description":"","CompatibleTests":[]},{"Name":"U/S","Description":"Urethral Smear","CompatibleTests":["Culture","Macroscopic Examination","Microscopic Examination"]},{"Name":"Urine","Description":"","CompatibleTests":["Pregnancy Test (HCG)","Alb","Sugar","Cytobacteriologic Examination of Urine (CBEU)","URINE ANALYSIS"]},{"Name":"V/S","Description":"Vaginal Smear","CompatibleTests":["Culture","Macroscopic Examination","Microscopic Examination"]},{"Name":"Whole Blood","Description":"","CompatibleTests":["FACSCount","FBS","Protein Count","Uric Acid","T Lymphocyte CD8","Malaria","Full Blood Count","HGB","HIV EIA","HIV Rapid Test","Western Blot","HGB Electropherosis","Platelet Count","Erythrocyte Sedimentation Rate (ESR)","White Blood Cell Count","Sickling RBC","Clotting Time (CT)","Blood Type (ABO/Rh)","Bleeding Time (BT)","Random Blood Sugar","T-Lymphocytes CD4","T Lymphocyte CD3","Blood filaria","T Lymphocyte CD4/CD8","CD4"]}]
+[{
+        "Name": "Aspirate",
+        "Description": "Aspirate Sample",
+        "CompatibleTests": ["AFB"]
+    }, {
+        "Name": "CSF",
+        "Description": "",
+        "CompatibleTests": ["CSF", "Total Albumin"]
+    }, {
+        "Name": "Dried Blood Spot",
+        "Description": "",
+        "CompatibleTests": ["Bleeding Time (BT)", "HIV DNA PCR"]
+    }, {
+        "Name": "Nasal Swab",
+        "Description": "",
+        "CompatibleTests": ["examen bacteriologique"]
+    }, {
+        "Name": "Plasma",
+        "Description": "",
+        "CompatibleTests": ["FBS", "Random Blood Sugar"]
+    }, {
+        "Name": "Plasma EDTA",
+        "Description": "",
+        "CompatibleTests": ["HIV DNA PCR", "HIV RNA VL"]
+    }, {
+        "Name": "Rectal Swab",
+        "Description": "",
+        "CompatibleTests": []
+    }, {
+        "Name": "Semen",
+        "Description": "",
+        "CompatibleTests": ["Sperm Count"]
+    }, {
+        "Name": "Serum",
+        "Description": "",
+        "CompatibleTests": ["ALT/SGPT", "ASLO", "Phosphorus", "Magnesium", "Creatine Kinase", "Thyroglobulin", "AST/SGOT", "Alkaline Phosphatase", "Total Bilirubin", "Blood Urea Nitrogen", "Creatinine", "Sodium", "Potassium", "Chloride", "CO2 Bicarbonate", "Total Cholesterol", "Triglycerides", "HDL Cholesterol", "LDL Cholesterol", "Glucose", "Amylase", "Lactate", "Kidney Function Panel", "Lipid Panel", "Liver Function Panel", "HIV Monitoring Panel", "UREA", "Calcium", "RPR", "Hepatitis B Surface Antigen", "Gamma Glutamyl", "UREA", "Hepatitis C Antibodies", "VDRL", "Rheumatoid Factor", "Progesterone", "ASOT (Streptococcal)", "TPHA", "Toxoplasma", "C-Reactive Protein", "Prolactin", "Ferritin", "Testosterone", "HIV Rapid Test", "Uric Acid", "WIDAL", "PSA", "Chlamydia", "H. pylori", "Conjugated/Direct Bilirubin"]
+    }, {
+        "Name": "SKIN",
+        "Description": "Skin",
+        "CompatibleTests": ["SKIN SNIP"]
+    }, {
+        "Name": "Sputum",
+        "Description": "",
+        "CompatibleTests": ["Zn Stain", "TB Smear"]
+    }, {
+        "Name": "Stool",
+        "Description": "",
+        "CompatibleTests": ["Stool Analysis"]
+    }, {
+        "Name": "Throat Swab",
+        "Description": "",
+        "CompatibleTests": []
+    }, {
+        "Name": "U/S",
+        "Description": "Urethral Smear",
+        "CompatibleTests": ["Culture", "Macroscopic Examination", "Microscopic Examination"]
+    }, {
+        "Name": "Urine",
+        "Description": "",
+        "CompatibleTests": ["Pregnancy Test (HCG)", "Alb", "Sugar", "Cytobacteriologic Examination of Urine (CBEU)", "URINE ANALYSIS"]
+    }, {
+        "Name": "V/S",
+        "Description": "Vaginal Smear",
+        "CompatibleTests": ["Culture", "Macroscopic Examination", "Microscopic Examination"]
+    }, {
+        "Name": "Whole Blood",
+        "Description": "",
+        "CompatibleTests": ["FACSCount", "FBS", "Protein Count", "Uric Acid", "T Lymphocyte CD8", "Malaria", "Full Blood Count", "HGB", "HIV EIA", "HIV Rapid Test", "Western Blot", "HGB Electropherosis", "Platelet Count", "Erythrocyte Sedimentation Rate (ESR)", "White Blood Cell Count", "Sickling RBC", "Clotting Time (CT)", "Blood Type (ABO/Rh)", "Bleeding Time (BT)", "Random Blood Sugar", "T-Lymphocytes CD4", "T Lymphocyte CD3", "Blood filaria", "T Lymphocyte CD4/CD8", "CD4"]
+    }
+]

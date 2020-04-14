@@ -1,1 +1,7 @@
-[{"Name":"USD","Delimiter":".","ExchangeRate":"","Enabled":true,"IsRequired":true}]
+[{
+	"Name": "USD",
+	"Delimiter": ".",
+	"ExchangeRate": "",
+	"Enabled": true,
+	"IsRequired": true
+}]
