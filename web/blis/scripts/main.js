@@ -135,6 +135,10 @@ $(document).on('keydown', '.select-dropdown', function(event) {
   }
 });
 
+function getRootPath(){
+	return System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),"web","blis");
+}
+
 function create_custom_dropdowns() {
   $('select').each(function(i, select) {
 	if (!$(this).next().hasClass('select-dropdown')) {
@@ -392,6 +396,13 @@ function ShowDialog(icon, title, content, options, width="50%", minWidth="290px"
 	dlg.toggle.bind(dlg);
 	dlg.toggle();
 	return dlg;
+}
+
+function SqlLiteConnection(host, user, pass){
+	if(DB != undefined && DB != null){
+		return DB.connection(host, user, pass, "sqlite");
+	}
+	return null;
 }
 
 init();

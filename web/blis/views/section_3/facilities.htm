@@ -53,7 +53,6 @@
 var fac_dlg = null;
 var map = null;
 var mapMarkers = null;
-var facilities = null;
 var config = null;
 
 $("#backBtn").unbind( "click" );
@@ -125,34 +124,124 @@ function load(item, section){
 	}
 }
 
+function createPagerClickEvent(id){
+	$('#Page_'+id).removeClass('Disabled');						
+	$('#Page_'+id).off("click");
+	$('#Page_'+id).click(function(){
+		if(!$(this).hasClass('Disabled')){
+			$("#pagingBox").find('.Pager').each(function(){
+				$(this).removeClass('Selected');
+			});
+			$(this).addClass('Selected');
+			
+			var _id = $(this).attr('id').replace('Page_','');	
+			console.log(_id);
+			populateData(_id);
+		}
+	});
+}
+
 function preparePager(){
 	$("#pagingBox").html('');
+	
+	var pagerList = [];
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	if(con != null){
+		con.open();
 
-	var pages = '';
-	pages += '<div id="Page_0_9" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager Disabled" style="height:32px;">';
-	pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">0-9</span>';
-	pages += '</div>';
+		var query  = "SELECT distinct ";
+		query += "(case when (substr(`FacilityName` ,1,1) GLOB '*[^0-9]*') = 0 then '0_9' ";
+		query += "	  else upper(substr(`FacilityName` ,1,1)) ";
+		query += "end) as `Tag`  ";
+		query += "FROM `facilities`  ";
+		query += "ORDER BY `FacilityName` ";
+				
+		var comm = con.createCommand(query);
+		if(comm != null){
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null)pagerList.push(row.Tag);
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
 
-	var selected = "Page_";
+	var pages  = '<div id="Page_0_9" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager '+(pagerList.includes('0_9') ? '' : 'Disabled')+'" style="height:32px;">';
+		pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">0-9</span>';
+		pages += '</div>';
+	$("#pagingBox").html(pages);
+	
+	if(pagerList.includes('0_9')){
+		createPagerClickEvent('0_9');
+	}
+
 	for(x=65;x<65+26;x++){
 		var c = String.fromCharCode(x);
-		pages += '<div id="Page_'+c+'" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager Divider-Left Disabled" style="height:32px;">';
-		pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">'+c+'</span>';
-		pages += '</div>';
+		var pages = '<div id="Page_'+c+'" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager Divider-Left '+(pagerList.includes(c) ? '' : 'Disabled')+'" style="height:32px;">';
+			pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">'+c+'</span>';
+			pages += '</div>';
+		$("#pagingBox").append(pages);
+		
+		if(pagerList.includes(c)){
+			createPagerClickEvent(c);
+		}
 	}
-	$("#pagingBox").html(pages);
+		
+	return pagerList;
 }
 
 function populateData(id, options){
 	$(".FacilitiesList").html('');
 	
-	var _facilities = facilities.filter(function(fac){
-		var _id = fac.FacilityName[0];
-		if(_id >= 0 && _id <= 9)_id = "0_9";
+	var _facilities = [];
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query  = "SELECT ";
+			query += "	`ID` ";
+			query += "	, `FacilityNumber` ";
+			query += "	, `FacilityName` ";
+			query += "	, `CommonName` ";
+			query += "	, `Zone` ";
+			query += "	, `Region` ";
+			query += "	, `District` ";
+			query += "	, `Council` ";
+			query += "	, `Ward` ";
+			query += "	, `VillageStreet` ";
+			query += "	, `FacilityType` ";
+			query += "	, `OperatingStatus` ";
+			query += "	, IFNULL(`Latitude`, '') as `Latitude` ";
+			query += "	, IFNULL(`Longitude`, '') as `Longitude` ";
+			query += "	, `Location`  ";
+			query += "FROM `facilities` ";
+			query += "WHERE (case when (substr(`FacilityName` ,1,1) GLOB '*[^0-9]*') = 0 then '0_9' ";
+			query += "	  		  else upper(substr(`FacilityName` ,1,1)) ";
+			query += "	      end) = @ID";
+				
+		var comm = con.createCommand(query);
+		if(comm != null){
+			comm.addParameter("@ID", "String", id);
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null)_facilities.push(row);
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
 		
-		return _id.toUpperCase() == id.toUpperCase();
-	});
-	
 	for(var x=0; x<_facilities.length; x++){
 		var facility = _facilities[x];
 		
@@ -225,53 +314,6 @@ function populateData(id, options){
 	}
 	
 	$(".FacilitiesList").scrollTop(0);
-}
-
-function loadData(){
-	preparePager();
-	
-	var config_file = System.IO.Path.Combine("web","blis","configurations","facilities.json");
-	if(System.IO.File.Exists(config_file)){
-		config = JSON.parse(System.IO.File.ReadAllText(config_file));
-		facilities = config.Facilities;
-		
-		var pagerList = [];
-		for(var x=0; x<facilities.length; x++){
-			var facility = facilities[x];
-			
-			var id = facility.FacilityName[0];
-			
-			if(id >= 0 && id <= 9)id = "0_9";
-			if(pagerList.indexOf(id) == -1)pagerList.push(id);
-		}
-		pagerList.sort();
-		
-		for(var x=0; x<pagerList.length; x++){
-			var id = pagerList[x];
-			
-			$('#Page_'+id).removeClass('Disabled');						
-			$('#Page_'+id).off("click");
-			$('#Page_'+id).click(function(){
-				if(!$(this).hasClass('Disabled')){
-					configs = JSON.parse(System.IO.File.ReadAllText(config_file));
-					facilities = config.Facilities;
-					
-					$("#pagingBox").find('.Pager').each(function(){
-						$(this).removeClass('Selected');
-					});
-					$(this).addClass('Selected');
-					
-					var _id = $(this).attr('id').replace('Page_','');	
-					populateData(_id);
-				}
-			});
-			
-			if(x==0){
-				$('#Page_'+id).addClass('Selected');
-				populateData(id);
-			}
-		}
-	}
 }
 
 function facility_selected(item){
@@ -661,8 +703,6 @@ function Render(item){
 	return _map;
 }
 
-loadData();
-
 function reset_dropdown(item, name, title, items){
 	var _selector = $(item).find(".select-dropdown."+name);
 	if(_selector != undefined && _selector != null){
@@ -689,42 +729,48 @@ function location_selected(item){
 	var _location = $(fac_dlg.el).find(".select-dropdown.locationsSelector").find(".current").text();
 	if(_location != undefined && _location != null && _location != "Locations..."){
 	
-		var _area = null;
-		
-		var ii = config.Locations.map(function(d){ 
-			if(d.Name == _location){
-				var _ddd = d.Zones.map(function(dd){ return dd.Name; });
-				_ddd.sort();
-				return _ddd;
-			}
-			else return[];				
-		})
-		.filter(function(d){ return d != ""; })
-		.shift();
-		
-		if(ii == undefined || ii == null){
-			_area = "regions";
-			ii = config.Locations.map(function(d){ 
-				if(d.Name == _location){
-					var _ddd = d.Zones.map(function(dd){  
-						return dd.Regions.map(function(ddd){ 
-							return ddd.Name; 
-						});//.shift(); 
-					}).filter(function(d){ return d != ""; });
-					
-					_ddd.sort();
-					return _ddd;
+		var ii = [];
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		if(con != null){
+			con.open();
+
+			var query   = "SELECT distinct ";
+				query  += "(CASE WHEN `Location` = 'Mainland'  ";
+				query  += "      THEN `Zone` ELSE `Region` "; 
+				query  += "END) as `Area` ";
+				query  += "FROM `facilities` "; 
+				query  += "WHERE `Location` = @Location  "; 
+				query  += "ORDER BY `Zone`, `Region` "; 
+			
+			var comm = con.createCommand(query);
+			if(comm != null){
+				comm.addParameter("@Location", "String", _location);
+				var reader = comm.executeReader();
+				if(reader != null){
+					while(reader.read()){
+						var row = JSON.parse(reader.getValues());	
+						if(row != undefined && row != null)ii.push(row.Area);
+					}
+					reader.close();
+					con.close();				
 				}
-				else return[];				
-			})
-			.filter(function(d){ return d != ""; })
-			.shift();
+				else con.close();
+			}
+			else con.close();
 		}
-		else _area = "zones";
-	
+		
 		if(ii != undefined && ii != null){
-			if(_area == "zones") reset_dropdown($(fac_dlg.el), "zonesSelector", "Zones", ii);
-			else if(_area == "regions") reset_dropdown($(fac_dlg.el), "regionsSelector", "Regions", ii);
+			if(_location == "Mainland") {
+				reset_dropdown($(fac_dlg.el), "zonesSelector", "Zones", ii);
+				reset_dropdown($(fac_dlg.el), "regionsSelector", "Regions", []);
+			}
+			else {
+				reset_dropdown($(fac_dlg.el), "zonesSelector", "Zones", []);
+				reset_dropdown($(fac_dlg.el), "regionsSelector", "Regions", ii);
+			}
+			
+			reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", []);
+			reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);
 		}
 		
 		create_custom_dropdowns();
@@ -753,22 +799,35 @@ function zone_selected(item){
 	if(_location != undefined && _location != null && _location != "Locations..."){
 		if(_zone != undefined && _zone != null && _zone != "Zones..."){
 		
-			var ii = config.Locations.map(function(d){ 
-				if(d.Name == _location){
-					var _ddd = d.Zones.map(function(dd){ 
-						if(dd.Name == _zone){
-							return dd.Regions.map(function(ddd){ return ddd.Name; });
+			var ii = [];
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			if(con != null){
+				con.open();
+
+				var query   = "SELECT distinct `Region` ";
+					query  += "FROM `facilities` "; 
+					query  += "WHERE `Zone` = @Zone  "; 
+					query  += "AND `Region` IS NOT NULL ";  	
+					query  += "ORDER BY `Region` "; 
+				
+				var comm = con.createCommand(query);
+				if(comm != null){
+					comm.addParameter("@Zone", "String", _zone);
+					var reader = comm.executeReader();
+					if(reader != null){
+						while(reader.read()){
+							var row = JSON.parse(reader.getValues());	
+							if(row != undefined && row != null)ii.push(row.Region);
 						}
-					}).filter(function(d){ return d != undefined; }).shift();
-					
-					return _ddd;
-				}				
-			})
-			.filter(function(d){ return d != undefined; })
-			.shift();
+						reader.close();
+						con.close();				
+					}
+					else con.close();
+				}
+				else con.close();
+			}
 			
 			if(ii != undefined && ii != null){
-				ii.sort();
 				reset_dropdown($(fac_dlg.el), "regionsSelector", "Regions", ii);
 			}
 			
@@ -795,35 +854,44 @@ function zone_selected(item){
 function region_selected(item){
 	$(item).parent().removeClass("is-invalid");
 	$(item).parent().attr("tooltip","");
-	
+	//console.log("region_selected");
 	var _location = $(fac_dlg.el).find(".select-dropdown.locationsSelector").find(".current").text();
 	var _zone = $(fac_dlg.el).find(".select-dropdown.zonesSelector").find(".current").text();
 	var _region = $(fac_dlg.el).find(".select-dropdown.regionsSelector").find(".current").text();
 	
 	if(_location != undefined && _location != null && _location != "Locations..."){
 		if(_zone != undefined && _zone != null && _zone != "Zones..."){
-			var ii = config.Locations.map(function(d){ 
-				if(d.Name == _location){
-					var _ddd = d.Zones.map(function(dd){ 
-						if(dd.Name == _zone){
-							var _dddd = dd.Regions.map(function(ddd){ 
-								if(ddd.Name == _region){
-									return ddd.Districts.map(function(dddd){ return dddd.Name; });
-								}
-							}).filter(function(d){ return d != undefined; }).shift()
-							
-							return _dddd;
+			var ii = [];
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			if(con != null){
+				con.open();
+
+				var query   = "SELECT distinct `District` ";
+					query  += "FROM `facilities` "; 
+					query  += "WHERE `Region` = @Region  "; 
+					query  += "AND `Zone` = @Zone  ";
+					query  += "AND `District` IS NOT NULL ";  					
+					query  += "ORDER BY `District` "; 
+				
+				var comm = con.createCommand(query);
+				if(comm != null){
+					comm.addParameter("@Zone", "String", _zone);
+					comm.addParameter("@Region", "String", _region);
+					var reader = comm.executeReader();
+					if(reader != null){
+						while(reader.read()){
+							var row = JSON.parse(reader.getValues());	
+							if(row != undefined && row != null)ii.push(row.District);
 						}
-					}).filter(function(d){ return d != undefined; }).shift();
-					
-					return _ddd;
-				}				
-			})
-			.filter(function(d){ return d != undefined; })
-			.shift();
+						reader.close();
+						con.close();				
+					}
+					else con.close();
+				}
+				else con.close();
+			}
 			
 			if(ii != undefined && ii != null){
-				ii.sort();
 				reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", ii);
 			}
 			
@@ -831,26 +899,35 @@ function region_selected(item){
 			add_dropdown_scroll($(fac_dlg.el), "districtsSelector", {"overflow-y": "auto", "max-height": "200px"});
 		}
 		else if(_region != undefined && _region != null && _region != "Regions..."){
-			var ii = config.Locations.map(function(d){ 
-				if(d.Name == _location){
-					var _ddd = d.Zones.map(function(dd){ 
-						var _dddd = dd.Regions.map(function(ddd){ 
-							if(ddd.Name == _region){
-								return ddd.Districts.map(function(dddd){ return dddd.Name; });
-							}
-						}).filter(function(d){ return d != undefined; }).shift()
-						
-						return _dddd;
-					}).filter(function(d){ return d != undefined; }).shift();
-					
-					return _ddd;
-				}				
-			})
-			.filter(function(d){ return d != undefined; })
-			.shift();
+			var ii = [];
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			if(con != null){
+				con.open();
 
+				var query   = "SELECT distinct `District` ";
+					query  += "FROM `facilities` "; 
+					query  += "WHERE `Region` = @Region  ";
+					query  += "AND `District` IS NOT NULL "; 
+					query  += "ORDER BY `District` "; 
+				
+				var comm = con.createCommand(query);
+				if(comm != null){
+					comm.addParameter("@Region", "String", _region);
+					var reader = comm.executeReader();
+					if(reader != null){
+						while(reader.read()){
+							var row = JSON.parse(reader.getValues());	
+							if(row != undefined && row != null)ii.push(row.District);
+						}
+						reader.close();
+						con.close();				
+					}
+					else con.close();
+				}
+				else con.close();
+			}
+			
 			if(ii != undefined && ii != null){
-				ii.sort();
 				reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", ii);
 			}
 			
@@ -873,7 +950,7 @@ function region_selected(item){
 function district_selected(item){
 	$(item).parent().removeClass("is-invalid");
 	$(item).parent().attr("tooltip","");
-	
+	//console.log("district_selected");
 	var _location = $(fac_dlg.el).find(".select-dropdown.locationsSelector").find(".current").text();
 	var _zone = $(fac_dlg.el).find(".select-dropdown.zonesSelector").find(".current").text();
 	var _region = $(fac_dlg.el).find(".select-dropdown.regionsSelector").find(".current").text();
@@ -884,34 +961,41 @@ function district_selected(item){
 			if(_region != undefined && _region != null && _region != "Regions..."){
 				if(_district != undefined && _district != null && _district != "Districts..."){
 					
-					var ii = config.Locations.map(function(d){ 
-						if(d.Name == _location){
-							var _ddd = d.Zones.map(function(dd){ 
-								if(dd.Name == _zone){
-									var _dddd = dd.Regions.map(function(ddd){ 
-										if(ddd.Name == _region){
-											var _ddddd = ddd.Districts.map(function(dddd){ 
-												if(dddd.Name == _district){
-													return dddd.Councils.map(function(ddddd){ return ddddd.Name; });
-												}
-											}).filter(function(d){ return d != undefined; }).shift();
-											
-											return _ddddd;
-										}
-									}).filter(function(d){ return d != undefined; }).shift()
-									
-									return _dddd;
+					var ii = [];
+					var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+					if(con != null){
+						con.open();
+
+						var query   = "SELECT distinct `Council` ";
+							query  += "FROM `facilities` "; 
+							query  += "WHERE `Region` = @Region  "; 
+							query  += "AND `District` = @District  "; 
+							query  += "AND `Location` = @Location  ";
+							query  += "AND `Zone` = @Zone  "; 	
+							query  += "AND `Council` IS NOT NULL ";				
+							query  += "ORDER BY `Council` "; 
+						
+						var comm = con.createCommand(query);
+						if(comm != null){
+							comm.addParameter("@Zone", "String", _zone);
+							comm.addParameter("@District", "String", _district);
+							comm.addParameter("@Region", "String", _region);
+							comm.addParameter("@Location", "String", _location);
+							var reader = comm.executeReader();
+							if(reader != null){
+								while(reader.read()){
+									var row = JSON.parse(reader.getValues());	
+									if(row != undefined && row != null)ii.push(row.Council);
 								}
-							}).filter(function(d){ return d != undefined; }).shift();
-							
-							return _ddd;
-						}				
-					})
-					.filter(function(d){ return d != undefined; })
-					.shift();
+								reader.close();
+								con.close();				
+							}
+							else con.close();
+						}
+						else con.close();
+					}
 					
 					if(ii != undefined && ii != null){
-						ii.sort();
 						reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", ii);
 					}
 					
@@ -932,37 +1016,44 @@ function district_selected(item){
 		else if(_region != undefined && _region != null && _region != "Regions..."){
 			if(_district != undefined && _district != null && _district != "Districts..."){
 				
-				var ii = config.Locations.map(function(d){ 
-					if(d.Name == _location){
-						var _ddd = d.Zones.map(function(dd){ 
-							var _dddd = dd.Regions.map(function(ddd){ 
-								if(ddd.Name == _region){
-									var _ddddd = ddd.Districts.map(function(dddd){ 
-										if(dddd.Name == _district){
-											return dddd.Councils.map(function(ddddd){ return ddddd.Name; });
-										}
-									}).filter(function(d){ return d != undefined; }).shift();
-									
-									return _ddddd;
-								}
-							}).filter(function(d){ return d != undefined; }).shift()
-							
-							return _dddd;
-						}).filter(function(d){ return d != undefined; }).shift();
-						
-						return _ddd;
-					}				
-				})
-				.filter(function(d){ return d != undefined; })
-				.shift();
+				var ii = [];
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+				if(con != null){
+					con.open();
+
+					var query   = "SELECT distinct `Council` ";
+						query  += "FROM `facilities` "; 
+						query  += "WHERE `Region` = @Region  "; 
+						query  += "AND `District` = @District  ";
+						query  += "AND `Location` = @Location  ";
+						query  += "AND `Council` IS NOT NULL ";
+						query  += "ORDER BY `Council` "; 
+					
+					var comm = con.createCommand(query);
+					if(comm != null){
+						comm.addParameter("@District", "String", _district);
+						comm.addParameter("@Region", "String", _region);
+						comm.addParameter("@Location", "String", _location);
+						var reader = comm.executeReader();
+						if(reader != null){
+							while(reader.read()){
+								var row = JSON.parse(reader.getValues());	
+								if(row != undefined && row != null)ii.push(row.Council);
+							}
+							reader.close();
+							con.close();				
+						}
+						else con.close();
+					}
+					else con.close();
+				}
 
 				if(ii != undefined && ii != null){
-					ii.sort();
-					reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", ii);
+					reset_dropdown($(fac_dlg.el), "councilsSelector", "Districts", ii);
 				}
 				
 				create_custom_dropdowns();			
-				add_dropdown_scroll($(fac_dlg.el), "districtsSelector", {"overflow-y": "auto", "max-height": "200px"});
+				add_dropdown_scroll($(fac_dlg.el), "councilsSelector", {"overflow-y": "auto", "max-height": "200px"});
 				
 			}
 			else {
@@ -1866,13 +1957,55 @@ $("#addFacility").unbind( "click" );
 $('#addFacility').click(function(){ 
 	var options = {};
 	
-	options.Location = null;
-	options.Locations = config.Locations.map(function(d){ return d.Name; }).filter(function(d){ return d != ""; }); 
-	options.Locations.sort();
+	options.Locations = null;
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query  = "SELECT distinct `Location` FROM `facilities` ORDER BY `Location`";				
+		var comm = con.createCommand(query);
+		if(comm != null){
+			var reader = comm.executeReader();
+			if(reader != null){
+				options.Locations = [];
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null)options.Locations.push(row.Location);
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+	//options.Locations = config.Locations.map(function(d){ return d.Name; }).filter(function(d){ return d != ""; }); 
+	//options.Locations.sort();
 	
-	options.Facilitytype = null;
-	options.Facilitytypes = config.FacilityTypes.map(function(d){ return d.replace('Hospital - ','').replace('Clinic - ',''); }).filter(function(d){ return d != ""; }); 
-	options.Facilitytypes.sort();
+	options.Facilitytypes = null;
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query  = "SELECT distinct REPLACE(REPLACE(`FacilityType`,'Hospital - ',''),'Clinic - ','') as `FacilityType` FROM `facilities` WHERE `FacilityType` IS NOT NULL ORDER BY `FacilityType`";				
+		var comm = con.createCommand(query);
+		if(comm != null){
+			var reader = comm.executeReader();
+			if(reader != null){
+				options.Facilitytypes = [];
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null)options.Facilitytypes.push(row.FacilityType);
+				}
+				reader.close();
+				con.close();
+			}
+			else con.close();
+		}
+		else con.close();
+	}	
+	//options.Facilitytypes = config.FacilityTypes.map(function(d){ return d.replace('Hospital - ','').replace('Clinic - ',''); }).filter(function(d){ return d != ""; }); 
+	//options.Facilitytypes.sort();
 	
 	options.Zone = null;
 	options.Zones = []; 
@@ -1901,6 +2034,29 @@ $('#addFacility').click(function(){
 //map = Render({Latitude:"-6.812102",Longitude:"39.297465"});
 map = Render({Latitude:"",Longitude:""});
 
+var pagerList = preparePager();
+if(pagerList.length > 0){
+	var fisrtID = pagerList.shift();
+	$('#Page_'+fisrtID).addClass('Selected');
+	populateData(fisrtID);
+}
+
 closeLoadingPage();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 </script>
