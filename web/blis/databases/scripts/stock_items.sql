@@ -1,4 +1,4 @@
-PRAGMA foreign_keys = ON;
+
 
 CREATE TABLE "stock_items" (
 	"ID"	INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -7,9 +7,10 @@ CREATE TABLE "stock_items" (
 	"ExpiryDate"	TEXT,
 	"Manufacturer"	TEXT,
 	"Supplier"	TEXT,
-	"QuantitySupplied"	INTEGER,
+	"QuantitySupplied"	INTEGER NOT NULL,
 	"CostPerUnit"	NUMERIC,
 	"DateReceived"	TEXT,
 	"Remarks"	TEXT,
-	FOREIGN KEY(StockID) REFERENCES stocks(ID)
+	FOREIGN KEY(StockID) REFERENCES stocks(ID),
+	UNIQUE("LotNumber")
 );

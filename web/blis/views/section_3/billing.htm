@@ -56,6 +56,7 @@ function hideNavigationDropMenu(){
 }
 
 function edit_currency(item){
+	var billingID		= $(item).parent().data("id");
 	var name 			= $(item).parent().data("name");
 	var delimiter 		= $(item).parent().data("delimiter");
 	var exchange_rate 	= $(item).parent().data("exchange-rate");
@@ -136,29 +137,36 @@ function edit_currency(item){
 		var _exchange_rate = $(cry_dlg.el).find(".exchange-rate-input").val().trim();		
 		var _currencyState = $(cry_dlg.el).find(".select-dropdown.currencyState").find(".current").text();
 		
-		if(_name.length > 0 && _delimiter.length > 0){		
-			var config_file = System.IO.Path.Combine("web","blis","configurations","currency.json");
-			if(System.IO.File.Exists(config_file)){
-				var configs = JSON.parse(System.IO.File.ReadAllText(config_file));				
-				for(var x=0; x<configs.length; x++){
-					var config = configs[x];
-					if(name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
-						
-						config.Name = _name.toUpperCase(),
-						config.Delimiter = _delimiter,
-						config.ExchangeRate = _exchange_rate,
-						config.Enabled =  _currencyState == "Enabled" ? true : false
-						
-						System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
-						
-						loadData();
-											
-						cry_dlg.toggle();
-						cry_dlg = null;						
-						
-						break;
-					}
+		if(_name.length > 0 && _delimiter.length > 0){
+		
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			if(con != null){
+				con.open();
+
+				var query    = "UPDATE `currencies` SET ";								
+					query   += " `Name` = @Name ";
+					query   += ",`Delimiter` = @Delimiter ";
+					query   += ",`ExchangeRate` = @ExchangeRate ";
+					query   += ",`Enabled` = @Enabled ";
+					query   += "WHERE `ID` = @ID ";
+				
+				var comm = con.createCommand(query);
+				if(comm != null){
+					comm.addParameter("@ID", "Int32", billingID);
+					comm.addParameter("@Name", "String", _name);
+					comm.addParameter("@Delimiter", "String", _delimiter);
+					comm.addParameter("@ExchangeRate", "String", _exchange_rate);
+					comm.addParameter("@Enabled", "Int32", _currencyState == "Enabled" ? 1 : 0);
+					comm.executeNonQuery();
+					con.close();
+					
+					loadData();
+										
+					cry_dlg.toggle();
+					cry_dlg = null;	
+					
 				}
+				else con.close();
 			}
 		}
 		else{
@@ -190,9 +198,8 @@ function edit_currency(item){
 }
 
 function delete_currency(item){
-	var name 			= $(item).parent().data("name");
-	var config_file = System.IO.Path.Combine("web","blis","configurations","currency.json");
-	
+	var name		= $(item).parent().data("name");
+	var billingID	= $(item).parent().data("id");
 	
 	var content = '';
 		content += '<div class="bar-container" style="margin:0px;">';
@@ -226,24 +233,26 @@ function delete_currency(item){
 	
 	$(cry_dlg.el).find(".yesButton").unbind( "click" );
 	$(cry_dlg.el).find(".yesButton").click(function() {
-		if(System.IO.File.Exists(config_file)){
-			var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+	
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		if(con != null){
+			con.open();
 
-			for(var x=0; x<configs.length; x++){
-				var config = configs[x];
-				if(name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
-					configs.splice(x, 1);
-					
-					System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
-					
-					loadData();
-										
-					cry_dlg.toggle();
-					cry_dlg = null;						
-					
-					break;
-				}
-			}		
+			var query    = "DELETE FROM `currencies` ";							
+				query   += "WHERE `ID` = @ID ";
+			
+			var comm = con.createCommand(query);
+			if(comm != null){
+				comm.addParameter("@ID", "Int32", billingID);
+				comm.executeNonQuery();
+				con.close();
+				
+				loadData();
+									
+				cry_dlg.toggle();
+				cry_dlg = null;	
+			}
+			else con.close();
 		}
 	});
 	
@@ -255,11 +264,11 @@ function delete_currency(item){
 	
 }
 
-function add_currency(name, delimiter, exchange_rate, enabled, isrequired){
+function add_currency(id, name, delimiter, exchange_rate, enabled, isrequired){
 	var isDefault = "mdi-check";
 	if(!enabled)isDefault = "mdi-close";
 	
-	var drug  = '<div data-isrequired="'+isrequired+'" data-name="'+name+'" data-delimiter="'+delimiter+'" data-exchange-rate="'+exchange_rate+'" data-enabled="'+enabled+'" class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden " style="width:100%; padding:0px; min-height: 32px; max-height: 32px;">';
+	var drug  = '<div data-id="'+id+'" data-isrequired="'+isrequired+'" data-name="'+name+'" data-delimiter="'+delimiter+'" data-exchange-rate="'+exchange_rate+'" data-enabled="'+enabled+'" class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden " style="width:100%; padding:0px; min-height: 32px; max-height: 32px;">';
 		drug += '	<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; height:100%; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi '+isDefault+'"></i></span></div>';
 		drug += '	<div class="FlexDisplay Divider-Right" style="min-width:128px; max-width:128px; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 12px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+name+'</span></div>';
 		drug += '	<div class="FlexDisplay Divider-Right" style="min-width:128px; max-width:128px; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 12px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+delimiter+'</span></div>';	
@@ -274,15 +283,35 @@ function add_currency(name, delimiter, exchange_rate, enabled, isrequired){
 function loadData(){
 	$(".CurrencyList").html('');
 	
-	var config_file = System.IO.Path.Combine("web","blis","configurations","currency.json");
-	if(System.IO.File.Exists(config_file)){
-		var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
-		
-		for(var x=0; x<configs.length; x++){
-			var config = configs[x];
-			add_currency(config.Name, config.Delimiter, config.ExchangeRate, config.Enabled, config.IsRequired);
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query  = "SELECT ";
+			query += "	`ID` ";
+			query += "	, `Name` ";
+			query += "	, IFNULL(`Delimiter`,'') as `Delimiter` ";
+			query += "	, IFNULL(`ExchangeRate`,'') as `ExchangeRate` ";
+			query += "	, `Enabled` ";
+			query += "	, `IsRequired` ";
+			query += "FROM `currencies` ";
+				
+		var comm = con.createCommand(query);
+		if(comm != null){
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null){
+						add_currency(row.ID, row.Name, row.Delimiter, row.ExchangeRate, row.Enabled, row.IsRequired);
+					}
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
 		}
-		
+		else con.close();
 	}
 }
 
@@ -365,49 +394,79 @@ $(".add-currency").click(function(){
 		
 		if(_name.length > 0 && _delimiter.length > 0){
 		
-			var config_file = System.IO.Path.Combine("web","blis","configurations","currency.json");
-			if(System.IO.File.Exists(config_file)){
-				var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
-		
-				var exists = false;
-				for(var x=0; x<configs.length; x++){
-					var config = configs[x];
-					if(_name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
-						exists = true;
-						break;
-					}
-				}
+			var exists = false;
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			if(con != null){
+				con.open();
+
+				var query   = "SELECT `ID` ";
+					query  += "FROM `currencies` "; 
+					query  += "WHERE `Name` = @Name  ";
 				
-				if(!exists){					
-					configs.push({
-						"Name": _name.toUpperCase(),
-						"Delimiter": _delimiter,
-						"ExchangeRate": _exchange_rate,
-						"Enabled": _currencyState == "Enabled" ? true : false,
-						"IsRequired": false
+				var comm = con.createCommand(query);
+				if(comm != null){
+					comm.addParameter("@Name", "String", _name);
+					var reader = comm.executeReader();
+					if(reader != null){
+						exists = reader.read();
+						reader.close();
+						con.close();				
+					}
+					else con.close();
+				}
+				else con.close();
+			}
+			
+			if(!exists){
+				_name = _name.charAt(0).toUpperCase() + _name.slice(1);
+				
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+				if(con != null){
+					con.open();
+
+					var query    = "INSERT INTO `currencies` ( ";
+						query   += "	`Name` ";
+						query   += "	,`Delimiter` ";
+						query   += "	,`ExchangeRate` ";
+						query   += "	,`Enabled` ";
+						query   += "	,`IsRequired` ";
+						query   += ") ";
+						query   += "VALUES ( ";
+						query   += "	@Name ";
+						query   += "	,@Delimiter ";
+						query   += "	,@ExchangeRate ";
+						query   += "	,@Enabled ";
+						query   += "	,@IsRequired ";
+						query   += ")";
+					
+					var comm = con.createCommand(query);
+					if(comm != null){
+						comm.addParameter("@Name", "String", _name);
+						comm.addParameter("@Delimiter", "String", _delimiter);
+						comm.addParameter("@ExchangeRate", "String", _exchange_rate);
+						comm.addParameter("@Enabled", "Int32", _currencyState == "Enabled" ? 1 : 0);
+						comm.addParameter("@IsRequired", "Int32", 0);
+						comm.executeNonQuery();
+						con.close();
+
+						loadData();
+					
+						cry_dlg.toggle();
+						cry_dlg = null;					
+					}
+					else con.close();
+				}
+			}
+			else{
+				var item = $(cry_dlg.el).find(".name-input");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","Currency already exists");
+					item.focus(function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
 					});
-					
-					System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
-					
-					loadData();
-					
-					cry_dlg.toggle();
-					cry_dlg = null;
-					
 				}
-				else{
-					var item = $(cry_dlg.el).find(".name-input");
-					if(item != undefined && item != null){
-						item.parent().addClass("is-invalid");
-						item.parent().attr("tooltip","Currency already exists");
-						item.focus(function(){
-							$(this).parent().removeClass("is-invalid");
-							$(this).parent().attr("tooltip","");
-						});
-					}
-				}
-				
-				
 			}
 		}
 		else{

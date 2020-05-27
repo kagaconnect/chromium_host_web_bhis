@@ -1,0 +1,10 @@
+
+
+CREATE TABLE "stock_usage" (
+	"ID"	INTEGER PRIMARY KEY AUTOINCREMENT,
+	"StockID"	INTEGER NOT NULL,
+	"LotNumber"	TEXT NOT NULL,
+	"QuantitySignedOut"	INTEGER NOT NULL,
+	"DateOfUsage"	TEXT NOT NULL,
+	"Remarks"	TEXT
+);
