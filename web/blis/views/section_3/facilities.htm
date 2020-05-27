@@ -53,7 +53,6 @@
 var fac_dlg = null;
 var map = null;
 var mapMarkers = null;
-var config = null;
 
 $("#backBtn").unbind( "click" );
 $('#backBtn').click(function(){
@@ -122,78 +121,6 @@ function load(item, section){
 	else if(section == "type"){
 	
 	}
-}
-
-function createPagerClickEvent(id){
-	$('#Page_'+id).removeClass('Disabled');						
-	$('#Page_'+id).off("click");
-	$('#Page_'+id).click(function(){
-		if(!$(this).hasClass('Disabled')){
-			$("#pagingBox").find('.Pager').each(function(){
-				$(this).removeClass('Selected');
-			});
-			$(this).addClass('Selected');
-			
-			var _id = $(this).attr('id').replace('Page_','');	
-			console.log(_id);
-			populateData(_id);
-		}
-	});
-}
-
-function preparePager(){
-	$("#pagingBox").html('');
-	
-	var pagerList = [];
-	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
-	if(con != null){
-		con.open();
-
-		var query  = "SELECT distinct ";
-		query += "(case when (substr(`FacilityName` ,1,1) GLOB '*[^0-9]*') = 0 then '0_9' ";
-		query += "	  else upper(substr(`FacilityName` ,1,1)) ";
-		query += "end) as `Tag`  ";
-		query += "FROM `facilities`  ";
-		query += "ORDER BY `FacilityName` ";
-				
-		var comm = con.createCommand(query);
-		if(comm != null){
-			var reader = comm.executeReader();
-			if(reader != null){
-				while(reader.read()){
-					var row = JSON.parse(reader.getValues());	
-					if(row != undefined && row != null)pagerList.push(row.Tag);
-				}
-				reader.close();
-				con.close();				
-			}
-			else con.close();
-		}
-		else con.close();
-	}
-
-	var pages  = '<div id="Page_0_9" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager '+(pagerList.includes('0_9') ? '' : 'Disabled')+'" style="height:32px;">';
-		pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">0-9</span>';
-		pages += '</div>';
-	$("#pagingBox").html(pages);
-	
-	if(pagerList.includes('0_9')){
-		createPagerClickEvent('0_9');
-	}
-
-	for(x=65;x<65+26;x++){
-		var c = String.fromCharCode(x);
-		var pages = '<div id="Page_'+c+'" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager Divider-Left '+(pagerList.includes(c) ? '' : 'Disabled')+'" style="height:32px;">';
-			pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">'+c+'</span>';
-			pages += '</div>';
-		$("#pagingBox").append(pages);
-		
-		if(pagerList.includes(c)){
-			createPagerClickEvent(c);
-		}
-	}
-		
-	return pagerList;
 }
 
 function populateData(id, options){
@@ -828,7 +755,9 @@ function zone_selected(item){
 			}
 			
 			if(ii != undefined && ii != null){
-				reset_dropdown($(fac_dlg.el), "regionsSelector", "Regions", ii);
+				reset_dropdown($(fac_dlg.el), "regionsSelector", "Regions", ii);	
+				reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", []);
+				reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);
 			}
 			
 			create_custom_dropdowns();
@@ -893,6 +822,7 @@ function region_selected(item){
 			
 			if(ii != undefined && ii != null){
 				reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", ii);
+				reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);	
 			}
 			
 			create_custom_dropdowns();			
@@ -929,6 +859,7 @@ function region_selected(item){
 			
 			if(ii != undefined && ii != null){
 				reset_dropdown($(fac_dlg.el), "districtsSelector", "Districts", ii);
+				reset_dropdown($(fac_dlg.el), "councilsSelector", "Councils", []);		
 			}
 			
 			create_custom_dropdowns();			
@@ -1110,6 +1041,7 @@ function delete_facility(item){
 	if(_parent != undefined && _parent != null){
 		var FacilityNumber = _parent.data("facilitynumber");
 		var Location = _parent.data("location").trim();
+		var FacilityName = _parent.data("facilityname");
 		
 		var content = '';
 			content += '<div class="bar-container" style="margin:0px;">';
@@ -1118,7 +1050,7 @@ function delete_facility(item){
 			
 			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:48px; margin-bottom:8px; padding:2px 8px;">';						
 			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-			content += '			<h4 class="feature-title mt-0" style="margin:auto auto; font-size: 12px; font-weight:normal; line-height:1;">Are you sure you want to delete facility with id "'+FacilityNumber+'" and location "'+Location+'"</h4>';
+			content += '			<h4 class="feature-title mt-0" style="margin:auto auto; font-size: 12px; font-weight:normal; line-height:1;">Are you sure you want to delete facility with id "'+FacilityNumber+'" and location "'+Location+' called "'+FacilityName+'""</h4>';
 			content += '		</div>';
 			content += '	</div>';
 			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:56px; margin-bottom:8px; padding:2px 8px;">';						
@@ -1145,73 +1077,97 @@ function delete_facility(item){
 		$(fac_dlg.el).find(".yesButton").click(function() {
 			
 			if(FacilityNumber != undefined && FacilityNumber != null &&
-				Location != undefined && Location != null && Location.length > 0){		
-				var config_file = System.IO.Path.Combine("web","blis","configurations","facilities.json");
-				if(System.IO.File.Exists(config_file)){
-					var _config = JSON.parse(System.IO.File.ReadAllText(config_file));
-		
-					for(var x=0; x<_config.Facilities.length; x++){
-						var fac = _config.Facilities[x];
-						if(FacilityNumber.toString().trim().toLowerCase() == fac.FacilityNumber.toString().trim().toLowerCase() &&
-						   Location.trim().toLowerCase() == fac.Location.trim().toLowerCase()){
-							_config.Facilities.splice(x, 1);
-							
-							System.IO.File.WriteAllText(config_file,JSON.stringify(_config));
-							
-							var id = fac.FacilityName[0].toUpperCase();
+				FacilityName != undefined && FacilityName != null &&
+				Location != undefined && Location != null && Location.length > 0){
+				
+				var deleted = false;
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+				if(con != null){
+					con.open();
+
+					var query    = "DELETE FROM `facilities` ";							
+						query   += "WHERE `FacilityNumber` = @FacilityNumber ";
+						query   += "AND `Location` = @Location ";	
+					
+					var comm = con.createCommand(query);
+					if(comm != null){
+						comm.addParameter("@FacilityNumber", "String", FacilityNumber);
+						comm.addParameter("@Location", "String", Location);
+						comm.executeNonQuery();
+						con.close();
+						deleted = true;
+					}
+					else con.close();
+				}
+				
+				if(deleted){
+					var hasItems = false;
+					var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+					if(con != null){
+						con.open();
+
+						var id = FacilityName[0].toUpperCase();
 							if(id >= 0 && id <= 9)id = "0_9";
 							
-							var hasItems = false;
-							for(var x=0; x<_config.Facilities.length; x++){
-								var _conf = _config.Facilities[x];
-								var _id = _conf.FacilityName[0].toUpperCase();
-								if(id == _id){
-									hasItems = true;
-									break;
+						var query  = "SELECT 1 ";
+							query += "FROM `facilities`  ";
+							query += "WHERE ";
+							query += "(case when (substr(`FacilityName` ,1,1) GLOB '*[^0-9]*') = 0 then '0_9' ";
+							query += "	  else upper(substr(`FacilityName` ,1,1)) ";
+							query += "end) = @ID ";
+							
+						var comm = con.createCommand(query);
+						if(comm != null){
+							comm.addParameter("@ID", "String", id);
+							var reader = comm.executeReader();
+							if(reader != null){
+								hasItems = reader.read();
+								reader.close();
+								con.close();				
+							}
+							else con.close();
+						}
+						else con.close();
+					}
+					
+					if(hasItems){
+						populateData(id);
+					}
+					else{
+						$('#Page_'+id).addClass('Disabled');
+						$("#pagingBox").find('.Pager').each(function(){
+							$(this).removeClass('Selected');
+						});
+						
+						var _id = "0_9";
+						var foundOne = false;
+						$("#pagingBox").find('.Pager').each(function(){
+							if(!$(this).hasClass('Disabled')){
+								if(!foundOne){
+									foundOne = true;
+									_id = $(this).attr('id').replace('Page_','');
 								}
 							}
-							
-							if(hasItems){
-								populateData(id);
-							}
-							else{
-								$('#Page_'+id).addClass('Disabled');
-								$("#pagingBox").find('.Pager').each(function(){
-									$(this).removeClass('Selected');
-								});
-								
-								var _id = "0_9";
-								var foundOne = false;
-								$("#pagingBox").find('.Pager').each(function(){
-									if(!$(this).hasClass('Disabled')){
-										if(!foundOne){
-											foundOne = true;
-											_id = $(this).attr('id').replace('Page_','');
-										}
-									}
-								});	
-								
-								$('#Page_'+_id).addClass('Selected');
-								populateData(_id);
-							}
-							
-							
-							if(map != undefined && map != null && _parent.hasClass("Checked")){
-								mapMarkers.clearLayers();
-								map.options.maxZoom = 2;
-								map.eachLayer(function(layer) {
-									if(layer instanceof L.TileLayer )
-										layer.options.maxZoom = 2;
-								});
-								map.setView([-50.109307, 6.434463],2);
-							}
-							
-							fac_dlg.toggle();
-							fac_dlg = null;						
-							
-							break;
-						}
-					}		
+						});	
+						
+						$('#Page_'+_id).addClass('Selected');
+						populateData(_id);
+					}
+					
+					
+					if(map != undefined && map != null && _parent.hasClass("Checked")){
+						mapMarkers.clearLayers();
+						map.options.maxZoom = 2;
+						map.eachLayer(function(layer) {
+							if(layer instanceof L.TileLayer )
+								layer.options.maxZoom = 2;
+						});
+						map.setView([-50.109307, 6.434463],2);
+					}
+					
+					fac_dlg.toggle();
+					fac_dlg = null;
+
 				}
 			}
 		});
@@ -1243,178 +1199,171 @@ function edit_facility(item){
 		options.Council = _parent.data("council");
 		options.Facilitytype = _parent.data("facilitytype");
 		
-		options.Locations = config.Locations.map(function(d){ return d.Name; }).filter(function(d){ return d != ""; });
-		if(options.Locations == undefined || options.Locations == null)options.Locations = [];
-		options.Locations.sort();
+		options.Locations = [];
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		if(con != null){
+			con.open();
 
-		options.Facilitytypes = config.FacilityTypes.map(function(d){ return d.replace('Hospital - ','').replace('Clinic - ',''); }).filter(function(d){ return d != ""; }); 
-		if(options.Facilitytypes == undefined || options.Facilitytypes == null)options.Facilitytypes = [];
-		options.Facilitytypes.sort();
-		
-		//Zones
-		options.Zones = config.Locations.map(function(d){ 
-			if(options.Location != undefined && options.Location != null && d.Name == options.Location){
-				var _ddd = d.Zones.map(function(dd){ return dd.Name; });
-				_ddd.sort();
-				return _ddd;
-			}
-			else return[];				
-		})
-		.filter(function(d){ return d != ""; })
-		.shift();
-		
-		//Regions
-		if(options.Zones == undefined || options.Zones == null){
-			options.Zones = [];
-			options.Regions = config.Locations.map(function(d){ 
-				if(options.Location != undefined && options.Location != null && d.Name == options.Location){
-					var _ddd = d.Zones.map(function(dd){  
-						return dd.Regions.map(function(ddd){ 
-							return ddd.Name; 
-						});
-					}).filter(function(d){ return d != ""; });
-					
-					_ddd.sort();
-					return _ddd;
-				}
-				else return[];				
-			})
-			.filter(function(d){ return d != ""; })
-			.shift();
-			
-			if(options.Regions == undefined || options.Regions == null)options.Regions = [];
-		}
-		else {
-			options.Regions = config.Locations.map(function(d){ 
-				if(options.Location != undefined && options.Location != null && d.Name == options.Location){
-					var _ddd = d.Zones.map(function(dd){ 
-						if(options.Zone != undefined && options.Zone != null && dd.Name == options.Zone){
-							return dd.Regions.map(function(ddd){ return ddd.Name; });
-						}
-					}).filter(function(d){ return d != undefined; }).shift();
-					
-					return _ddd;
-				}				
-			})
-			.filter(function(d){ return d != undefined; })
-			.shift();
-			
-			if(options.Regions == undefined || options.Regions == null)options.Regions = [];
-		}
-		
-		//Districts
-		if(options.Location != undefined && options.Location != null){
-			if(options.Zone != undefined && options.Zone != null){
-				options.Districts = config.Locations.map(function(d){ 
-					if(d.Name == options.Location){
-						var _ddd = d.Zones.map(function(dd){ 
-							if(dd.Name == options.Zone){
-								var _dddd = dd.Regions.map(function(ddd){ 
-									if(ddd.Name == options.Region){
-										return ddd.Districts.map(function(dddd){ return dddd.Name; });
-									}
-								}).filter(function(d){ return d != undefined; }).shift()
-								
-								return _dddd;
-							}
-						}).filter(function(d){ return d != undefined; }).shift();
-						
-						return _ddd;
-					}				
-				})
-				.filter(function(d){ return d != undefined; })
-				.shift();
-			}
-			else if(options.Region != undefined && options.Region != null){
-				options.Districts = config.Locations.map(function(d){ 
-					if(d.Name == options.Location){
-						var _ddd = d.Zones.map(function(dd){ 
-							var _dddd = dd.Regions.map(function(ddd){ 
-								if(ddd.Name == options.Region){
-									return ddd.Districts.map(function(dddd){ return dddd.Name; });
-								}
-							}).filter(function(d){ return d != undefined; }).shift()
-							
-							return _dddd;
-						}).filter(function(d){ return d != undefined; }).shift();
-						
-						return _ddd;
-					}				
-				})
-				.filter(function(d){ return d != undefined; })
-				.shift();
-			}
-		}
-		if(options.Districts == undefined || options.Districts == null)options.Districts = [];
-		
-		//Councils
-		if(options.Location != undefined && options.Location != null){
-			if(options.Zones != undefined && options.Zones != null){
-				if(options.Region != undefined && options.Region != null){
-					if(options.District != undefined && options.District != null){
-						options.Councils = config.Locations.map(function(d){ 
-							if(d.Name == options.Location){								
-								var _ddd = d.Zones.map(function(dd){ 
-									if(dd.Name == options.Zone){										
-										var _dddd = dd.Regions.map(function(ddd){ 
-											if(ddd.Name == options.Region){
-												var _ddddd = ddd.Districts.map(function(dddd){ 
-													if(dddd.Name == options.District){
-														return dddd.Councils.map(function(ddddd){ return ddddd.Name; });
-													}
-												}).filter(function(d){ return d != undefined; }).shift();
-												
-												return _ddddd;
-											}
-										}).filter(function(d){ return d != undefined; }).shift()
-										
-										return _dddd;
-									}
-								}).filter(function(d){ return d != undefined; }).shift();
-								
-								return _ddd;
-							}				
-						})
-						.filter(function(d){ return d != undefined; })
-						.shift();
+			var query  = "SELECT distinct `Location` FROM `facilities` ORDER BY `Location`";				
+			var comm = con.createCommand(query);
+			if(comm != null){
+				var reader = comm.executeReader();
+				if(reader != null){
+					while(reader.read()){
+						var row = JSON.parse(reader.getValues());	
+						if(row != undefined && row != null)options.Locations.push(row.Location);
 					}
+					reader.close();
+					con.close();				
 				}
+				else con.close();
 			}
-			else if(options.Region != undefined && options.Region != null){
-				if(options.District != undefined && options.District != null){
-					
-					options.Councils = config.Locations.map(function(d){ 
-						if(d.Name == options.Location){
-							var _ddd = d.Zones.map(function(dd){ 
-								var _dddd = dd.Regions.map(function(ddd){ 
-									if(ddd.Name == options.Region){
-										var _ddddd = ddd.Districts.map(function(dddd){ 
-											if(dddd.Name == options.District){
-												return dddd.Councils.map(function(ddddd){ return ddddd.Name; });
-											}
-										}).filter(function(d){ return d != undefined; }).shift();
-										
-										return _ddddd;
-									}
-								}).filter(function(d){ return d != undefined; }).shift()
-								
-								return _dddd;
-							}).filter(function(d){ return d != undefined; }).shift();
-							
-							return _ddd;
-						}				
-					})
-					.filter(function(d){ return d != undefined; })
-					.shift();
-				}
-			}
+			else con.close();
 		}
-		if(options.Councils == undefined || options.Councils == null)options.Councils = [];
+
+		options.Facilitytypes = [];
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		if(con != null){
+			con.open();
+
+			var query  = "SELECT distinct REPLACE(REPLACE(`FacilityType`,'Hospital - ',''),'Clinic - ','') as `FacilityType` FROM `facilities` WHERE `FacilityType` IS NOT NULL ORDER BY `FacilityType`";				
+			var comm = con.createCommand(query);
+			if(comm != null){
+				var reader = comm.executeReader();
+				if(reader != null){
+					while(reader.read()){
+						var row = JSON.parse(reader.getValues());	
+						if(row != undefined && row != null)options.Facilitytypes.push(row.FacilityType);
+					}
+					reader.close();
+					con.close();
+				}
+				else con.close();
+			}
+			else con.close();
+		}
+		
+		options.Zones = [];
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		if(con != null){
+			con.open();
+
+			var query  = "SELECT distinct `Zone` FROM `facilities` WHERE `Zone` IS NOT NULL ORDER BY `Zone`";				
+			var comm = con.createCommand(query);
+			if(comm != null){
+				var reader = comm.executeReader();
+				if(reader != null){
+					while(reader.read()){
+						var row = JSON.parse(reader.getValues());	
+						if(row != undefined && row != null)options.Zones.push(row.Zone);
+					}
+					reader.close();
+					con.close();				
+				}
+				else con.close();
+			}
+			else con.close();
+		}		
+		
+		options.Regions = [];
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		if(con != null){
+			con.open();
+
+			var query   = "SELECT distinct `Region` ";
+				query  += "FROM `facilities` "; 
+				query  += "WHERE `Location` = @Location  ";
+				if(options.Location == "Mainland")query  += "AND `Zone` = @Zone  ";	
+				query  += "AND `Region` IS NOT NULL  ";			
+				query  += "ORDER BY `Zone`, `Region` "; 
+				
+			var comm = con.createCommand(query);
+			if(comm != null){
+				comm.addParameter("@Location", "String", options.Location);
+				if(options.Location == "Mainland")comm.addParameter("@Zone", "String", options.Zone);
+				var reader = comm.executeReader();
+				if(reader != null){
+					while(reader.read()){
+						var row = JSON.parse(reader.getValues());	
+						if(row != undefined && row != null)options.Regions.push(row.Region);
+					}
+					reader.close();
+					con.close();				
+				}
+				else con.close();
+			}
+			else con.close();
+		}	
+		
+		options.Districts = [];
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		if(con != null){
+			con.open();
+
+			var query   = "SELECT distinct `District` ";
+				query  += "FROM `facilities` "; 
+				query  += "WHERE `Location` = @Location  ";
+				if(options.Location == "Mainland")query  += "AND `Zone` = @Zone  ";
+				query  += "AND `Region` = @Region  ";
+				query  += "AND `District` IS NOT NULL  ";
+				query  += "ORDER BY `District` "; 
+				
+			var comm = con.createCommand(query);
+			if(comm != null){
+				comm.addParameter("@Location", "String", options.Location);
+				if(options.Location == "Mainland")comm.addParameter("@Zone", "String", options.Zone);
+				comm.addParameter("@Region", "String", options.Region);
+				var reader = comm.executeReader();
+				if(reader != null){
+					while(reader.read()){
+						var row = JSON.parse(reader.getValues());	
+						if(row != undefined && row != null)options.Districts.push(row.District);
+					}
+					reader.close();
+					con.close();				
+				}
+				else con.close();
+			}
+			else con.close();
+		}
+		
+		options.Councils = [];
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		if(con != null){
+			con.open();
+
+			var query   = "SELECT distinct `Council` ";
+				query  += "FROM `facilities` "; 
+				query  += "WHERE `Location` = @Location  ";
+				if(options.Location == "Mainland")query  += "AND `Zone` = @Zone  ";
+				query  += "AND `Region` = @Region  ";
+				query  += "AND `District` = @District  ";
+				query  += "AND `Council` IS NOT NULL  ";
+				query  += "ORDER BY `Council` "; 
+				
+			var comm = con.createCommand(query);
+			if(comm != null){
+				comm.addParameter("@Location", "String", options.Location);
+				if(options.Location == "Mainland")comm.addParameter("@Zone", "String", options.Zone);
+				comm.addParameter("@Region", "String", options.Region);
+				comm.addParameter("@District", "String", options.District);
+				var reader = comm.executeReader();
+				if(reader != null){
+					while(reader.read()){
+						var row = JSON.parse(reader.getValues());	
+						if(row != undefined && row != null)options.Councils.push(row.Council);
+					}
+					reader.close();
+					con.close();				
+				}
+				else con.close();
+			}
+			else con.close();
+		}
 		
 		options.Title = "Edit facility";
 		options.Mode = "Edit";
-		
-		//console.log(options);
+
 		facility_popup(options);
 	}
 }
@@ -1646,43 +1595,6 @@ function facility_popup(options){
 			var _council 		=  $(fac_dlg.el).find(".select-dropdown.councilsSelector .current").text();
 			var _facilityTypes 	=  $(fac_dlg.el).find(".select-dropdown.facilityTypesSelector .current").text();
 			
-			var hasZone = true;
-			if(_zone == "Zones..."){
-				if(_location != "Locations..."){
-					var ii = config.Locations.map(function(d){ 
-						if(d.Name == _location){
-							var _ddd = d.Zones.map(function(dd){ return dd.Name; });
-							_ddd.sort();
-							return _ddd;
-						}
-						else return[];				
-					})
-					.filter(function(d){ return d != ""; })
-					.shift();
-					
-					if(ii == undefined || ii == null){
-						_area = "regions";
-						ii = config.Locations.map(function(d){ 
-							if(d.Name == _location){
-								var _ddd = d.Zones.map(function(dd){  
-									return dd.Regions.map(function(ddd){ 
-										return ddd.Name; 
-									}).shift(); 
-								}).filter(function(d){ return d != ""; });
-								
-								_ddd.sort();
-								return _ddd;
-							}
-							else return[];				
-						})
-						.filter(function(d){ return d != ""; })
-						.shift();
-					}
-					else hasZone = false;
-				}
-				else hasZone = false;
-			}
-					 
 			if(_id.trim().length > 0 &&
 				_name.trim().length > 0 &&
 				_location != "Locations..."  && 
@@ -1690,133 +1602,102 @@ function facility_popup(options){
 				_district != "Districts..."  &&
 				_council != "Councils..."  &&
 				_facilityTypes != "Facility Types..." &&
-				hasZone){
-			
-			
-			
-				var config_file = System.IO.Path.Combine("web","blis","configurations","facilities.json");
-				if(System.IO.File.Exists(config_file)){
-					if(options.Mode == "New"){
-						var _config = JSON.parse(System.IO.File.ReadAllText(config_file));
-						facilities = _config.Facilities;
+				(_location == "Mainland" ? _zone != "Zones..." : true )){
 				
-						var id = _name[0].toUpperCase();
-						if(id >= 0 && id <= 9)id = "0_9";
-						
-						var exists = false;
-						for(var x=0; x<facilities.length; x++){
-							var fac = facilities[x];
-							if(_id.trim().toLowerCase() == fac.FacilityNumber.trim().toLowerCase()){
-								exists = true;
-								break;
-							}
-						}
-						
-						if(!exists){
-							_name = _name.charAt(0).toUpperCase() + _name.slice(1);
-							
-							facilities.push({
-								"FacilityNumber": _id,
-								"FacilityName": _name,
-								"CommonName": "",
-								"Zone": _zone == "Zones..." ? "" : _zone,
-								"Region": _region,
-								"District": _district,
-								"Council": _council,
-								"Ward": "Not set",
-								"VillageStreet": "Not set",
-								"FacilityType": _facilityTypes,
-								"OperatingStatus": "Operating",
-								"Latitude": _latitude,
-								"Longitude": _longitude,
-								"Location": _location
-							});
-												
-							_config.Facilities = facilities;
-							
-							System.IO.File.WriteAllText(config_file,JSON.stringify(_config));
-							
-							$('#Page_'+id).removeClass('Disabled');	
-							$("#pagingBox").find('.Pager').each(function(){
-								$(this).removeClass('Selected');
-							});			
-							$('#Page_'+id).addClass('Selected');
-							
-							
-							if(map != undefined && map != null && _latitude.toString() != "" && _longitude != ""){
-								var latlong = _longitude+","+_latitude;				
-								var reCenter = getLatLong(latlong);	
+				var exists = false;
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+				if(con != null){
+					con.open();
 
-								map.options.maxZoom = 18;
-								map.eachLayer(function(layer) {
-									if(layer instanceof L.TileLayer )
-										layer.options.maxZoom = 18;
-								});
-
-								map.flyTo([reCenter[0]-0.002,reCenter[1]],17);
-								
-								mapMarkers.clearLayers();
-								var marker = L.marker(reCenter);
-								marker.addTo(mapMarkers);
-							}
-							
-							populateData(id, { FacilityNumber:_id, Location:_location });
-							
-							fac_dlg.toggle();
-							fac_dlg = null;
-							
+					var query   = "SELECT `FacilityNumber` ";
+						query  += "FROM `facilities` "; 
+						query  += "WHERE `FacilityNumber` = @FacilityNumber  ";
+						query  += "AND `Location` = @Location  ";
+					
+					var comm = con.createCommand(query);
+					if(comm != null){
+						comm.addParameter("@FacilityNumber", "String", _id.trim());
+						comm.addParameter("@Location", "String", _location);
+						var reader = comm.executeReader();
+						if(reader != null){
+							exists = reader.read();
+							reader.close();
+							con.close();				
 						}
-						else{
-							var item = $(fac_dlg.el).find(".id-input");
-							if(item != undefined && item != null){
-								item.parent().addClass("is-invalid");
-								item.parent().attr("tooltip","Facility already exists");
-								item.focus(function(){
-									$(this).parent().removeClass("is-invalid");
-									$(this).parent().attr("tooltip","");
-								});
-							}
-						}
+						else con.close();
 					}
-					else{
-						var _config = JSON.parse(System.IO.File.ReadAllText(config_file));
-
-						var id = _name[0].toUpperCase();
-						if(id >= 0 && id <= 9)id = "0_9";
+					else con.close();
+				}
+			
+				if(options.Mode == "New"){
+					if(!exists){
+						_name = _name.charAt(0).toUpperCase() + _name.slice(1);
 						
-						for(var x=0; x<_config.Facilities.length; x++){
-							var fac = _config.Facilities[x];
-							if(options.ID.toString().trim().toLowerCase() == fac.FacilityNumber.toString().trim().toLowerCase() &&
-							   options.Location.trim().toLowerCase() == fac.Location.trim().toLowerCase()){
-								
-								_config.Facilities[x] = {
-									"FacilityNumber": _id,
-									"FacilityName": _name,
-									"CommonName": "",
-									"Zone": _zone == "Zones..." ? "" : _zone,
-									"Region": _region,
-									"District": _district,
-									"Council": _council,
-									"Ward": "Not set",
-									"VillageStreet": "Not set",
-									"FacilityType": _facilityTypes,
-									"OperatingStatus": "Operating",
-									"Latitude": _latitude,
-									"Longitude": _longitude,
-									"Location": _location
-								};
-								
-								facilities = _config.Facilities;
-								_config.Facilities = facilities;
-								config = _config;
-								
-								System.IO.File.WriteAllText(config_file,JSON.stringify(_config));
+						var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+						if(con != null){
+							con.open();
+
+							var query    = "INSERT INTO `facilities` ( ";
+								query   += "	`FacilityNumber`, ";
+								query   += "	`FacilityName`, ";
+								//query   += "	`CommonName`, ";
+								if(_location == "Mainland")query   += "	`Zone`, ";
+								query   += "	`Region`, ";
+								query   += "	`District`, ";
+								if(_location == "Mainland")query   += "	`Council`, ";
+								//query   += "	`Ward`, ";
+								//query   += "	`VillageStreet`, ";
+								query   += "	`FacilityType`, ";
+								query   += "	`OperatingStatus`, ";
+								if(_latitude.length > 0 && !isNaN(_latitude))query   += "	`Latitude`, ";
+								if(_longitude.length > 0 && !isNaN(_longitude))query   += "	`Longitude`, ";
+								query   += "	`Location` ";							
+								query   += ") ";
+								query   += "VALUES ( ";
+								query   += "	@FacilityNumber, ";
+								query   += "	@FacilityName, ";
+								//query   += "	@CommonName, ";
+								if(_location == "Mainland")query   += "	@Zone, ";
+								query   += "	@Region, ";
+								query   += "	@District, ";
+								if(_location == "Mainland")query   += "	@Council, ";
+								//query   += "	@Ward, ";
+								//query   += "	@VillageStreet, ";
+								query   += "	@FacilityType, ";
+								query   += "	@OperatingStatus, ";
+								if(_latitude.length > 0 && !isNaN(_latitude))query   += "	@Latitude, ";
+								if(_longitude.length > 0 && !isNaN(_longitude))query   += "	@Longitude, ";
+								query   += "	@Location ";	
+								query   += ")";
 							
+							var comm = con.createCommand(query);
+							if(comm != null){
+								comm.addParameter("@FacilityNumber", "String", _id);
+								comm.addParameter("@FacilityName", "String", _name);
+								//comm.addParameter("@CommonName", "String", _id.trim());
+								if(_location == "Mainland")comm.addParameter("@Zone", "String", _zone);
+								comm.addParameter("@Region", "String", _region);
+								comm.addParameter("@District", "String", _district);
+								if(_location == "Mainland")comm.addParameter("@Council", "String", _council);
+								//comm.addParameter("@Ward", "String", _id.trim());
+								//comm.addParameter("@VillageStreet", "String", _id.trim());
+								comm.addParameter("@FacilityType", "String", _facilityTypes);
+								comm.addParameter("@OperatingStatus", "String", "Operating");
+								if(_latitude.length > 0 && !isNaN(_latitude))comm.addParameter("@Latitude", "Double", _latitude);
+								if(_longitude.length > 0 && !isNaN(_longitude))comm.addParameter("@Longitude", "Double", _longitude);
+								comm.addParameter("@Location", "String", _location);
+								comm.executeNonQuery();
+								con.close();
+								
+								var id = _name[0].toUpperCase();
+								if(id >= 0 && id <= 9)id = "0_9";
+						
 								$('#Page_'+id).removeClass('Disabled');	
 								$("#pagingBox").find('.Pager').each(function(){
 									$(this).removeClass('Selected');
 								});			
 								$('#Page_'+id).addClass('Selected');
+								createPagerClickEvent(id, "#pagingBox", populateData);
 								
 								
 								if(map != undefined && map != null && _latitude.toString() != "" && _longitude != ""){
@@ -1840,12 +1721,91 @@ function facility_popup(options){
 								
 								fac_dlg.toggle();
 								fac_dlg = null;
-								
-								break;
 							}
+							else con.close();
 						}
-					}			
+					}
 				}
+				else{
+					if(exists){
+						_name = _name.charAt(0).toUpperCase() + _name.slice(1);
+						
+						var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+						if(con != null){
+							con.open();
+
+							var query    = "UPDATE `facilities` SET ";								
+								query   += "	`FacilityName` = @FacilityName, ";
+								//query   += "	`CommonName` = @CommonName, ";
+								if(_location == "Mainland")query   += "	`Zone` = @Zone, ";
+								query   += "	`Region` = @Region, ";
+								query   += "	`District` = @District, ";
+								if(_location == "Mainland")query   += "	`Council` = @Council, ";
+								//query   += "	`Ward` = @Ward, ";
+								//query   += "	`VillageStreet` = @VillageStreet, ";
+								query   += "	`FacilityType` = @FacilityType, ";								
+								if(_latitude.length > 0 && !isNaN(_latitude))query   += "	`Latitude` = @Latitude, ";
+								if(_longitude.length > 0 && !isNaN(_longitude))query   += "	`Longitude` = @Longitude, ";
+								query   += "	`OperatingStatus` = @OperatingStatus ";								
+								query   += "WHERE `FacilityNumber` = @FacilityNumber ";
+								query   += "AND `Location` = @Location ";	
+							
+							var comm = con.createCommand(query);
+							if(comm != null){
+								comm.addParameter("@FacilityNumber", "String", _id);
+								comm.addParameter("@FacilityName", "String", _name);
+								//comm.addParameter("@CommonName", "String", _id.trim());
+								if(_location == "Mainland")comm.addParameter("@Zone", "String", _zone);
+								comm.addParameter("@Region", "String", _region);
+								comm.addParameter("@District", "String", _district);
+								if(_location == "Mainland")comm.addParameter("@Council", "String", _council);
+								//comm.addParameter("@Ward", "String", _id.trim());
+								//comm.addParameter("@VillageStreet", "String", _id.trim());
+								comm.addParameter("@FacilityType", "String", _facilityTypes);
+								comm.addParameter("@OperatingStatus", "String", "Operating");
+								if(_latitude.length > 0 && !isNaN(_latitude))comm.addParameter("@Latitude", "Double", _latitude);
+								if(_longitude.length > 0 && !isNaN(_longitude))comm.addParameter("@Longitude", "Double", _longitude);
+								comm.addParameter("@Location", "String", _location);
+								comm.executeNonQuery();
+								con.close();
+								
+								var id = _name[0].toUpperCase();
+								if(id >= 0 && id <= 9)id = "0_9";
+						
+								$('#Page_'+id).removeClass('Disabled');	
+								$("#pagingBox").find('.Pager').each(function(){
+									$(this).removeClass('Selected');
+								});			
+								$('#Page_'+id).addClass('Selected');
+								createPagerClickEvent(id, "#pagingBox", populateData);
+								
+								
+								if(map != undefined && map != null && _latitude.toString() != "" && _longitude != ""){
+									var latlong = _longitude+","+_latitude;				
+									var reCenter = getLatLong(latlong);	
+
+									map.options.maxZoom = 18;
+									map.eachLayer(function(layer) {
+										if(layer instanceof L.TileLayer )
+											layer.options.maxZoom = 18;
+									});
+
+									map.flyTo([reCenter[0]-0.002,reCenter[1]],17);
+									
+									mapMarkers.clearLayers();
+									var marker = L.marker(reCenter);
+									marker.addTo(mapMarkers);
+								}
+								
+								populateData(id, { FacilityNumber:_id, Location:_location });
+								
+								fac_dlg.toggle();
+								fac_dlg = null;
+							}
+							else con.close();
+						}
+					}
+				}			
 			}
 			else{
 				if(_id.trim().length == 0){
@@ -1979,8 +1939,6 @@ $('#addFacility').click(function(){
 		}
 		else con.close();
 	}
-	//options.Locations = config.Locations.map(function(d){ return d.Name; }).filter(function(d){ return d != ""; }); 
-	//options.Locations.sort();
 	
 	options.Facilitytypes = null;
 	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
@@ -2004,8 +1962,6 @@ $('#addFacility').click(function(){
 		}
 		else con.close();
 	}	
-	//options.Facilitytypes = config.FacilityTypes.map(function(d){ return d.replace('Hospital - ','').replace('Clinic - ',''); }).filter(function(d){ return d != ""; }); 
-	//options.Facilitytypes.sort();
 	
 	options.Zone = null;
 	options.Zones = []; 
@@ -2034,7 +1990,7 @@ $('#addFacility').click(function(){
 //map = Render({Latitude:"-6.812102",Longitude:"39.297465"});
 map = Render({Latitude:"",Longitude:""});
 
-var pagerList = preparePager();
+var pagerList = preparePager("#pagingBox", "FacilityName", "facilities", populateData);
 if(pagerList.length > 0){
 	var fisrtID = pagerList.shift();
 	$('#Page_'+fisrtID).addClass('Selected');

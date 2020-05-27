@@ -61,10 +61,35 @@ function getRoles(){
 }
 
 function getLanguages(){
-	return ["Default","English","Francais"];
+	var languages = ["Default"];
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query  = "SELECT distinct `Code`  ";
+		query += "FROM `languages`  ";
+		query += "ORDER BY `Code` ";
+		
+		var comm = con.createCommand(query);
+		if(comm != null){
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null)languages.push(row.Code);
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+	return languages;
 }
 
 function edit_user(item){
+	var userID 					= $(item).parent().data("id");
 	var language 				= $(item).parent().data("language");
 	var diplay_name_at_result	= $(item).parent().data("diplay-name-at-result");
 	var role 					= $(item).parent().data("role");
@@ -119,8 +144,8 @@ function edit_user(item){
 		content += '					<i class="mdi mdi-account-question" />';
 		content += '				</div>';
 		content += '				<select class="diplaynameatresult">';
-		content += '					<option '+(diplay_name_at_result == "Diplay Name At Result Entry" ? 'selected=""' : '')+'>Diplay Name At Result Entry</option>';
-		content += '					<option '+(diplay_name_at_result == "Diplay Name At Result Entry" ? '' : 'selected=""')+'>Dont display</option>';
+		content += '					<option '+(diplay_name_at_result == '1' ? 'selected=""' : '')+'>Diplay Name At Result Entry</option>';
+		content += '					<option '+(diplay_name_at_result == '0' ? 'selected=""' : '')+'>Dont display</option>';
 		content += '				</select>';
 		content += '			</div>';
 		content += '		</div>';
@@ -244,34 +269,43 @@ function edit_user(item){
 		if(_name.length > 0 && _username.length > 0  && _password.length > 0  && _role != "Role..."  && _language != "Language..."  &&
 		   !$(user_dlg.el).find(".phone-mobile-input").parent().hasClass("is-invalid") &&
 		   !$(user_dlg.el).find(".email-input").parent().hasClass("is-invalid")){
-		
-			var config_file = System.IO.Path.Combine("web","blis","configurations","users.json");
-			if(System.IO.File.Exists(config_file)){
-				var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+		   
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			if(con != null){
+				con.open();
+
+				var query    = "UPDATE `users` SET ";								
+					query   += " `Name` = @Name ";
+					query   += ",`Email` = @Email ";
+					query   += ",`PhoneMobile` = @PhoneMobile ";
+					query   += ",`Username` = @Username ";
+					query   += ",`Password` = @Password ";
+					query   += ",`Role` = @Role ";
+					query   += ",`DiplayNameAtResult` = @DiplayNameAtResult ";
+					query   += ",`Language` = @Language ";
+					query   += "WHERE `ID` = @ID ";
 				
-				for(var x=0; x<configs.length; x++){
-					var config = configs[x];
-					if(name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
-						
-						config.Name = _name;
-						config.Email = _email;
-						config.PhoneMobile = _phone_mobile;
-						config.Username = _username;
-						config.Password = _password;
-						config.Role = _role,
-						config.DiplayNameAtResult = _diplayNameAtResult == "" ? true : false;
-						config.Language = _language;
-						
-						System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
-						
-						loadData();
-											
-						user_dlg.toggle();
-						user_dlg = null;						
-						
-						break;
-					}
+				var comm = con.createCommand(query);
+				if(comm != null){
+					comm.addParameter("@ID", "Int32", userID);
+					comm.addParameter("@Name", "String", _name);
+					comm.addParameter("@Email", "String", _email);
+					comm.addParameter("@PhoneMobile", "String", _phone_mobile);
+					comm.addParameter("@Username", "String", _username);
+					comm.addParameter("@Password", "String", _password);
+					comm.addParameter("@Role", "String", _role);
+					comm.addParameter("@DiplayNameAtResult", "Int32", _diplayNameAtResult == "Diplay Name At Result Entry" ? 1 : 0);
+					comm.addParameter("@Language", "String", _language);
+					comm.executeNonQuery();
+					con.close();
+					
+					loadData();
+										
+					user_dlg.toggle();
+					user_dlg = null;	
+					
 				}
+				else con.close();
 			}
 		}
 		else{
@@ -332,8 +366,8 @@ function edit_user(item){
 }
 
 function delete_user(item){
-	var name 			= $(item).parent().data("name");
-	var config_file = System.IO.Path.Combine("web","blis","configurations","users.json");
+	var name		= $(item).parent().data("name");
+	var userID		= $(item).parent().data("id");
 	
 	
 	var content = '';
@@ -367,24 +401,26 @@ function delete_user(item){
 	
 	$(user_dlg.el).find(".yesButton").unbind( "click" );
 	$(user_dlg.el).find(".yesButton").click(function() {
-		if(System.IO.File.Exists(config_file)){
-			var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+	
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		if(con != null){
+			con.open();
 
-			for(var x=0; x<configs.length; x++){
-				var config = configs[x];
-				if(name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
-					configs.splice(x, 1);
-					
-					System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
-					
-					loadData();
-										
-					user_dlg.toggle();
-					user_dlg = null;						
-					
-					break;
-				}
-			}		
+			var query    = "DELETE FROM `users` ";							
+				query   += "WHERE `ID` = @ID ";
+			
+			var comm = con.createCommand(query);
+			if(comm != null){
+				comm.addParameter("@ID", "Int32", userID);
+				comm.executeNonQuery();
+				con.close();
+				
+				loadData();
+									
+				user_dlg.toggle();
+				user_dlg = null;	
+			}
+			else con.close();
 		}
 	});
 	
@@ -395,11 +431,11 @@ function delete_user(item){
 	});
 }
 
-function add_user(name, email, phone_mobile, username, password, role, diplay_name_at_result, language){
+function add_user(id, name, email, phone_mobile, username, password, role, diplay_name_at_result, language){
 	var isDefault = "mdi-help-circle";
 	//if(!enabled)isDefault = "mdi-close";
-
-	var user  = '<div data-language="'+language+'" data-diplay-name-at-result="'+diplay_name_at_result+'" data-role="'+role+'" data-password="'+password+'" data-name="'+name+'" data-email="'+email+'" data-phone-mobile="'+phone_mobile+'" data-username="'+username+'" class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden " style="width:100%; padding:0px; min-height: 32px; max-height: 32px;">';
+	
+	var user  = '<div data-id="'+id+'" data-language="'+language+'" data-diplay-name-at-result="'+diplay_name_at_result+'" data-role="'+role+'" data-password="'+password+'" data-name="'+name+'" data-email="'+email+'" data-phone-mobile="'+phone_mobile+'" data-username="'+username+'" class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden " style="width:100%; padding:0px; min-height: 32px; max-height: 32px;">';
 		
 		user += '	<div tooltip="Username: '+username+', Role: '+role+', DiplayNameAtResult: '+(diplay_name_at_result ? "Yes" : "No")+', Language: '+language+'" flow="right" class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; min-height: 32px; max-height: 32px; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi '+isDefault+'"></i></span></div>';
 		user += '	<div class="FlexDisplay Divider-Right" style="min-width:200px; max-width:200px; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+email+'</span></div>';
@@ -416,15 +452,38 @@ function add_user(name, email, phone_mobile, username, password, role, diplay_na
 function loadData(){
 	$(".UsersList").html('');
 	
-	var config_file = System.IO.Path.Combine("web","blis","configurations","users.json");
-	if(System.IO.File.Exists(config_file)){
-		var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
-		
-		for(var x=0; x<configs.length; x++){
-			var config = configs[x];
-			add_user(config.Name,config.Email,config.PhoneMobile,config.Username,config.Password,config.Role,config.DiplayNameAtResult,config.Language );
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query  = "SELECT ";
+			query += "	`ID` ";
+			query += "	, `Name` ";
+			query += "	, `Email` ";
+			query += "	, `PhoneMobile` ";
+			query += "	, `Username` ";
+			query += "	, `Password` ";
+			query += "	, `Role` ";
+			query += "	, `DiplayNameAtResult` ";
+			query += "	, `Language` ";
+			query += "FROM `users` ";
+				
+		var comm = con.createCommand(query);
+		if(comm != null){
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null){
+						add_user(row.ID,row.Name,row.Email,row.PhoneMobile,row.Username,row.Password,row.Role,row.DiplayNameAtResult,row.Language );
+					}
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
 		}
-		
+		else con.close();
 	}
 }
 
@@ -606,52 +665,90 @@ $(".add-user").click(function(){
 		if(_name.length > 0 && _username.length > 0  && _password.length > 0  && _role != "Role..."  && _language != "Language..." &&
 		   !$(user_dlg.el).find(".phone-mobile-input").parent().hasClass("is-invalid") &&
 		   !$(user_dlg.el).find(".email-input").parent().hasClass("is-invalid")){
-		
-			var config_file = System.IO.Path.Combine("web","blis","configurations","users.json");
-			if(System.IO.File.Exists(config_file)){
-				var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
-		
-				var exists = false;
-				for(var x=0; x<configs.length; x++){
-					var config = configs[x];
-					if(_name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
-						exists = true;
-						break;
-					}
-				}
+		   
+			var exists = false;
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			if(con != null){
+				con.open();
+
+				var query   = "SELECT `ID` ";
+					query  += "FROM `users` "; 
+					query  += "WHERE `Email` = @Email  ";
+					query  += "AND `PhoneMobile` = @PhoneMobile  ";
 				
-				if(!exists){
-					_name = _name.charAt(0).toUpperCase() + _name.slice(1);
-					
-					configs.push({
-						"Name": _name,
-						"Email": _email,
-						"PhoneMobile": _phone_mobile,
-						"Username": _username,
-						"Password": _password,
-						"Role": _role,
-						"DiplayNameAtResult": _diplayNameAtResult == "" ? true : false,
-						"Language": _language
-					});
-					
-					System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
-					
-					loadData();
-					
-					user_dlg.toggle();
-					user_dlg = null;
-					
-				}
-				else{
-					var item = $(user_dlg.el).find(".name-input");
-					if(item != undefined && item != null){
-						item.parent().addClass("is-invalid");
-						item.parent().attr("tooltip","User already exists");
-						item.focus(function(){
-							$(this).parent().removeClass("is-invalid");
-							$(this).parent().attr("tooltip","");
-						});
+				var comm = con.createCommand(query);
+				if(comm != null){
+					comm.addParameter("@Email", "String", _email);
+					comm.addParameter("@PhoneMobile", "String", _phone_mobile);
+					var reader = comm.executeReader();
+					if(reader != null){
+						exists = reader.read();
+						reader.close();
+						con.close();				
 					}
+					else con.close();
+				}
+				else con.close();
+			}
+			
+			if(!exists){
+				_name = _name.charAt(0).toUpperCase() + _name.slice(1);
+				
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+				if(con != null){
+					con.open();
+
+					var query    = "INSERT INTO `users` ( ";
+						query   += "	`Name` ";
+						query   += "	,`Email` ";
+						query   += "	,`PhoneMobile` ";
+						query   += "	,`Username` ";
+						query   += "	,`Password` ";
+						query   += "	,`Role` ";
+						query   += "	,`DiplayNameAtResult` ";
+						query   += "	,`Language` ";
+						query   += ") ";
+						query   += "VALUES ( ";
+						query   += "	@Name ";
+						query   += "	,@Email ";
+						query   += "	,@PhoneMobile ";
+						query   += "	,@Username ";
+						query   += "	,@Password ";
+						query   += "	,@Role ";
+						query   += "	,@DiplayNameAtResult ";
+						query   += "	,@Language ";
+						query   += ")";
+					
+					var comm = con.createCommand(query);
+					if(comm != null){
+						comm.addParameter("@Name", "String", _name);
+						comm.addParameter("@Email", "String", _email);
+						comm.addParameter("@PhoneMobile", "String", _phone_mobile);
+						comm.addParameter("@Username", "String", _username);
+						comm.addParameter("@Password", "String", _password);
+						comm.addParameter("@Role", "String", _role);
+						comm.addParameter("@DiplayNameAtResult", "Int32", _diplayNameAtResult == "Diplay Name At Result Entry" ? 1 : 0);
+						comm.addParameter("@Language", "String", _language);
+						comm.executeNonQuery();
+						con.close();
+												
+						loadData();
+					
+						user_dlg.toggle();
+						user_dlg = null;					
+					}
+					else con.close();
+				}
+			}
+			else{
+				var item = $(user_dlg.el).find(".name-input");
+				if(item != undefined && item != null){
+					item.parent().addClass("is-invalid");
+					item.parent().attr("tooltip","User already exists");
+					item.focus(function(){
+						$(this).parent().removeClass("is-invalid");
+						$(this).parent().attr("tooltip","");
+					});
 				}
 			}
 		}

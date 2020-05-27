@@ -139,6 +139,79 @@ function getRootPath(){
 	return System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),"web","blis");
 }
 
+function createPagerClickEvent(id, host, callback){
+	$('#Page_'+id).removeClass('Disabled');						
+	$('#Page_'+id).off("click");
+	$('#Page_'+id).click(function(){
+		if(!$(this).hasClass('Disabled')){
+			$(host).find('.Pager').each(function(){
+				$(this).removeClass('Selected');
+			});
+			$(this).addClass('Selected');
+			
+			var _id = $(this).attr('id').replace('Page_','');	
+			if(callback != undefined && callback != null)callback(_id);
+		}
+	});
+}
+
+
+function preparePager(id, column, table, callback){
+	$(id).html('');
+	
+	var pagerList = [];
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query  = "SELECT distinct ";
+		query += "(case when (substr(`"+column+"` ,1,1) GLOB '*[^0-9]*') = 0 then '0_9' ";
+		query += "	  else upper(substr(`"+column+"` ,1,1)) ";
+		query += "end) as `Tag`  ";
+		query += "FROM `"+table+"`  ";
+		query += "ORDER BY `"+column+"` ";
+		
+		var comm = con.createCommand(query);
+		if(comm != null){
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null)pagerList.push(row.Tag);
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+
+	var pages  = '<div id="Page_0_9" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager '+(pagerList.includes('0_9') ? '' : 'Disabled')+'" style="height:32px;">';
+		pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">0-9</span>';
+		pages += '</div>';
+	$(id).html(pages);
+	
+	if(pagerList.includes('0_9')){
+		createPagerClickEvent('0_9', id, callback);
+	}
+
+	for(x=65;x<65+26;x++){
+		var c = String.fromCharCode(x);
+		var pages = '<div id="Page_'+c+'" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager Divider-Left '+(pagerList.includes(c) ? '' : 'Disabled')+'" style="height:32px;">';
+			pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">'+c+'</span>';
+			pages += '</div>';
+		$("#pagingBox").append(pages);
+		
+		if(pagerList.includes(c)){
+			createPagerClickEvent(c, id, callback);
+		}
+	}
+		
+	return pagerList;
+}
+
+
 function create_custom_dropdowns() {
   $('select').each(function(i, select) {
 	if (!$(this).next().hasClass('select-dropdown')) {
