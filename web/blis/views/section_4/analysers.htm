@@ -984,152 +984,178 @@
 	$(".add-equipment").click(function(){	
 		hideNavigationDropMenu();
 		
-		var config_file = System.IO.Path.Combine("web","blis","configurations","lab_sections.json");
-		if(System.IO.File.Exists(config_file)){
-			var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+		var _sections = [];
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		if(con != null){
+			con.open();
+
+			var query   = "SELECT ";
+				query  += "	`Name` "; 
+				query  += "FROM `labSections` "; 
+				query  += "ORDER BY `Name` ";
 			
-			var content = equptment_details({
-				"Name": "",
-				"Version": "",
-				"ConfigFile": "",
-				"LabSection": "",
-				"CommunicationType": "",
-				"FeedSource": ""
-			}, configs);
-
-
-			var ana_dlg = ShowDialog('<i class="mdi mdi-file-tree"></i>', "Add equipment", content,{
-				onCloseDialog : function() {
-					ana_dlg = null;
-					return false; 
+			var comm = con.createCommand(query);
+			if(comm != null){
+				comm.addParameter("@Code", "String", _language_value);
+				comm.addParameter("@Name", "String", _category_value);
+				var reader = comm.executeReader();
+				if(reader != null){
+					while(reader.read()){
+						var row = JSON.parse(reader.getValues());	
+						if(row != undefined && row != null){
+							_sections.psuh(row.Name);
+						}
+					}
+					reader.close();
+					con.close();				
 				}
-			},"320px");	
+				else con.close();
+			}
+			else con.close();
+		}
+		_sections.push("Other");
+		
+		var content = equptment_details({
+			"Name": "",
+			"Version": "",
+			"ConfigFile": "",
+			"LabSection": "",
+			"CommunicationType": "",
+			"FeedSource": ""
+		}, _sections);
+
+
+		var ana_dlg = ShowDialog('<i class="mdi mdi-file-tree"></i>', "Add equipment", content,{
+			onCloseDialog : function() {
+				ana_dlg = null;
+				return false; 
+			}
+		},"320px");	
+		
+		$(ana_dlg.el).find(".enter-value").unbind( "click" );
+		$(ana_dlg.el).find(".enter-value").click(function() {
+		
+			var _feedSource = $(ana_dlg.el).find(".select-dropdown.connectionType").find(".current").text();				
+			var _name = $(ana_dlg.el).find(".name-input").val().trim();
+			var _version = $(ana_dlg.el).find(".version-input").val().trim();				
+			var _labSection = $(ana_dlg.el).find(".select-dropdown.labSections").find(".current").text();
+			var _communicationType = $(ana_dlg.el).find(".select-dropdown.CommunicationType").find(".current").text();				
+			var _config_file = $(ana_dlg.el).find(".config-file-input").val().trim();
 			
-			$(ana_dlg.el).find(".enter-value").unbind( "click" );
-			$(ana_dlg.el).find(".enter-value").click(function() {
-			
-				var _feedSource = $(ana_dlg.el).find(".select-dropdown.connectionType").find(".current").text();				
-				var _name = $(ana_dlg.el).find(".name-input").val().trim();
-				var _version = $(ana_dlg.el).find(".version-input").val().trim();				
-				var _labSection = $(ana_dlg.el).find(".select-dropdown.labSections").find(".current").text();
-				var _communicationType = $(ana_dlg.el).find(".select-dropdown.CommunicationType").find(".current").text();				
-				var _config_file = $(ana_dlg.el).find(".config-file-input").val().trim();
-				
-				if(_feedSource != "Connection Type" && _name.length > 0 && _version.length && _labSection != "Lab Section" &&
-				   _communicationType != "Communication Type" && _config_file.length > 0){
-				   
-					var config_file = System.IO.Path.Combine("web","blis","configurations","analysers.json");
-					if(System.IO.File.Exists(config_file)){
-						var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
-						
-						var id = _name[0].toUpperCase();
-						if(id >= 0 && id <= 9)id = "0_9";
-						
-						var exists = false;
-						for(var x=0; x<configs.length; x++){
-							var config = configs[x];
-							if(_name.trim().toLowerCase() == config.Name.trim().toLowerCase() &&
-							   _feedSource.trim().toLowerCase() == config.FeedSource.trim().toLowerCase()){
-								exists = true;
-								break;
-							}
+			if(_feedSource != "Connection Type" && _name.length > 0 && _version.length && _labSection != "Lab Section" &&
+			   _communicationType != "Communication Type" && _config_file.length > 0){
+			   
+				var config_file = System.IO.Path.Combine("web","blis","configurations","analysers.json");
+				if(System.IO.File.Exists(config_file)){
+					var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
+					
+					var id = _name[0].toUpperCase();
+					if(id >= 0 && id <= 9)id = "0_9";
+					
+					var exists = false;
+					for(var x=0; x<configs.length; x++){
+						var config = configs[x];
+						if(_name.trim().toLowerCase() == config.Name.trim().toLowerCase() &&
+						   _feedSource.trim().toLowerCase() == config.FeedSource.trim().toLowerCase()){
+							exists = true;
+							break;
 						}
+					}
+					
+					if(!exists){
+						_name = _name.charAt(0).toUpperCase() + _name.slice(1);
 						
-						if(!exists){
-							_name = _name.charAt(0).toUpperCase() + _name.slice(1);
-							
-							var settings = {};
-							if(_feedSource == "TCP/IP"){
-								settings = {
-									"IP": "",
-									"Port": "",
-									"AutoReconnect": "",
-									"Mode": ""
-								};								
-							}
-							else if(_feedSource == "Serial"){
-								settings = {
-									"BaudRate": "",
-									"Parity": "",
-									"StopBits": "",
-									"DataBits": "",
-									"Port": ""
-								};
-							}
-							else if(_feedSource == "File"){
-								settings = {
-									"BaseDirectory": "",
-									"IncludeSubDirectory": "",
-									"SubDirectoryFormat": "",
-									"FileNameFormat": "",
-									"FileExtension": "",
-									"FileSeparator": ""
-								};
-							}
-							else if(_feedSource == "DataSource"){
-								settings = {
-									"Source": ""
-								};
-							}
-						
-							configs.push({
-								"Name": _name,
-								"Version": _version,
-								"ConfigFile": _config_file,
-								"LabSection": _labSection,
-								"CommunicationType": _communicationType,
-								"FeedSource": _feedSource,
-								"Settings": settings
-							});
-							
-							System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
-							
-							$('#Page_'+id).removeClass('Disabled');	
-							$("#pagingBox").find('.Pager').each(function(){
-								$(this).removeClass('Selected');
-							});			
-							$('#Page_'+id).addClass('Selected');
-							
-							$('#Page_'+id).off("click");
-							$('#Page_'+id).click(function(){
-								if(!$(this).hasClass('Disabled')){
-									$("#pagingBox").find('.Pager').each(function(){
-										$(this).removeClass('Selected');
-									});
-									$(this).addClass('Selected');
-									
-									var _id = $(this).attr('id').replace('Page_','');	
-									populateData(configs, _id);
-								}
-							});
-							
-							populateData(configs, id);
-							
-							ana_dlg.toggle();
-							ana_dlg = null;
+						var settings = {};
+						if(_feedSource == "TCP/IP"){
+							settings = {
+								"IP": "",
+								"Port": "",
+								"AutoReconnect": "",
+								"Mode": ""
+							};								
 						}
-						else{
-							var item = $(ana_dlg.el).find(".name-input");
-							if(item != undefined && item != null){
-								item.parent().addClass("is-invalid");
-								item.parent().attr("tooltip","Equipment name already exists");
-								item.focus(function(){
-									$(this).parent().removeClass("is-invalid");
-									$(this).parent().attr("tooltip","");
+						else if(_feedSource == "Serial"){
+							settings = {
+								"BaudRate": "",
+								"Parity": "",
+								"StopBits": "",
+								"DataBits": "",
+								"Port": ""
+							};
+						}
+						else if(_feedSource == "File"){
+							settings = {
+								"BaseDirectory": "",
+								"IncludeSubDirectory": "",
+								"SubDirectoryFormat": "",
+								"FileNameFormat": "",
+								"FileExtension": "",
+								"FileSeparator": ""
+							};
+						}
+						else if(_feedSource == "DataSource"){
+							settings = {
+								"Source": ""
+							};
+						}
+					
+						configs.push({
+							"Name": _name,
+							"Version": _version,
+							"ConfigFile": _config_file,
+							"LabSection": _labSection,
+							"CommunicationType": _communicationType,
+							"FeedSource": _feedSource,
+							"Settings": settings
+						});
+						
+						System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
+						
+						$('#Page_'+id).removeClass('Disabled');	
+						$("#pagingBox").find('.Pager').each(function(){
+							$(this).removeClass('Selected');
+						});			
+						$('#Page_'+id).addClass('Selected');
+						
+						$('#Page_'+id).off("click");
+						$('#Page_'+id).click(function(){
+							if(!$(this).hasClass('Disabled')){
+								$("#pagingBox").find('.Pager').each(function(){
+									$(this).removeClass('Selected');
 								});
+								$(this).addClass('Selected');
+								
+								var _id = $(this).attr('id').replace('Page_','');	
+								populateData(configs, _id);
 							}
+						});
+						
+						populateData(configs, id);
+						
+						ana_dlg.toggle();
+						ana_dlg = null;
+					}
+					else{
+						var item = $(ana_dlg.el).find(".name-input");
+						if(item != undefined && item != null){
+							item.parent().addClass("is-invalid");
+							item.parent().attr("tooltip","Equipment name already exists");
+							item.focus(function(){
+								$(this).parent().removeClass("is-invalid");
+								$(this).parent().attr("tooltip","");
+							});
 						}
 					}
 				}
-			});
-			
-			create_custom_dropdowns();
-		
-			var _labSections = $(ana_dlg.el).find(".select-dropdown.labSections").find(".list");
-			if(_labSections != undefined && _labSections != null){
-				_labSections.addClass("scroll scroll2");
-				_labSections.css({"overflow-y": "auto", "max-height": "200px"});
 			}
+		});
+		
+		create_custom_dropdowns();
+	
+		var _labSections = $(ana_dlg.el).find(".select-dropdown.labSections").find(".list");
+		if(_labSections != undefined && _labSections != null){
+			_labSections.addClass("scroll scroll2");
+			_labSections.css({"overflow-y": "auto", "max-height": "200px"});
 		}
 	});
 

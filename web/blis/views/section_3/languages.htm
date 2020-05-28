@@ -37,7 +37,6 @@
 									<option value="" selected="">Language...</option>
 									<option value="en">English</option>
 									<option value="fr">Francais</option>
-									<option value="sw">Swahili</option>
 								</select>
 							</div>
 						</div>
@@ -80,35 +79,25 @@
 					 
 				</div>
 			</div>
-			<div class="FlexDisplay FlexGrow" style="height:100%; margin:16px 16px 16px 16px;">
-				<div class="page-container Flex FlexColumn Overflow-Hidden inner-container Round Shadow" style="position:relative; height:calc(100% - 0px);  width:100%;">
-					<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
-						<div class="FlexDisplay Flex">
-							<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">TRANSALATIONS</h4>
-						</div>
+			
+			<div class="FlexDisplay FlexRow Divider-Bottom inner-container-parent Round-Top" style="min-height:32px; max-height:32px; margin:16px 16px 0px 16px;" >
+				<div class="FlexDisplay Flex">
+					<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">TRANSALATIONS</h4>
+				</div>
+			</div>				
+			<div class="FlexDisplay FlexGrow FlexColumn FlexBoxSizing-BorderBox scroll scroll2 Round-Bottom Shadow inner-container-parent" style="height:100%; margin:0px 16px 16px 16px; ">
+				<div class="Flex FlexColumn " style="position:relative; height:calc(100%); width:100%;">
+					<div class="Flex FlexColumn page-container CategoriesList" style="position:relative; padding:8px 0px 0px 0px; height:calc(100% - 0px);  width:100%;">
+				
 					</div>
-					<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 32px); z-index:2;">
-						<!--<div class="FlexDisplay FlexColumn"  style="width:100%; min-height: 24px; max-height: 24px;">
-							<div class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden " style="width:100%; padding:0px;">
-								<div class="FlexDisplay FlexRow Overflow-Hidden " style="width:100%; padding:0px;">
-									<div class="FlexDisplay Divider-Right" style="min-width:256px; max-width:256px; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">DEFAULT</span></div>
-									<div class="FlexDisplay" style="width:100%; min-height: 32px; max-height: 32px; overflow:hidden; padding:7px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">TRANSALATION</span></div>			
-								</div>	
-							</div>	
-						</div>-->
-						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2 CategoriesList" style="overflow-y:auto; padding:8px 0px 0px 0px; height:calc(100% - 0px);">
-							
-							
-							
-						</div>
-					</div>			
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 <script>
-var _config = null;
+var saveList = [];
+
 
 $("#backBtn").unbind( "click" );
 $('#backBtn').click(function(){
@@ -129,37 +118,75 @@ function language_category_selected(item){
 			
 		if(_language_value != undefined && _language_value != null &&
 		   _category_value != undefined && _category_value != null){
-	
-			var config_file = System.IO.Path.Combine("web","blis","configurations","languages_"+_language_value+".json");
-			if(System.IO.File.Exists(config_file)){
-				_config = JSON.parse(System.IO.File.ReadAllText(config_file));
-				var _item = _config.filter(function(d){ return d.name == _category_value; }).shift();
-				if(_item != undefined && _item != null){
-					
-						var element = _item.category;
-						Object.keys(element).forEach(function(key){
+		   
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			if(con != null){
+				con.open();
 
-							var category = '<div data-language="'+_language_value+'" data-category="'+_category_value+'" data-id="'+key+'" class="FlexDisplay Flex LanguageItem" style="min-height: 32px; max-height: 32px; margin:0px 12px 8px 12px;"> ';
-								category += '	<div class="FlexDisplay Flex FlexRow form-control"> ';
-								category += '		<div class="icon" tooltip="'+key+'" flow="right"> ';
-								category += '			<i class="mdi mdi-information" /> ';
-								category += '		</div> ';
-								category += '		<input type="text" placeholder="'+element[key]+'" value="'+element[key]+'"/> ';
-								category += '	</div> ';
-								category += '</div> ';
-							
-							$(".CategoriesList").append(category);
-							
-							$(".CategoriesList").find("[data-id='" + key + "']").on('change keydown paste input', function(){
-								element[key] = $(this).find("input").val().trim();
-							});
-						});
-					
-					$(".CategoriesList").scrollTop(0);
+				var query   = "SELECT ";
+					query  += "	`ID` "; 
+					query  += "	,`Code` "; 
+					query  += "	,`Name` "; 
+					query  += "	,`Category` "; 
+					query  += "	,`Value` "; 
+					query  += "FROM `languages` "; 
+					query  += "WHERE LOWER(`Code`) = LOWER(@Code)  ";
+					query  += "AND LOWER(`Name`) = LOWER(@Name)  ";
+				
+				var comm = con.createCommand(query);
+				if(comm != null){
+					comm.addParameter("@Code", "String", _language_value);
+					comm.addParameter("@Name", "String", _category_value);
+					var reader = comm.executeReader();
+					if(reader != null){
+						while(reader.read()){
+							var row = JSON.parse(reader.getValues());	
+							if(row != undefined && row != null){
+								var val = row.Value;
+								if(saveList[row.ID] != undefined && saveList[row.ID] != null){
+									if(saveList[row.ID][row.Code] != undefined && saveList[row.ID][row.Code] != null){
+										if(saveList[row.ID][row.Code][row.Name] != undefined && saveList[row.ID][row.Code][row.Name] != null){
+											if(saveList[row.ID][row.Code][row.Name][row.Category] != undefined && saveList[row.ID][row.Code][row.Name][row.Category] != null){
+												val = saveList[row.ID][row.Code][row.Name][row.Category];
+											}
+										}
+									}
+								}
+								
+								var category = '<div data-code="'+row.Code+'" data-name="'+row.Name+'" data-category="'+row.Category+'" data-id="'+row.ID+'" class="FlexDisplay Flex LanguageItem" style="min-height: 32px; max-height: 32px; margin:0px 12px 8px 12px;"> ';
+									category += '	<div class="FlexDisplay Flex FlexRow form-control"> ';
+									category += '		<div class="icon" tooltip="'+row.Category+'" flow="right"> ';
+									category += '			<i class="mdi mdi-information" /> ';
+									category += '		</div> ';									
+									category += '		<input type="text" placeholder="'+val+'" value="'+val+'"/> ';
+									category += '	</div> ';
+									category += '</div> ';
+								
+								$(".CategoriesList").append(category);
+								
+								$(".CategoriesList").find("[data-id='" + row.ID + "']").on('change keydown paste input', function(){
+									var _id			= $(this).data("id");
+									var _code		= $(this).data("code");
+									var _name		= $(this).data("name");
+									var _category	= $(this).data("category");
+									
+									if(saveList[_id] == undefined)saveList[_id] = [];
+									if(saveList[_id][_code] == undefined)saveList[_id][_code] = [];
+									if(saveList[_id][_code][_name] == undefined)saveList[_id][_code][_name] = [];
+									saveList[_id][_code][_name][_category] = $(this).find("input").val().trim();
+								});
+							}
+						}
+						reader.close();
+						con.close();				
+					}
+					else con.close();
 				}
+				else con.close();
 			}
 		}
 	}
+	else saveList = [];
 }
 
 $(".save").unbind( "click" );
@@ -181,10 +208,84 @@ $(".save").click(function(){
 	if($(".CategoriesList").find(".LanguageItem .form-control.is-invalid").children().length == 0){
 		var _language 	=  $(".select-dropdown.language .current").text();
 		if(_language != "Language..."){
-			var _language_value = $(".select-dropdown.language").find(".list .option.selected").data("value");
-			var config_file = System.IO.Path.Combine("web","blis","configurations","languages_"+_language_value+".json");
-			if(System.IO.File.Exists(config_file)){
-				System.IO.File.WriteAllText(config_file,JSON.stringify(_config));
+		
+			if(saveList.length > 0){
+				var items = 0;
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+				if(con != null){
+					con.open();
+					
+					Object.keys(saveList).forEach(function(id){
+						if(saveList[id] != undefined){
+							Object.keys(saveList[id]).forEach(function(code){
+								if(saveList[id][code] != undefined){
+									Object.keys(saveList[id][code]).forEach(function(name){
+										if(saveList[id][code][name] != undefined){
+											Object.keys(saveList[id][code][name]).forEach(function(category){
+												var value = saveList[id][code][name][category];
+												if(value != undefined){
+												
+													var query    = "UPDATE `languages` SET `Value` = @Value ";
+														query   += "WHERE `ID` = @ID ";
+														query   += "AND `Code` = @Code ";
+														query   += "AND `Name` = @Name ";
+														query   += "AND `Category` = @Category ";
+													
+													var comm = con.createCommand(query);
+													if(comm != null){
+														comm.addParameter("@ID", "Int32", id);
+														comm.addParameter("@Code", "String", code);
+														comm.addParameter("@Name", "String", name);
+														comm.addParameter("@Category", "String", category);
+														comm.addParameter("@Value", "String", value);
+														comm.executeNonQuery();
+														
+														items++;
+													}
+												}
+											});
+										}
+									});
+								}
+							});
+						}
+					});
+					
+					con.close();
+				}
+				
+				var content = '';
+					content += '<div class="bar-container" style="margin:0px;">';
+					content += '	<div class="bar-progress"></div>';
+					content += '</div>'; 
+					
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:48px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<h4 class="feature-title mt-0" style="margin:auto auto; font-size: 12px; font-weight:normal;">'+items+' item'+(items == 1 ? '' : 's')+' updated</h4>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:56px; margin-bottom:8px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div class="FlexDisplay" style="margin:auto auto;">';
+					content += '				<div class="okButton button button-primary" style="margin:0px 4px 0px 0px;">Ok</div>';
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+					
+					content += '</div>';
+
+				var lang_dlg = ShowDialog('<i class="mdi mdi-translate"></i>', "Updated language", content,{
+					onCloseDialog : function() {
+						lang_dlg = null;
+						return false; 
+					}
+				},"400px");	
+				
+				$(lang_dlg.el).find(".okButton").unbind( "click" );
+				$(lang_dlg.el).find(".okButton").click(function() {
+					lang_dlg.toggle();
+					lang_dlg = null;	
+				});
 			}
 		}
 	}	

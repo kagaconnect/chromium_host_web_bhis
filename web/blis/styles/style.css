@@ -2179,6 +2179,16 @@ body,a,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 	background:#304057;
 }
 
+.inner-container-parent{
+	box-shadow:0 1px 2px rgba(0, 0, 0, 0.3); 
+	background:rgba(255, 255, 255, 0.9);
+}
+
+.lights-off .inner-container-parent{
+	box-shadow:0 1px 2px rgba(0, 0, 0, 0.3); 
+	background:#304057;
+}
+
 .inner-container::before {
     content: '';
 	opacity:0.2;
