@@ -73,7 +73,7 @@
 											<div class="icon">
 												<i class="mdi mdi-flask-outline" />
 											</div>
-											<input type="text" placeholder="Name"/>
+											<input class="test-name-input" type="text" placeholder="Name"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -81,7 +81,7 @@
 											<div class="icon">
 												<i class="mdi mdi-flask-outline" />
 											</div>
-											<input type="text" placeholder="Description"/>
+											<input class="description-input" type="text" placeholder="Description"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -90,18 +90,6 @@
 												<i class="mdi mdi-flask-outline" />
 											</div>
 											<select class="lab-sections" onchange="section_selected(this)">
-												<option value="-2" data-display-text="Lab Section" selected="">Lab Section</option>
-												<option value="1" data-display-text="Serology">Serology</option>
-												<option value="2" data-display-text="Hematology">Hematology</option>
-												<option value="4" data-display-text="HIV">HIV</option>
-												<option value="5" data-display-text="CD4">CD4</option>
-												<option value="6" data-display-text="Chemistry">Chemistry</option>
-												<option value="7" data-display-text="Microscopy">Microscopy</option>
-												<option value="8" data-display-text="Other">Other</option>
-												<option value="9" data-display-text="Hormonal">Hormonal</option>
-												<option value="10" data-display-text="Bacteriology">Bacteriology</option>
-												<option value="12" data-display-text="parasitology">parasitology</option>
-												<option value="-1" data-display-text="--New--">--New--</option>
 											</select>
 										</div>
 									</div>
@@ -121,7 +109,7 @@
 											<div class="icon">
 												<i class="mdi mdi-flask-outline" />
 											</div>
-											<input type="text" placeholder="Clinical Data"/>
+											<input class="clinical-data-input" type="text" placeholder="Clinical Data"/>
 										</div>
 									</div>
 									<div class="FlexHidden Flex FlexGrow SectionNameInput" style="min-width:130px;">
@@ -129,7 +117,7 @@
 											<div class="icon">
 												<i class="mdi mdi-flask-outline" />
 											</div>
-											<input type="text" placeholder="Section Name"/>
+											<input class="section-name-input" type="text" placeholder="Section Name"/>
 										</div>
 									</div>
 								</div>
@@ -149,7 +137,7 @@
 											<div class="icon">
 												<i class="mdi mdi-tray-full" />
 											</div>
-											<select>
+											<select class="panel-tests">
 												<option selected="">No</option>
 												<option>Yes</option>
 											</select>
@@ -160,7 +148,7 @@
 											<div class="icon">
 												<i class="mdi mdi-file-chart" />
 											</div>
-											<select>
+											<select class="hide-patient-name">
 												<option selected="">No</option>
 												<option>Yes</option>
 											</select>
@@ -185,7 +173,7 @@
 											<div class="icon">
 												<i class="mdi mdi-menu-open" />
 											</div>
-											<input type="text" placeholder="Prevalence Threshold"/>
+											<input class="prevalence-threshold-input" type="text" placeholder="Prevalence Threshold"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -193,7 +181,7 @@
 											<div class="icon">
 												<i class="mdi mdi-timelapse" />
 											</div>
-											<input type="text" placeholder="Target TAT"/>
+											<input class="target-tat-input" type="text" placeholder="Target TAT"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -201,7 +189,7 @@
 											<div class="icon">
 												<i class="mdi mdi-cash-usd" />
 											</div>
-											<input type="text" placeholder="Cost To Patient"/>
+											<input class="cost-to-patient-input" type="text" placeholder="Cost To Patient"/>
 										</div>
 									</div>
 								</div>
@@ -247,34 +235,228 @@
 	</div>
 </div>
 <script>
-
+var tests = [];
+var compatibleSpecimens = [];
 var transitioning = false;
 
-function add_test(value, autoScroll=true){
-	if(value != undefined && value != null && value.trim().length > 0){
+function getMeasurement(item){
+	var measurement = null;
+	var _testType = item.find(":first-child .select-dropdown.test-type").find(".current").text();
+	var _name = item.find(":first-child .measurement-name").val().trim();
+	var _unitDefault = item.find(":first-child .measurement-unit-default").val().trim();
+	
+	if(_name.length > 0){
+		measurement = {
+			TestType:_testType,
+			Name:_name,
+			UnitDefault:_unitDefault
+		};
+		
+		if(_testType == "Numeric Range"){
+			var _from = item.find(":first-child .range-from").val().trim();
+			var _to = item.find(":first-child .range-to").val().trim();
+			var _gender = item.find(":first-child .select-dropdown.genders").find(".current").text();
+			var _age_from = item.find(":first-child .age-range-from").val().trim();
+			var _age_to = item.find(":first-child .age-range-to").val().trim();
+			
+			if(_from.length > 0 && _to.length > 0 && _age_from.length > 0 && _age_to.length > 0 && _gender != "Choose..."){			
+				measurement.Information = {
+					From:_from,
+					To:_to,
+					Gender:_gender,
+					AgeFrom:_age_from,
+					AgeTo:_age_to
+				};
+			}
+			else measurement = null;
+		}
+		else if(_testType == "Alphanumeric Values"){
+			var _from = item.find(":first-child .from").val().trim();
+			var _to = item.find(":first-child .to").val().trim();
+			if(_from.length > 0 && _to.length > 0){	
+				measurement.Information = {
+					From:_from,
+					To:_to
+				};
+			}
+			else measurement = null;
+		}
+		else if(_testType == "Autocomplete"){
+			measurement.Information = [];
+			var _list = item.find(":first-child .select-dropdown.autocomplete-list .option").each(function(index){
+				var val = $(this).data("value");
+				if(val.length > 0){
+					measurement.Information.push(val);
+				}
+			});
+			
+			if(measurement.Information.length == 0) measurement = null;
+		}
+		else if(_testType == "Free Text"){
+		
+		}
+	}
+	
+	return measurement;
+}
+
+function save_test(){
+	var _name 					= $(".test-name-input").val().trim();
+	var _description 			= $(".description-input").val().trim();
+	var _labSection 			= $(".select-dropdown.lab-sections").find(".current").text();
+	var _clinicalData 			= $(".clinical-data-input").val().trim();
+	var _sectionName 			= $(".section-name-input").val().trim();
+	var _panelTests 			= $(".select-dropdown.panel-tests").find(".current").text();
+	var _hidePatientName 		= $(".select-dropdown.hide-patient-name").find(".current").text();
+	var _prevalenceThreshold 	= $(".prevalence-threshold-input").val().trim();
+	var _targetTAT 				= $(".target-tat-input").val().trim();
+	var _costToPatient 			= $(".cost-to-patient-input").val().trim();
+	
+	var _compatibleSpecimens 	= compatibleSpecimens.filter(function(v) { return v.State; }).map(function(v){ return v.Name; });
+	
+	var _totals					= 0;
+	var _measurements 			= [];
+	$(".MeasuresList").find('.TestContainer').each(function(x) {
+		_totals++;
+		
+		var child = $(this);		
+		var measurement = getMeasurement(child.find('.TestMain'));
+		if(measurement != null){
+			measurement.Subs = [];	
+			var hasErrors = false;
+			var subs = child.find('.TestSub').each(function(y) {
+				var subChild = $(this);
+				var subMeasurement = getMeasurement(subChild);
+				if(subMeasurement != null)measurement.Subs.push(subMeasurement);
+				else hasErrors = true;
+			});
+			if(!hasErrors)_measurements.push(measurement);
+		}
+	});
+	
+	if(_labSection == "--New--") _labSection = _sectionName;
+
+	if(_name != undefined && _name != null && _name.trim().length > 0 &&
+	   _measurements.length > 0 && _measurements.length == _totals && 
+	   _labSection != "Lab Section" && _labSection.length > 0){
+		
+		_name = _name.charAt(0).toUpperCase() + _name.slice(1);
+		
+		
+		//Delete compatible specimens first from db then add new ones
+		_compatibleSpecimens.forEach(function(specimen){
+			console.log(specimen);
+		});
+
+		//Delete messurements first from db then add new ones
+		$(".MeasuresList").find('.TestContainer').each(function(x) {
+			var child = $(this);		
+			var measurement = getMeasurement(child.find('.TestMain'));
+			//console.log(measurement);		
+			var subs = child.find('.TestSub').each(function(y) {
+				var subChild = $(this);
+				var subMeasurement = getMeasurement(subChild);
+				//console.log(subMeasurement);
+			});
+		});
+		
+		//TODO:add insert functions here
+		tests.push(_name);
+		load_tests();		
+	}
+}
+
+function load_tests(autoScroll=true){
+	tests.forEach(function(value){
 		var index = $('.testindex').last().text();
 		if(index.length == 0)index = 1;
 		else index = parseInt($('.testindex').last().text())+1;
-		
-		var test  = '<div class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold" style="min-height:32px;">';
+
+
+		var test  = '<div data-test-name="'+value+'" class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold" style="min-height:32px;">';
 			test += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
 			test += '		<h4 class="testindex feature-title mt-0" style="width:100%; margin:0px 0px 0px 0px; font-size: 12px; font-weight:normal; text-align:center;">'+(index)+'</h4>';
 			test += '	</div>';
 			test += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
-			test += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 12px; font-weight:normal;">'+value+' '+index+'</h4>';
+			test += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 12px; font-weight:normal;">'+value+'</h4>';
+			test += '	</div>';
+			test += '	<div class="FlexDisplay FlexRow" style="min-height:32px; min-width:24px; font-size:16px; padding:0px 8px;">';
+			test += '		<i onclick="delete_test(this)" class="mdi mdi-close-circle" style="margin:auto auto;"/>';
 			test += '	</div>';
 			test += '</div>';
 		
 		$('.TestsList').append(test);
 		if(autoScroll)$('.TestsList').scrollTop($('.TestsList')[0].scrollHeight);
+	});
+}
+
+function delete_test(item){
+	var _parent = $(item).parents(".CheckBoxBold");
+	if(_parent != undefined && _parent != null){
+		var _name = _parent.data("test-name");
+		var content = '';
+			content += '<div class="bar-container" style="margin:0px;">';
+			content += '	<div class="bar-progress"></div>';
+			content += '</div>'; 
+			
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:48px; margin-bottom:8px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<h4 class="feature-title mt-0" style="margin:auto auto; font-size: 12px; font-weight:normal; line-height:1;">Are you sure you want to delete the test "'+_name+'"?"</h4>';
+			content += '		</div>';
+			content += '	</div>';
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:56px; margin-bottom:8px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<div class="FlexDisplay" style="margin:auto auto;">';
+			content += '				<div class="yesButton button button-primary" style="margin:0px 4px 0px 0px;">Yes</div>';
+			content += '				<div class="noButton button button-primary" style="margin:0px 0px 0px 4px;">No</div>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			
+			
+			content += '</div>';
+
+
+		var test_dlg = ShowDialog('<i class="mdi mdi-flask-outline"></i>', "Delete test", content,{
+			onCloseDialog : function() {
+				fac_dlg = null;
+				return false; 
+			}
+		},"400px");	
+		
+		$(test_dlg.el).find(".noButton").unbind( "click" );
+		$(test_dlg.el).find(".noButton").click(function() {
+			test_dlg.toggle();
+			test_dlg = null;		
+		});
+		
+		$(test_dlg.el).find(".yesButton").unbind( "click" );
+		$(test_dlg.el).find(".yesButton").click(function() {
+		
+			//TODO:add delete functions here
+			_parent.remove();
+			
+			test_dlg.toggle();
+			test_dlg = null;
+		});
 	}
 }
 
-function add_specimen(x,value,isChecked=false, autoScroll=true){
+function specimen_checked(item, name){
+	var specimen = compatibleSpecimens.filter(function(v) { return v.Name == name; }).shift();
+	if(specimen != undefined && specimen != null){
+		specimen.State = item.checked;
+	}
+}
+
+function add_specimen(x,item,isChecked=false, autoScroll=true){
+
+	compatibleSpecimens.push({Name:item.Name, State:isChecked});
+	
 	var _specimen = '';
 	_specimen += '<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;">';
 	_specimen += '	<div class="FlexDisplay Divider-Right" style="min-width:40px; max-width:40px; height:100%; padding:0px 0px 0px 0px;">';
-	_specimen += '		<input type="checkbox" id="checkbox_'+x+'" class="checkbox" '+(isChecked ? "checked" : "")+' style="display: none;">';
+	_specimen += '		<input onchange="specimen_checked(this, \''+item.Name+'\');" type="checkbox" id="checkbox_'+x+'" class="checkbox" '+(isChecked ? "checked" : "")+' style="display: none;">';
 	_specimen += '		<label for="checkbox_'+x+'" class="check">';
 	_specimen += '		  <svg width="18px" height="18px" viewBox="0 0 18 18">';
 	_specimen += '			<path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>';
@@ -282,8 +464,11 @@ function add_specimen(x,value,isChecked=false, autoScroll=true){
 	_specimen += '		  </svg>';
 	_specimen += '		</label>';
 	_specimen += '	</div>	';						
-	_specimen += '	<div class="feature-content" style=" overflow:hidden; margin:-2px 12px 0px 12px;">';
-	_specimen += '		<span class="feature-title mt-0" style="font-size:12px; font-weight:normal; white-space:nowrap; width:100%; text-overflow:ellipsis; -webkit-line-clamp:1; color:#6B7A90;">'+value+'</span>';
+	_specimen += '	<div class="feature-content Flex FlexGrow" style=" overflow:hidden; margin:-2px 12px 0px 12px;">';
+	_specimen += '		<span class="feature-title mt-0" style="font-size:12px; font-weight:normal; white-space:nowrap; width:100%; text-overflow:ellipsis; -webkit-line-clamp:1; color:#6B7A90;">'+item.Name+'</span>';
+	_specimen += '	</div>';
+	_specimen += '	<div class="feature-content" style="margin:0px 12px 0px 12px;">';
+	_specimen += '		<span  tooltip="'+item.Description+'" flow="left" style="font-size:16px; width:24px; color:#6B7A90; '+(item.Description.length > 0 ? 'cursor:pointer;' : '')+' "><i class="mdi mdi-information" /></span>';
 	_specimen += '	</div>';
 	_specimen += '</div>';
 	
@@ -367,7 +552,6 @@ function proceedTo(item, index){
 	}
 }
 
-
 function hideNavigationDropMenu(){
 	$(".add-test .submenu").hide();
 	$(".add-test").attr('id', '');
@@ -380,15 +564,6 @@ $('#backBtn').click(function(){
 	var page = System.IO.Path.Combine("web","blis","views",backNavigation);
 	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
 });
-
-
-create_custom_dropdowns();
-
-var _labSections = $(".select-dropdown.lab-sections").find(".list");
-if(_labSections != undefined && _labSections != null){
-	_labSections.addClass("scroll scroll2");
-	_labSections.css({"overflow-y": "auto", "max-height": "200px"});
-}
 
 $(".select-dropdown.genders").each(function( index ) {
 	var _genders = $(this).find(".list");
@@ -500,7 +675,7 @@ function add_sub(item){
 		var parentIndex = parseInt($(item).parents(".TestItem").find(".MesurementTitle").text().replace("Measurement ",""));
 		
 		var lastSub = _parent.find(".TestSub").last().find(".MesurementTitle").text().replace("Measurement "+parentIndex+": Sub ","");
-		console.log(lastSub);
+		//console.log(lastSub);
 		if(lastSub.length == 0)lastSub = 1;
 		else lastSub = parseInt(lastSub)+1;
 	
@@ -535,11 +710,11 @@ function add_testInfo(item){
 		_testInfo += '					</div>';
 		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
 		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<input type="text" placeholder="From" style="text-align:center;"/>';
+		_testInfo += '							<input class="range-from" type="text" placeholder="From" style="text-align:center;"/>';
 		_testInfo += '						</div>';
 		_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">:</h4>';
 		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<input type="text" placeholder="To" style="text-align:center;"/>';
+		_testInfo += '							<input class="range-to" type="text" placeholder="To" style="text-align:center;"/>';
 		_testInfo += '						</div>';
 		_testInfo += '					</div>';
 		_testInfo += '				</div>';
@@ -574,11 +749,11 @@ function add_testInfo(item){
 		_testInfo += '					</div>';
 		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
 		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<input type="text" placeholder="From" style="text-align:center;"/>';
+		_testInfo += '							<input class="age-range-from" type="text" placeholder="From" style="text-align:center;"/>';
 		_testInfo += '						</div>';
 		_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">:</h4>';
 		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<input type="text" placeholder="To" style="text-align:center;"/>';
+		_testInfo += '							<input class="age-range-to" type="text" placeholder="To" style="text-align:center;"/>';
 		_testInfo += '						</div>';
 		_testInfo += '					</div>';
 		_testInfo += '				</div>';
@@ -595,11 +770,11 @@ function add_testInfo(item){
 		_testInfo += '					</div>';
 		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
 		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<input type="text" placeholder="" style="text-align:center;"/>';
+		_testInfo += '							<input class="from" type="text" placeholder="" style="text-align:center;"/>';
 		_testInfo += '						</div>';
 		_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">/</h4>';
 		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<input type="text" placeholder="" style="text-align:center;"/>';
+		_testInfo += '							<input class="to" type="text" placeholder="" style="text-align:center;"/>';
 		_testInfo += '						</div>';
 		_testInfo += '					</div>';
 		_testInfo += '				</div>';
@@ -663,7 +838,7 @@ function add_measurement(title,item){
 
 	var _test = '';
 	_test += '<div class="FlexDisplay Flex FlexColumn '+(item == null ? "TestContainer" : "")+'" style="padding:0px 0px 8px 0px; min-height:160px;">';
-	_test += '	<div class="FlexDisplay Flex FlexColumn TestItem '+(item == null ? "" : "TestSub")+' Divider-Bottom">';
+	_test += '	<div class="FlexDisplay Flex FlexColumn TestItem '+(item == null ? "TestMain" : "TestSub")+' Divider-Bottom">';
 	
 	_test += '		<div class="FlexDisplay FlexRow Divider-Bottom TestTitleBackground" style="height:32px;" >';
 	_test += '			<div class="FlexDisplay Flex">';
@@ -717,7 +892,7 @@ function add_measurement(title,item){
 	_test += '						<div class="icon">';
 	_test += '							<i class="mdi mdi-test-tube" />';
 	_test += '						</div>';
-	_test += '						<input type="text" placeholder="Name"/>';
+	_test += '						<input class="measurement-name" type="text" placeholder="Name"/>';
 	_test += '					</div>';
 	_test += '				</div>';
 	_test += '			</div>';
@@ -730,7 +905,7 @@ function add_measurement(title,item){
 	_test += '						<div class="icon">';
 	_test += '							<i class="mdi mdi-beaker" />';
 	_test += '						</div>';
-	_test += '						<input type="text" placeholder="Unit/Default Value"/>';
+	_test += '						<input class="measurement-unit-default" type="text" placeholder="Unit/Default Value"/>';
 	_test += '					</div>';
 	_test += '				</div>';
 	_test += '			</div>';
@@ -757,6 +932,70 @@ function add_measurement(title,item){
 	create_custom_dropdowns();
 }
 
+function getLabSections(){
+	var _sections = [];
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query   = "SELECT ";
+			query  += "	`Name` "; 
+			query  += "FROM `lab_sections` "; 
+			query  += "ORDER BY `Name` ";
+		
+		var comm = con.createCommand(query);
+		if(comm != null){
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null){
+						_sections.push(row.Name);
+					}
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+	_sections.push("--New--");
+	return _sections;
+}
+
+function getSpecimenTypes(){
+	var _specimenTypes = [];
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query   = "SELECT ";
+			query  += "	`Name` ";
+			query  += "	,IFNULL(`Description`,'') as `Description` "; 
+			query  += "FROM `specimen_types` "; 
+			query  += "ORDER BY `Name` ";
+		
+		var comm = con.createCommand(query);
+		if(comm != null){
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null){
+						_specimenTypes.push(row);
+					}
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+	return _specimenTypes;
+}
+
 $("#addTests").unbind( "click" );
 $("#addTests").click(function() {
 	var index = $('.TestContainer').last().find(".TestItem").first().find(".MesurementTitle").text().replace("Measurement ","");
@@ -773,9 +1012,7 @@ $(".save").unbind( "click" );
 $(".save").click(function(){	
 	$(".save .submenu").hide();
 	$(".save").attr('id', '');
-	
-	add_test('Fake Test');
-	
+	save_test();
 });
 
 $(".save").mouseup(function(){
@@ -791,16 +1028,27 @@ $('.save .submenu .root .nav-button').each(function (index, value) {
 	});
 });
 
+$(".lab-sections").html('<option value="-2" data-display-text="Lab Section" selected="">Lab Section</option>');
+getLabSections().forEach(function(item, index){ 
+	$(".lab-sections").append('<option value="'+(item == "--New--" ? -1 : index)+'" data-display-text="'+item+'">'+item+'</option>');
+}); 
 
-
-
-["Aspirate","CSF","Dried Blood Spot","Nasal Swab","Plasma","Plasma EDTA","Rectal Swab","Semen","Serum","Skin","Sputum","Stool","Throat Swab","U/S","Urine","V/S","Whole Blood"].forEach(function(item, index){ 
+getSpecimenTypes().forEach(function(item, index){ 
 	add_specimen(index, item, false, false); 
 }); 
 
-add_test('Fake Test', false);
+
+create_custom_dropdowns();
+var _labSections = $(".select-dropdown.lab-sections").find(".list");
+if(_labSections != undefined && _labSections != null){
+	_labSections.addClass("scroll scroll2");
+	_labSections.css({"overflow-y": "auto", "max-height": "200px"});
+}
 
 hideNavigationDropMenu();
 
 closeLoadingPage();
+
+//tests.push("testing");
+//load_tests();		
 </script>
