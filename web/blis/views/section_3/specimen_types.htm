@@ -128,7 +128,7 @@ function edit_specimen_type(item){
 					comm.executeNonQuery();
 					con.close();
 					
-					var id = _name[0].toUpperCase();
+					var id = _name[0].toString().toUpperCase();
 					if(id >= 0 && id <= 9)id = "0_9";
 					
 					populateData(id);
@@ -200,7 +200,7 @@ function delete_specimen_type(item){
 			if(con != null){
 				con.open();
 
-				var id = name[0].toUpperCase();
+				var id = name[0].toString().toUpperCase();
 				if(id >= 0 && id <= 9)id = "0_9";
 					
 				var query  = "SELECT 1 ";
@@ -413,7 +413,7 @@ $(".add-specimen-type").click(function(){
 						con.close();
 						
 						
-						var id = _name[0].toUpperCase();
+						var id = _name[0].toString().toUpperCase();
 						if(id >= 0 && id <= 9)id = "0_9";
 				
 						$('#Page_'+id).removeClass('Disabled');	

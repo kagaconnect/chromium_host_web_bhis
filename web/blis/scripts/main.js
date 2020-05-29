@@ -139,6 +139,14 @@ function getRootPath(){
 	return System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),"web","blis");
 }
 
+function isObjectSet(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
 function createPagerClickEvent(id, host, callback){
 	$('#Page_'+id).removeClass('Disabled');						
 	$('#Page_'+id).off("click");

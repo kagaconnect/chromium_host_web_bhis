@@ -128,7 +128,7 @@ function edit_drug(item){
 					comm.executeNonQuery();
 					con.close();
 					
-					var id = _name[0].toUpperCase();
+					var id = _name[0].toString().toUpperCase();
 					if(id >= 0 && id <= 9)id = "0_9";
 					
 					populateData(id);
@@ -203,7 +203,7 @@ function delete_drug(item){
 			if(con != null){
 				con.open();
 
-				var id = name[0].toUpperCase();
+				var id = name[0].toString().toUpperCase();
 				if(id >= 0 && id <= 9)id = "0_9";
 					
 				var query  = "SELECT 1 ";
@@ -417,7 +417,7 @@ $(".add-drug").click(function(){
 						con.close();
 						
 						
-						var id = _name[0].toUpperCase();
+						var id = _name[0].toString().toUpperCase();
 						if(id >= 0 && id <= 9)id = "0_9";
 				
 						$('#Page_'+id).removeClass('Disabled');	
@@ -447,66 +447,6 @@ $(".add-drug").click(function(){
 					});
 				}
 			}
-		
-			/*var config_file = System.IO.Path.Combine("web","blis","configurations","drugs.json");
-			if(System.IO.File.Exists(config_file)){
-				var configs = JSON.parse(System.IO.File.ReadAllText(config_file));
-		
-				var id = _name[0].toUpperCase();
-				if(id >= 0 && id <= 9)id = "0_9";
-				
-				var exists = false;
-				for(var x=0; x<configs.length; x++){
-					var config = configs[x];
-					if(_name.trim().toLowerCase() == config.Name.trim().toLowerCase()){
-						exists = true;
-						break;
-					}
-				}
-				
-				if(!exists && _name.length > 1){
-					_name = _name.charAt(0).toUpperCase() + _name.slice(1);
-					
-					if(_description.length > 1){
-						_description = _description.charAt(0).toUpperCase() + _description.slice(1);
-					}
-					else if(_description.length == 1){
-						_description = _description.charAt(0).toUpperCase();
-					}
-					
-					configs.push({
-						"Name":_name,
-						"Description":_description
-					});
-					
-					System.IO.File.WriteAllText(config_file,JSON.stringify(configs));
-					
-					$('#Page_'+id).removeClass('Disabled');	
-					$("#pagingBox").find('.Pager').each(function(){
-						$(this).removeClass('Selected');
-					});			
-					$('#Page_'+id).addClass('Selected');
-					
-					populateData(configs, id);
-					
-					spt_dlg.toggle();
-					spt_dlg = null;
-					
-				}
-				else{ //baby aspirate
-					var item = $(spt_dlg.el).find(".name-input");
-					if(item != undefined && item != null){
-						item.parent().addClass("is-invalid");
-						item.parent().attr("tooltip","Specimen type already exists");
-						item.focus(function(){
-							$(this).parent().removeClass("is-invalid");
-							$(this).parent().attr("tooltip","");
-						});
-					}
-				}
-				
-				
-			}*/
 		}
 	});
 	

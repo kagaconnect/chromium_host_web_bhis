@@ -1106,7 +1106,7 @@ function delete_facility(item){
 					if(con != null){
 						con.open();
 
-						var id = FacilityName[0].toUpperCase();
+						var id = FacilityName[0].toString().toUpperCase();
 							if(id >= 0 && id <= 9)id = "0_9";
 							
 						var query  = "SELECT 1 ";
@@ -1689,7 +1689,7 @@ function facility_popup(options){
 								comm.executeNonQuery();
 								con.close();
 								
-								var id = _name[0].toUpperCase();
+								var id = _name[0].toString().toUpperCase();
 								if(id >= 0 && id <= 9)id = "0_9";
 						
 								$('#Page_'+id).removeClass('Disabled');	
@@ -1769,7 +1769,7 @@ function facility_popup(options){
 								comm.executeNonQuery();
 								con.close();
 								
-								var id = _name[0].toUpperCase();
+								var id = _name[0].toString().toUpperCase();
 								if(id >= 0 && id <= 9)id = "0_9";
 						
 								$('#Page_'+id).removeClass('Disabled');	
