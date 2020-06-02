@@ -1,0 +1,9 @@
+CREATE TABLE "measurements" (
+	"ID"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"TestID"	INTEGER NOT NULL,
+	"ParentID"	INTEGER,
+	"Type"	TEXT NOT NULL,
+	"Name"	TEXT NOT NULL,
+	"UnitDefault"	TEXT
+);
+

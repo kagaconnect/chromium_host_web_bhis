@@ -277,6 +277,30 @@ function isNumberKey(evt){
     return true;
 }
 
+function SelectItemByValue(item,value){
+	if(value != ""){
+		item.find('.selected').removeClass('selected');
+		item.find("li[data-value="+value+"]").addClass('selected');
+		
+		var selected = item.find('.selected');
+		var text = selected.data('display-text') || selected.text();
+		item.find('.current').text(text);
+		item.prev('select').val(selected.data('value')).trigger('change');
+	} 
+}
+
+function SelectItemByText(item,value){ 
+	if(value != ""){
+		item.find('.selected').removeClass('selected');
+		item.find("li[data-display-text="+value+"]").addClass('selected');
+		
+		var selected = item.find('.selected');
+		var text = selected.data('display-text') || selected.text();
+		item.find('.current').text(text);
+		item.prev('select').val(selected.data('value')).trigger('change');
+	}
+}
+
 function isDecimalKey(evt){
     var charCode = (evt.which) ? evt.which : evt.keyCode
     if (charCode > 31 && (charCode != 46 &&(charCode < 48 || charCode > 57)))
