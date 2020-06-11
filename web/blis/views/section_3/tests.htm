@@ -240,6 +240,7 @@ var transitioning = false;
 
 function getMeasurement(item){
 	var measurement = null;
+	
 	var _testType = item.find(":first-child .select-dropdown.test-type").find(".current").text();
 	var _name = item.find(":first-child .measurement-name").val().trim();
 	var _unitDefault = item.find(":first-child .measurement-unit-default").val().trim();
@@ -252,33 +253,46 @@ function getMeasurement(item){
 		};
 		
 		if(_testType == "Numeric Range"){
-			var _from = item.find(":first-child .range-from").val().trim();
-			var _to = item.find(":first-child .range-to").val().trim();
-			var _gender = item.find(":first-child .select-dropdown.genders").find(".current").text();
-			var _age_from = item.find(":first-child .age-range-from").val().trim();
-			var _age_to = item.find(":first-child .age-range-to").val().trim();
-			
-			if(_from.length > 0 && _to.length > 0 && _age_from.length > 0 && _age_to.length > 0 && _gender != "Choose..."){			
-				measurement.Information = {
-					From:_from,
-					To:_to,
-					Gender:_gender,
-					AgeFrom:_age_from,
-					AgeTo:_age_to
-				};
-			}
-			else measurement = null;
+			measurement.Information = [];
+			item.find(".TestItemInfo").children().each(function(index){	
+				if(measurement != null){
+					var _from = $(this).find(":first-child .range-from").val().trim();
+					var _to = $(this).find(":first-child .range-to").val().trim();
+					var _gender = $(this).find(":first-child .select-dropdown.genders").find(".current").text();
+					var _age_from = $(this).find(":first-child .age-range-from").val().trim();
+					var _age_to = $(this).find(":first-child .age-range-to").val().trim();
+					
+					if(_from.length > 0 && _to.length > 0 && _age_from.length > 0 && _age_to.length > 0 && _gender != "Choose..."){			
+						measurement.Information.push({
+							Index:(index+1),
+							From:_from,
+							To:_to,
+							Gender:_gender,
+							AgeFrom:_age_from,
+							AgeTo:_age_to
+						});
+					}
+					else measurement = null;
+				}				
+			});
 		}
 		else if(_testType == "Alphanumeric Values"){
-			var _from = item.find(":first-child .from").val().trim();
-			var _to = item.find(":first-child .to").val().trim();
-			if(_from.length > 0 && _to.length > 0){	
-				measurement.Information = {
-					From:_from,
-					To:_to
-				};
-			}
-			else measurement = null;
+			measurement.Information = [];
+			item.find(".TestItemInfo").children().each(function(index){	
+				if(measurement != null){
+					var _from = $(this).find(":first-child .from").val().trim();
+					var _to = $(this).find(":first-child .to").val().trim();
+					
+					if(_from.length > 0 && _to.length > 0){	
+						measurement.Information.push({
+							Index:(index+1),
+							From:_from,
+							To:_to
+						});
+					}
+					else measurement = null;
+				}				
+			});
 		}
 		else if(_testType == "Autocomplete"){
 			measurement.Information = [];
@@ -359,6 +373,7 @@ function hasDuplicatedNames(){
 		if(!val){
 			var child = $(this);		
 			var measurement = getMeasurement(child.find('.TestMain'));
+			
 			if(!vals.includes(measurement.Name))vals.push(measurement.Name);
 			else val = true;
 			
@@ -366,6 +381,7 @@ function hasDuplicatedNames(){
 				var subs = child.find('.TestSub').each(function(y) {
 					var subChild = $(this);
 					var subMeasurement = getMeasurement(subChild);
+					
 					if(!vals.includes(subMeasurement.Name))vals.push(subMeasurement.Name);
 					else val = true;
 				});
@@ -409,7 +425,7 @@ function save_test(){
 			if(!hasErrors)_measurements.push(measurement);
 		}
 	});
-	
+		
 	if(_labSection == "--New--") _labSection = _sectionName;
 	
 	var hasDuplicated = hasDuplicatedNames();
@@ -632,42 +648,47 @@ function save_messagement(con, testID, measurement, parentID){
 	
 	if(messagementID != undefined && messagementID != null){
 		if(measurement.TestType == "Numeric Range"){
-			save_messagement_settings(con, testID, messagementID,[
-				{ Setting:"From", Value:measurement.Information.From },
-				{ Setting:"To", Value:measurement.Information.To },
-				{ Setting:"Gender", Value:measurement.Information.Gender },
-				{ Setting:"AgeFrom", Value:measurement.Information.AgeFrom },
-				{ Setting:"AgeTo", Value:measurement.Information.AgeTo }
-			]);
+			measurement.Information.forEach(function(m,i){
+				save_messagement_settings(con, i+1, testID, messagementID,[
+					{ Setting:"From", Value:m.From },
+					{ Setting:"To", Value:m.To },
+					{ Setting:"Gender", Value:m.Gender },
+					{ Setting:"AgeFrom", Value:m.AgeFrom },
+					{ Setting:"AgeTo", Value:m.AgeTo }
+				]);
+			});			
 		}
 		else if(measurement.TestType == "Alphanumeric Values"){
-			save_messagement_settings(con, testID, messagementID,[
-				{ Setting:"From", Value:measurement.Information.From },
-				{ Setting:"To", Value:measurement.Information.To }
-			]);
+			measurement.Information.forEach(function(m,i){
+				save_messagement_settings(con, i+1, testID, messagementID,[
+					{ Setting:"From", Value:m.From },
+					{ Setting:"To", Value:m.To }
+				]);
+			});
 		}
 		else if(measurement.TestType == "Autocomplete"){
 			var _s = [];
 			measurement.Information.forEach(function(m,i){
-				_s.push({ Setting:"Item"+i, Value:m });
+				_s.push({ Setting:"Item"+(i+1), Value:m });
 			});
-			save_messagement_settings(con, testID, messagementID,_s);
+			save_messagement_settings(con, 1, testID, messagementID,_s);
 		}
 		else if(measurement.TestType == "Free Text"){
-			save_messagement_settings(con, testID, messagementID,[]);
+			save_messagement_settings(con, 1, testID, messagementID,[]);
 		}
 	}
 	
 	 return messagementID;
 }
 
-function save_messagement_settings(con, testID, messagementID, settings){
+function save_messagement_settings(con, id, testID, messagementID, settings){
 	settings.forEach(function(setting, index){
-		var query    = "INSERT INTO `measurement_options` (`TestID`,`MeasurementID`,`Setting`,`Value`) VALUES ";
-			query   += "(@TestID"+index+",@MeasurementID"+index+", @Setting"+index+", @Value"+index+")";
+		var query    = "INSERT INTO `measurement_options` (`Index`,`TestID`,`MeasurementID`,`Setting`,`Value`) VALUES ";
+			query   += "(@Index"+index+",@TestID"+index+",@MeasurementID"+index+", @Setting"+index+", @Value"+index+")";
 		
 		var comm = con.createCommand(query);
 		if(comm != null){
+			comm.addParameter("@Index"+index, "Int32", id);
 			comm.addParameter("@TestID"+index, "Int32", testID);
 			comm.addParameter("@MeasurementID"+index, "Int32", messagementID);
 			comm.addParameter("@Setting"+index, "String", setting.Setting);
@@ -751,12 +772,14 @@ function view_test(item){
 						reader.close();
 						
 						var query   = "SELECT ";
-							query  += "`TestID` ";
+							query  += "`Index` ";
+							query  += ",`TestID` ";
 							query  += ",`MeasurementID` ";
 							query  += ",`Setting` ";
 							query  += ",IFNULL(`Value`,'') as `Value` ";
 							query  += "FROM `measurement_options` "; 
 							query  += "WHERE `TestID` = @TestID ";
+							query  += "ORDER BY `Index`";
 							
 							var comm = con.createCommand(query);
 							if(comm != null){
@@ -809,11 +832,31 @@ function view_test(item){
 							}
 							
 							messurements.forEach(function(messurement){
-								messurement.Information = messurement.Information.reduce(function(obj, { Setting, Value }, index) {
-								  obj[Setting] = Value;
-								  return obj;
-								}, {});
+								messurement.Information = messurement.Information.reduce(function(obj, { Index, Setting, Value }, index) {
+									if(obj[Index-1] == undefined || obj[Index-1] == null)obj[Index-1]=[];									
+									obj[Index-1].push({Setting, Value });
+									return obj;
+								}, []);
+								
+								if(messurement.Type == "Autocomplete"){
+									if(messurement.Information.length > 0){
+										messurement.Information = messurement.Information.shift();
+									}
+								}
+								else{
+									messurement.Information = messurement.Information.map(function(info) {
+										return info.reduce(function(obj, { Setting, Value }, index) {
+											obj[Setting] = Value;
+											return obj;
+										}, {});
+									});
+								}
+								
+								//passport size 3 pics per plot (so 3x3)
+								//national id
+								//sales agreement
 							});
+							
 							
 							var subs = messurements.filter(function(v){ return v.ParentID != undefined && v.ParentID != null; });
 							messurements = messurements.filter(function(v){ return v.ParentID == undefined || v.ParentID == null; });
@@ -1232,152 +1275,338 @@ function add_another(item){
 	var _parent = $(item).parents(".TestItem");
 	if(_parent != undefined && _parent != null){
 		var _test_type =  _parent.find(".select-dropdown.test-type .current").text();		
-		if(_test_type != "Free Text"){
-			_parent.find('.TestItemInfo').append(add_testInfo(_test_type));
+		if(_test_type != "Free Text" && _test_type != "Autocomplete"){
+			_parent.find('.TestItemInfo').append(add_testInfo(_test_type, null, true));
 			create_custom_dropdowns();
 			_parent.scrollTop(_parent[0].scrollHeight);
 		}
 	}
 }
 
-function add_testInfo(item, data){
+function add_testInfo(item, data, modified){
 	var _testInfo = '';
-	_testInfo += '	<div class="FlexDisplay Flex FlexRow" style="padding:4px 16px 8px 16px; min-height:60px; max-height:60px;">';
-	_testInfo += '		<div class="FlexDisplay Flex FlexRow">';
 	
-	if((item == undefined || item == null) || (item != null && item == "Numeric Range") || (data != null && data.Type == "Numeric Range")){	
-		//_testInfo += '			<div class="FlexHidden Flex FlexRow '+((item == null || (item != null && item == "Numeric Range") || (data != null && data.Type == "Numeric Range")) ? "FlexDisplay" : "")+' Measure_NumericRange">';
-		_testInfo += '			<div class="FlexHidden Flex FlexRow '+((item == null && data == null) || (item != null && item == "Numeric Range") || (data != null && data.Type == "Numeric Range") ? "FlexDisplay" : "")+' Measure_NumericRange">';
-		_testInfo += '				<div class="FlexDisplay Flex FlexColumn" style="min-width:180px;">';
-		_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
-		_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
-		_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Range</h4>';
-		_testInfo += '						</span>';
-		_testInfo += '					</div>';
-		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
-		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="range-from" type="text" placeholder="From" value="'+(data != undefined && data != null && data.Information != undefined && data.Information != null ? data.Information.From : "" )+'" style="text-align:center;"/>';
-		_testInfo += '						</div>';
-		_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">:</h4>';
-		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="range-to" type="text" placeholder="To" value="'+(data != undefined && data != null && data.Information != undefined && data.Information != null ? data.Information.To : "" )+'" style="text-align:center;"/>';
-		_testInfo += '						</div>';
-		_testInfo += '					</div>';
-		_testInfo += '				</div>';
-		_testInfo += '				<div class="FlexDisplay Flex FlexColumn" style="min-width:150px;">';
-		_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
-		_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
-		_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Gender</h4>';
-		_testInfo += '						</span>';
-		_testInfo += '					</div>';
-		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
-		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">';
-		_testInfo += '							<div class="icon">';
-		_testInfo += '								<i class="mdi mdi-tray-full" />';
-		_testInfo += '							</div>';
-		_testInfo += '							<select class="genders">';
-		_testInfo += '								<option '+(data == undefined || data == null ? 'selected=""' : "" )+'>Choose...</option>';
-		_testInfo += '								<option '+(data != undefined && data != null && data.Information != undefined && data.Information != null && data.Information.Gender == "Ambiguous" ? 'selected=""' : "" )+'>Ambiguous</option>';
-		_testInfo += '								<option '+(data != undefined && data != null && data.Information != undefined && data.Information != null && data.Information.Gender == "Female" ? 'selected=""' : "" )+'>Female</option>';
-		_testInfo += '								<option '+(data != undefined && data != null && data.Information != undefined && data.Information != null && data.Information.Gender == "Male" ? 'selected=""' : "" )+'>Male</option>';
-		_testInfo += '								<option '+(data != undefined && data != null && data.Information != undefined && data.Information != null && data.Information.Gender == "Not applicable" ? 'selected=""' : "" )+'>Not applicable</option>';
-		_testInfo += '								<option '+(data != undefined && data != null && data.Information != undefined && data.Information != null && data.Information.Gender == "Other" ? 'selected=""' : "" )+'>Other</option>';
-		_testInfo += '								<option '+(data != undefined && data != null && data.Information != undefined && data.Information != null && data.Information.Gender == "Unknown" ? 'selected=""' : "" )+'>Unknown</option>';
-		_testInfo += '							</select>';
-		_testInfo += '						</div>';
-		_testInfo += '					</div>';
-		_testInfo += '				</div>';
-		_testInfo += '				<div class="FlexDisplay Flex FlexColumn"  style="min-width:138px;">';
-		_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
-		_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
-		_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Age Range</h4>';
-		_testInfo += '						</span>';
-		_testInfo += '					</div>';
-		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
-		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="age-range-from" type="text" placeholder="From" value="'+(data != undefined && data != null && data.Information != undefined && data.Information != null ? data.Information.AgeFrom : "" )+'" style="text-align:center;"/>';
-		_testInfo += '						</div>';
-		_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">:</h4>';
-		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="age-range-to" type="text" placeholder="To" value="'+(data != undefined && data != null && data.Information != undefined && data.Information != null ? data.Information.AgeFrom : "" )+'" style="text-align:center;"/>';
-		_testInfo += '						</div>';
-		_testInfo += '					</div>';
-		_testInfo += '				</div>';
-		_testInfo += '			</div>';
+	if(data != null){
+		var h = 60;
+		if(data.Type == "Numeric Range" || data.Type == "Alphanumeric Values"){
+			
+			data.Information.forEach(function(info, index){
+				modified = index > 0;
+				if(modified != undefined && modified != null && modified == true){
+					h = 46;
+				}
+				
+				_testInfo += '	<div class="FlexDisplay Flex FlexRow" style="padding:4px 16px 8px 16px; min-height:'+h+'px; max-height:'+h+'px;">';
+				_testInfo += '		<div class="FlexDisplay Flex FlexRow">';
+				
+				if(data.Type == "Numeric Range"){
+					_testInfo += '			<div class="FlexHidden Flex FlexRow '+(data.Type == "Numeric Range" ? "FlexDisplay" : "")+' Measure_NumericRange">';
+					_testInfo += '				<div class="FlexDisplay Flex FlexColumn" style="min-width:180px;">';
+					if((modified == undefined || modified == null) || (modified != undefined && modified != null && modified == false)){
+						_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+						_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
+						_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Range</h4>';
+						_testInfo += '						</span>';
+						_testInfo += '					</div>';
+					}
+					_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+					_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+					_testInfo += '							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="range-from" type="text" placeholder="From" value="'+info.From+'" style="text-align:center;"/>';
+					_testInfo += '						</div>';
+					_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">:</h4>';
+					_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+					_testInfo += '							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="range-to" type="text" placeholder="To" value="'+info.To+'" style="text-align:center;"/>';
+					_testInfo += '						</div>';
+					_testInfo += '					</div>';
+					_testInfo += '				</div>';
+					_testInfo += '				<div class="FlexDisplay Flex FlexColumn" style="min-width:150px;">';
+					if((modified == undefined || modified == null) || (modified != undefined && modified != null && modified == false)){
+						_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+						_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
+						_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Gender</h4>';
+						_testInfo += '						</span>';
+						_testInfo += '					</div>';
+					}
+					_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+					_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">';
+					_testInfo += '							<div class="icon">';
+					_testInfo += '								<i class="mdi mdi-tray-full" />';
+					_testInfo += '							</div>';
+					_testInfo += '							<select class="genders">';
+					_testInfo += '								<option>Choose...</option>';
+					_testInfo += '								<option '+(info.Gender == "Ambiguous" ? 'selected=""' : "" )+'>Ambiguous</option>';
+					_testInfo += '								<option '+(info.Gender == "Female" ? 'selected=""' : "" )+'>Female</option>';
+					_testInfo += '								<option '+(info.Gender == "Male" ? 'selected=""' : "" )+'>Male</option>';
+					_testInfo += '								<option '+(info.Gender == "Not applicable" ? 'selected=""' : "" )+'>Not applicable</option>';
+					_testInfo += '								<option '+(info.Gender == "Other" ? 'selected=""' : "" )+'>Other</option>';
+					_testInfo += '								<option '+(info.Gender == "Unknown" ? 'selected=""' : "" )+'>Unknown</option>';
+					_testInfo += '							</select>';
+					_testInfo += '						</div>';
+					_testInfo += '					</div>';
+					_testInfo += '				</div>';
+					_testInfo += '				<div class="FlexDisplay Flex FlexColumn"  style="min-width:138px;">';
+					if((modified == undefined || modified == null) || (modified != undefined && modified != null && modified == false)){
+						_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+						_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
+						_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Age Range</h4>';
+						_testInfo += '						</span>';
+						_testInfo += '					</div>';
+					}
+					_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+					_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+					_testInfo += '							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="age-range-from" type="text" placeholder="From" value="'+info.AgeFrom+'" style="text-align:center;"/>';
+					_testInfo += '						</div>';
+					_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">:</h4>';
+					_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+					_testInfo += '							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="age-range-to" type="text" placeholder="To" value="'+info.AgeFrom+'" style="text-align:center;"/>';
+					_testInfo += '						</div>';
+					_testInfo += '					</div>';
+					_testInfo += '				</div>';
+					_testInfo += '			</div>';
+				}
+				
+				if(data.Type == "Alphanumeric Values"){
+					_testInfo += '			<div class="FlexHidden Flex FlexRow '+(data.Type == "Alphanumeric Values" ? "FlexDisplay" : "")+' Measure_AlphanumericValues">';												
+					_testInfo += '				<div class="FlexDisplay Flex FlexColumn">';
+					
+					if((modified == undefined || modified == null) || (modified != undefined && modified != null && modified == false)){
+						_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+						_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
+						_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Values</h4>';
+						_testInfo += '						</span>';
+						_testInfo += '					</div>';
+					}
+					
+					_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+					_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+					_testInfo += '							<input class="from" type="text" placeholder="" value="'+info.From+'" style="text-align:center;"/>';
+					_testInfo += '						</div>';
+					_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">/</h4>';
+					_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+					_testInfo += '							<input class="to" type="text" placeholder="" value="'+info.To+'" style="text-align:center;"/>';
+					_testInfo += '						</div>';
+					_testInfo += '					</div>';
+					_testInfo += '				</div>';
+					_testInfo += '			</div>';
+				}
+				
+				_testInfo += '		</div>';
+				_testInfo += '	</div>';				
+			});
+		}
+		
+		else if(data.Type == "Autocomplete" || data.Type == "Free Text"){
+				_testInfo += '	<div class="FlexDisplay Flex FlexRow" style="padding:4px 16px 8px 16px; min-height:'+h+'px; max-height:'+h+'px;">';
+				_testInfo += '		<div class="FlexDisplay Flex FlexRow">';
+				
+				if(data.Type == "Autocomplete"){
+					_testInfo += '			<div class="FlexHidden Flex FlexRow '+(data.Type == "Autocomplete" ? "FlexDisplay" : "")+' Measure_Autocomplete">	';											
+					_testInfo += '				<div class="FlexDisplay Flex FlexColumn">';
+					_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+					_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Values</h4>';
+					_testInfo += '					</div>';
+					_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+					_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+					_testInfo += '							<div class="icon">';
+					_testInfo += '								<i class="mdi mdi-textbox-password" />';
+					_testInfo += '							</div>';
+					_testInfo += '							<select class="autocomplete-list">';
+					_testInfo += '								<option selected=""></option>';
+					data.Information.forEach(function(info){
+						_testInfo += '								<option value="'+info.Value+'">'+info.Value+'</option>';
+					});
+					_testInfo += '							</select>';
+					_testInfo += '						</div>';
+					_testInfo += '						<div class="FlexDisplay FlexColumn">';
+					_testInfo += '							<div onclick="add_autocomplete_item(this)" class="FlexDisplay btn-clear">';
+					_testInfo += '								<div style="margin:auto auto; width:16px height:16px; padding:0px 8px 0px 8px;">';
+					_testInfo += '									<i class="mdi mdi-plus-circle" />';
+					_testInfo += '								</div>';
+					_testInfo += '							</div>';
+					_testInfo += '						</div>';
+					_testInfo += '					</div>';
+					_testInfo += '				</div>	';											
+					_testInfo += '			</div>';
+				}
+				
+				if(data.Type == "Free Text"){
+					_testInfo += '			<div class="FlexHidden Flex FlexRow '+(data.Type == "Free Text" ? "FlexDisplay" : "")+' Measure_FreeText">	';											
+					_testInfo += '				<div class="FlexDisplay Flex FlexColumn">';
+					_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+					_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Values</h4>';
+					_testInfo += '					</div>';
+					_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+					_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+					_testInfo += '							<div class="icon">';
+					_testInfo += '								<i class="mdi mdi-help-circle" />';
+					_testInfo += '							</div>';
+					_testInfo += '							<span style="margin:0px 0px 0px 0px; width:100%;">';
+					_testInfo += '								<h4 class="feature-title mt-0" style="font-size: 12px; font-weight:normal; line-height:16px; margin-top:6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Will appear as a text box for result entry</h4>';
+					_testInfo += '							</span>';
+					_testInfo += '						</div>';
+					_testInfo += '					</div>';
+					_testInfo += '				</div>	';											
+					_testInfo += '			</div>';
+				}
+				
+				_testInfo += '		</div>';
+				_testInfo += '	</div>';
+		}		
 	}
-	
-	if((item == undefined || item == null) || (item != null && item == "Alphanumeric Values") || (data != null && data.Type == "Alphanumeric Values")){
-		_testInfo += '			<div class="FlexHidden Flex FlexRow '+((item != null && item == "Alphanumeric Values") || (data != null && data.Type == "Alphanumeric Values") ? "FlexDisplay" : "")+' Measure_AlphanumericValues">';												
-		_testInfo += '				<div class="FlexDisplay Flex FlexColumn">';
-		_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
-		_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
-		_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Values</h4>';
-		_testInfo += '						</span>';
-		_testInfo += '					</div>';
-		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
-		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<input class="from" type="text" placeholder="" value="'+(data != undefined && data != null && data.Information != undefined && data.Information != null ? data.Information.From : "" )+'" style="text-align:center;"/>';
-		_testInfo += '						</div>';
-		_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">/</h4>';
-		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<input class="to" type="text" placeholder="" value="'+(data != undefined && data != null && data.Information != undefined && data.Information != null ? data.Information.To : "" )+'" style="text-align:center;"/>';
-		_testInfo += '						</div>';
-		_testInfo += '					</div>';
-		_testInfo += '				</div>';
-		_testInfo += '			</div>';
+	else {
+		var h = 60;
+		if(item != null && (item == "Numeric Range" || item == "Alphanumeric Values")){
+			if(modified != undefined && modified != null && modified == true){
+				h = 46;
+			}
+		}		
+		
+		_testInfo += '	<div class="FlexDisplay Flex FlexRow" style="padding:4px 16px 8px 16px; min-height:'+h+'px; max-height:'+h+'px;">';
+		_testInfo += '		<div class="FlexDisplay Flex FlexRow">';
+		
+		if((item == undefined || item == null) || (item != null && item == "Numeric Range")){	
+			_testInfo += '			<div class="FlexHidden Flex FlexRow '+((item == null && data == null) || (item != null && item == "Numeric Range") ? "FlexDisplay" : "")+' Measure_NumericRange">';
+			_testInfo += '				<div class="FlexDisplay Flex FlexColumn" style="min-width:180px;">';
+			if((modified == undefined || modified == null) || (modified != undefined && modified != null && modified == false)){
+				_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+				_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
+				_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Range</h4>';
+				_testInfo += '						</span>';
+				_testInfo += '					</div>';
+			}
+			_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+			_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+			_testInfo += '							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="range-from" type="text" placeholder="From" style="text-align:center;"/>';
+			_testInfo += '						</div>';
+			_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">:</h4>';
+			_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+			_testInfo += '							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="range-to" type="text" placeholder="To" style="text-align:center;"/>';
+			_testInfo += '						</div>';
+			_testInfo += '					</div>';
+			_testInfo += '				</div>';
+			_testInfo += '				<div class="FlexDisplay Flex FlexColumn" style="min-width:150px;">';
+			if((modified == undefined || modified == null) || (modified != undefined && modified != null && modified == false)){
+				_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+				_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
+				_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Gender</h4>';
+				_testInfo += '						</span>';
+				_testInfo += '					</div>';
+			}
+			_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+			_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">';
+			_testInfo += '							<div class="icon">';
+			_testInfo += '								<i class="mdi mdi-tray-full" />';
+			_testInfo += '							</div>';
+			_testInfo += '							<select class="genders">';
+			_testInfo += '								<option selected="">Choose...</option>';
+			_testInfo += '								<option>Ambiguous</option>';
+			_testInfo += '								<option>Female</option>';
+			_testInfo += '								<option>Male</option>';
+			_testInfo += '								<option>Not applicable</option>';
+			_testInfo += '								<option>Other</option>';
+			_testInfo += '								<option>Unknown</option>';
+			_testInfo += '							</select>';
+			_testInfo += '						</div>';
+			_testInfo += '					</div>';
+			_testInfo += '				</div>';
+			_testInfo += '				<div class="FlexDisplay Flex FlexColumn"  style="min-width:138px;">';
+			if((modified == undefined || modified == null) || (modified != undefined && modified != null && modified == false)){
+				_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+				_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
+				_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Age Range</h4>';
+				_testInfo += '						</span>';
+				_testInfo += '					</div>';
+			}
+			_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+			_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+			_testInfo += '							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="age-range-from" type="text" placeholder="From" value="'+(data != undefined && data != null && data.Information != undefined && data.Information != null ? data.Information.AgeFrom : "" )+'" style="text-align:center;"/>';
+			_testInfo += '						</div>';
+			_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">:</h4>';
+			_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+			_testInfo += '							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="age-range-to" type="text" placeholder="To" value="'+(data != undefined && data != null && data.Information != undefined && data.Information != null ? data.Information.AgeFrom : "" )+'" style="text-align:center;"/>';
+			_testInfo += '						</div>';
+			_testInfo += '					</div>';
+			_testInfo += '				</div>';
+			_testInfo += '			</div>';
+		}
+		
+		if((item == undefined || item == null) || (item != null && item == "Alphanumeric Values")){
+			_testInfo += '			<div class="FlexHidden Flex FlexRow '+((item != null && item == "Alphanumeric Values") || (data != null && data.Type == "Alphanumeric Values") ? "FlexDisplay" : "")+' Measure_AlphanumericValues">';												
+			_testInfo += '				<div class="FlexDisplay Flex FlexColumn">';
+			
+			if((modified == undefined || modified == null) || (modified != undefined && modified != null && modified == false)){
+				_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+				_testInfo += '						<span style="margin:0px 0px 0px 0px; width:100%;">';
+				_testInfo += '							<h4 class="feature-title mt-0" style="text-align:center; font-size: 12px; font-weight:normal; line-height:16px;">Values</h4>';
+				_testInfo += '						</span>';
+				_testInfo += '					</div>';
+			}
+			
+			_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+			_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+			_testInfo += '							<input class="from" type="text" placeholder="" style="text-align:center;"/>';
+			_testInfo += '						</div>';
+			_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">/</h4>';
+			_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+			_testInfo += '							<input class="to" type="text" placeholder="" style="text-align:center;"/>';
+			_testInfo += '						</div>';
+			_testInfo += '					</div>';
+			_testInfo += '				</div>';
+			_testInfo += '			</div>';
+		}
+		
+		if((item == undefined || item == null) || (item != null && item == "Autocomplete")){
+			_testInfo += '			<div class="FlexHidden Flex FlexRow '+((item != null && item == "Autocomplete") ? "FlexDisplay" : "")+' Measure_Autocomplete">	';											
+			_testInfo += '				<div class="FlexDisplay Flex FlexColumn">';
+			_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+			_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Values</h4>';
+			_testInfo += '					</div>';
+			_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+			_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+			_testInfo += '							<div class="icon">';
+			_testInfo += '								<i class="mdi mdi-textbox-password" />';
+			_testInfo += '							</div>';
+			_testInfo += '							<select class="autocomplete-list">';
+			_testInfo += '								<option selected=""></option>';
+			_testInfo += '							</select>';
+			_testInfo += '						</div>';
+			_testInfo += '						<div class="FlexDisplay FlexColumn">';
+			_testInfo += '							<div onclick="add_autocomplete_item(this)" class="FlexDisplay btn-clear">';
+			_testInfo += '								<div style="margin:auto auto; width:16px height:16px; padding:0px 8px 0px 8px;">';
+			_testInfo += '									<i class="mdi mdi-plus-circle" />';
+			_testInfo += '								</div>';
+			_testInfo += '							</div>';
+			_testInfo += '						</div>';
+			_testInfo += '					</div>';
+			_testInfo += '				</div>	';											
+			_testInfo += '			</div>';
+		}
+		
+		if((item == undefined || item == null) || (item != null && item == "Free Text")){
+			_testInfo += '			<div class="FlexHidden Flex FlexRow '+((item != null && item == "Free Text") ? "FlexDisplay" : "")+' Measure_FreeText">	';											
+			_testInfo += '				<div class="FlexDisplay Flex FlexColumn">';
+			_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
+			_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Values</h4>';
+			_testInfo += '					</div>';
+			_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
+			_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
+			_testInfo += '							<div class="icon">';
+			_testInfo += '								<i class="mdi mdi-help-circle" />';
+			_testInfo += '							</div>';
+			_testInfo += '							<span style="margin:0px 0px 0px 0px; width:100%;">';
+			_testInfo += '								<h4 class="feature-title mt-0" style="font-size: 12px; font-weight:normal; line-height:16px; margin-top:6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Will appear as a text box for result entry</h4>';
+			_testInfo += '							</span>';
+			_testInfo += '						</div>';
+			_testInfo += '					</div>';
+			_testInfo += '				</div>	';											
+			_testInfo += '			</div>';
+		}
+		
+		_testInfo += '		</div>';
+		_testInfo += '	</div>';
+		
 	}
-	
-	if((item == undefined || item == null) || (item != null && item == "Autocomplete") || (data != null && data.Type == "Autocomplete")){
-		_testInfo += '			<div class="FlexHidden Flex FlexRow '+((item != null && item == "Autocomplete") || (data != null && data.Type == "Autocomplete") ? "FlexDisplay" : "")+' Measure_Autocomplete">	';											
-		_testInfo += '				<div class="FlexDisplay Flex FlexColumn">';
-		_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
-		_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Values</h4>';
-		_testInfo += '					</div>';
-		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
-		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<div class="icon">';
-		_testInfo += '								<i class="mdi mdi-textbox-password" />';
-		_testInfo += '							</div>';
-		_testInfo += '							<select class="autocomplete-list">';
-		_testInfo += '								<option selected=""></option>';
-		_testInfo += '							</select>';
-		_testInfo += '						</div>';
-		_testInfo += '						<div class="FlexDisplay FlexColumn">';
-		_testInfo += '							<div onclick="add_autocomplete_item(this)" class="FlexDisplay btn-clear">';
-		_testInfo += '								<div style="margin:auto auto; width:16px height:16px; padding:0px 8px 0px 8px;">';
-		_testInfo += '									<i class="mdi mdi-plus-circle" />';
-		_testInfo += '								</div>';
-		_testInfo += '							</div>';
-		_testInfo += '						</div>';
-		_testInfo += '					</div>';
-		_testInfo += '				</div>	';											
-		_testInfo += '			</div>';
-	}
-	
-	if((item == undefined || item == null) || (item != null && item == "Free Text") || (data != null && data.Type == "Free Text")){
-		_testInfo += '			<div class="FlexHidden Flex FlexRow '+((item != null && item == "Free Text") || (data != null && data.Type == "Free Text") ? "FlexDisplay" : "")+' Measure_FreeText">	';											
-		_testInfo += '				<div class="FlexDisplay Flex FlexColumn">';
-		_testInfo += '					<div class="FlexDisplay FlexRow" style="min-height:16px; max-height:16px;" >';
-		_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Values</h4>';
-		_testInfo += '					</div>';
-		_testInfo += '					<div class="FlexDisplay FlexRow"  style="width:100%; height:32px;">';
-		_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-		_testInfo += '							<div class="icon">';
-		_testInfo += '								<i class="mdi mdi-help-circle" />';
-		_testInfo += '							</div>';
-		_testInfo += '							<span style="margin:0px 0px 0px 0px; width:100%;">';
-		_testInfo += '								<h4 class="feature-title mt-0" style="font-size: 12px; font-weight:normal; line-height:16px; margin-top:6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Will appear as a text box for result entry</h4>';
-		_testInfo += '							</span>';
-		_testInfo += '						</div>';
-		_testInfo += '					</div>';
-		_testInfo += '				</div>	';											
-		_testInfo += '			</div>';
-	}
-	
-	_testInfo += '		</div>';
-	_testInfo += '	</div>';
-	
-	
+
 	return _testInfo;
 }
 
@@ -1463,12 +1692,19 @@ function add_measurement(title, item, data, info, completed){
 	_test += '	</div>';
 	
 	
-	if(data != undefined && data != null){
+	if(data != undefined && data != null){	
+		if(data.SubMessurements.length == 0) {
+			completed = true;
+		}
+		
+		if(info == undefined || info == null)info = "";
 		info += _test;
 		
 		data.SubMessurements.forEach(function(messurement, index){
 			add_measurement(title+': Sub '+(index+1), "", messurement, _test, index+1 == data.SubMessurements.length);
 		});
+		
+		
 
 		if(completed != undefined && completed != null && completed){
 			var _testContainer = '<div class="FlexDisplay Flex FlexColumn TestContainer" style="padding:0px 0px 8px 0px; min-height:160px;">';
