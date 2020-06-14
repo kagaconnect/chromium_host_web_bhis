@@ -16,8 +16,8 @@ For more info about the original application, please refer to the [C4G BLIS](htt
 ##### Authentication
 ![](https://github.com/kagaconnect/chromium_host_web_bhis/blob/master/assets/images/landing.jpg)
 
-##### Dashboard 
-![](https://github.com/kagaconnect/chromium_host_web_bhis/blob/master/assets/images/dashboard.jpg)
+##### Facilities 
+![](https://github.com/kagaconnect/chromium_host_web_bhis/blob/master/assets/images/facilities.jpg)
 
 ##### Reception
 ![](https://github.com/kagaconnect/chromium_host_web_bhis/blob/master/assets/images/reception.jpg)
