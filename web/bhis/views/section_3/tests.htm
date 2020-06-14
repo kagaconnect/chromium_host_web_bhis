@@ -4,7 +4,7 @@
 			<i class="mdi mdi-apps"></i>
 		</div>
 		<div class="FlexDisplay">
-			<span class="BLIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
+			<span class="BHIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
 		</div>
 		<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
 		<div class="clear-test dropdown" tooltip="Clear" flow="down">
@@ -439,7 +439,7 @@ function save_test(){
 		
 		_name = _name.charAt(0).toUpperCase() + _name.slice(1);
 		
-		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 		if(con != null){
 			con.open();
 			
@@ -706,7 +706,7 @@ function view_test(item){
 	var testID = $(item).data('test-id');
 	var testName = $(item).data('test-name');
 	
-	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 	if(con != null){
 		con.open();
 
@@ -887,7 +887,7 @@ function view_test(item){
 
 function load_tests(autoScroll=true){
 	$('.TestsList').html('');
-	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 	if(con != null){
 		con.open();
 
@@ -974,7 +974,7 @@ function delete_test(item){
 		$(test_dlg.el).find(".yesButton").unbind( "click" );
 		$(test_dlg.el).find(".yesButton").click(function() {
 		
-			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 			if(con != null){
 				con.open();
 				
@@ -1145,7 +1145,7 @@ function hideNavigationDropMenu(){
 
 $("#backBtn").unbind( "click" );
 $('#backBtn').click(function(){
-	var page = System.IO.Path.Combine("web","blis","views",backNavigation);
+	var page = System.IO.Path.Combine("web","bhis","views",backNavigation);
 	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
 });
 
@@ -1729,7 +1729,7 @@ function add_measurement(title, item, data, info, completed){
 
 function getLabSections(){
 	var _sections = [];
-	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 	if(con != null){
 		con.open();
 
@@ -1761,7 +1761,7 @@ function getLabSections(){
 
 function getSpecimenTypes(){
 	var _specimenTypes = [];
-	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 	if(con != null){
 		con.open();
 

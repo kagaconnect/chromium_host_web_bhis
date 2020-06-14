@@ -4,7 +4,7 @@
 			<i class="mdi mdi-apps"></i>
 		</div>
 		<div class="FlexDisplay">
-			<span class="BLIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
+			<span class="BHIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
 		</div>
 		<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
 		<div class="add-user dropdown" tooltip="add user" flow="left">
@@ -47,7 +47,7 @@
 
 $("#backBtn").unbind( "click" );
 $('#backBtn').click(function(){
-	var page = System.IO.Path.Combine("web","blis","views",backNavigation);
+	var page = System.IO.Path.Combine("web","bhis","views",backNavigation);
 	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
 });
 
@@ -62,7 +62,7 @@ function getRoles(){
 
 function getLanguages(){
 	var languages = ["Default"];
-	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 	if(con != null){
 		con.open();
 
@@ -270,7 +270,7 @@ function edit_user(item){
 		   !$(user_dlg.el).find(".phone-mobile-input").parent().hasClass("is-invalid") &&
 		   !$(user_dlg.el).find(".email-input").parent().hasClass("is-invalid")){
 		   
-			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 			if(con != null){
 				con.open();
 
@@ -402,7 +402,7 @@ function delete_user(item){
 	$(user_dlg.el).find(".yesButton").unbind( "click" );
 	$(user_dlg.el).find(".yesButton").click(function() {
 	
-		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 		if(con != null){
 			con.open();
 
@@ -452,7 +452,7 @@ function add_user(id, name, email, phone_mobile, username, password, role, dipla
 function loadData(){
 	$(".UsersList").html('');
 	
-	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 	if(con != null){
 		con.open();
 
@@ -667,7 +667,7 @@ $(".add-user").click(function(){
 		   !$(user_dlg.el).find(".email-input").parent().hasClass("is-invalid")){
 		   
 			var exists = false;
-			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 			if(con != null){
 				con.open();
 
@@ -694,7 +694,7 @@ $(".add-user").click(function(){
 			if(!exists){
 				_name = _name.charAt(0).toUpperCase() + _name.slice(1);
 				
-				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 				if(con != null){
 					con.open();
 

@@ -136,7 +136,7 @@ $(document).on('keydown', '.select-dropdown', function(event) {
 });
 
 function getRootPath(){
-	return System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),"web","blis");
+	return System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),"web","bhis");
 }
 
 function isObjectSet(obj) {
@@ -168,7 +168,7 @@ function preparePager(id, column, table, callback){
 	$(id).html('');
 	
 	var pagerList = [];
-	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 	if(con != null){
 		con.open();
 
@@ -240,7 +240,7 @@ function init(){
 	$.fn.pagepiling.moveTo('loadingPage');
 	
 	setTimeout(function(){ 
-		var page = System.IO.Path.Combine("web","blis","views",backNavigation);
+		var page = System.IO.Path.Combine("web","bhis","views",backNavigation);
 		loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), false);
 	},1000);
 }
@@ -263,7 +263,7 @@ function loadSubPage(sub_file,canNavigate){
 				$('#mainPage').html(content);
 				create_custom_dropdowns();
 				
-				$(".BLIS-Title").html("Basic Laboratory Information System v"+getVersion());
+				$(".BHIS-Title").html("Basic Health Information System v"+getVersion());
 				//closeLoadingPage();				
 			},1000);
 		});					

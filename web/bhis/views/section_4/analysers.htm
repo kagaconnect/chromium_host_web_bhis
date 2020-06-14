@@ -45,7 +45,7 @@
 </div>
 <script>
 	$('#backBtn').click(function(){
-		var page = System.IO.Path.Combine("web","blis","views",backNavigation);
+		var page = System.IO.Path.Combine("web","bhis","views",backNavigation);
 		loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
 	});
 	
@@ -53,7 +53,7 @@
 		$(".AnalysersList").html('');
 		
 		var _analysers = [];
-		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 		if(con != null){
 			con.open();
 
@@ -160,7 +160,7 @@
 	}
 	
 	function save_analyser_settings(id, settings){
-		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 		if(con != null){
 			con.open();
 			
@@ -206,7 +206,7 @@
 		   _FeedSource != "File" && _FeedSource != "DataSource") return;
 		  
 		var settings = [];
-		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 		if(con != null){
 			con.open();
 
@@ -668,7 +668,7 @@
 	
 	function getLabSections(){
 		var _sections = [];
-		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 		if(con != null){
 			con.open();
 
@@ -751,7 +751,7 @@
 			if(_feedSource != "Connection Type" && _name.length > 0 && _version.length && _labSection != "Lab Section" &&
 				_communicationType != "Communication Type" && _config_file.length > 0){
 			   
-				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 				if(con != null){
 					con.open();
 					
@@ -790,7 +790,7 @@
 						con.close();
 						
 						
-						var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+						var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 						if(con != null){
 							con.open();
 							
@@ -890,7 +890,7 @@
 		$(ana_dlg.el).find(".yesButton").unbind( "click" );
 		$(ana_dlg.el).find(".yesButton").click(function() {	
 		
-			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 			if(con != null){
 				con.open();
 
@@ -1110,7 +1110,7 @@
 				_communicationType != "Communication Type" && _config_file.length > 0){
 				
 				var exists = false;
-				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 				if(con != null){
 					con.open();
 
@@ -1135,7 +1135,7 @@
 				if(!exists){
 					_name = _name.charAt(0).toUpperCase() + _name.slice(1);
 					
-					var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+					var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 					if(con != null){
 						con.open();
 

@@ -4,7 +4,7 @@
 			<i class="mdi mdi-apps"></i>
 		</div>
 		<div class="FlexDisplay">
-			<span class="BLIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
+			<span class="BHIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
 		</div>
 		<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
 		<div class="add-currency dropdown" tooltip="add currency" flow="left">
@@ -46,7 +46,7 @@
 
 $("#backBtn").unbind( "click" );
 $('#backBtn').click(function(){
-	var page = System.IO.Path.Combine("web","blis","views",backNavigation);
+	var page = System.IO.Path.Combine("web","bhis","views",backNavigation);
 	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
 });
 
@@ -139,7 +139,7 @@ function edit_currency(item){
 		
 		if(_name.length > 0 && _delimiter.length > 0){
 		
-			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 			if(con != null){
 				con.open();
 
@@ -234,7 +234,7 @@ function delete_currency(item){
 	$(cry_dlg.el).find(".yesButton").unbind( "click" );
 	$(cry_dlg.el).find(".yesButton").click(function() {
 	
-		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 		if(con != null){
 			con.open();
 
@@ -283,7 +283,7 @@ function add_currency(id, name, delimiter, exchange_rate, enabled, isrequired){
 function loadData(){
 	$(".CurrencyList").html('');
 	
-	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 	if(con != null){
 		con.open();
 
@@ -395,7 +395,7 @@ $(".add-currency").click(function(){
 		if(_name.length > 0 && _delimiter.length > 0){
 		
 			var exists = false;
-			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 			if(con != null){
 				con.open();
 
@@ -420,7 +420,7 @@ $(".add-currency").click(function(){
 			if(!exists){
 				_name = _name.charAt(0).toUpperCase() + _name.slice(1);
 				
-				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 				if(con != null){
 					con.open();
 

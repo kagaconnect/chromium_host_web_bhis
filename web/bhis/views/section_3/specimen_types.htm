@@ -4,7 +4,7 @@
 			<i class="mdi mdi-apps"></i>
 		</div>
 		<div class="FlexDisplay">
-			<span class="BLIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
+			<span class="BHIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
 		</div>
 		<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
 		<div class="add-specimen-type dropdown" tooltip="add specimen type" flow="left">
@@ -45,7 +45,7 @@
 <script>
 $("#backBtn").unbind( "click" );
 $('#backBtn').click(function(){
-	var page = System.IO.Path.Combine("web","blis","views",backNavigation);
+	var page = System.IO.Path.Combine("web","bhis","views",backNavigation);
 	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
 });
 
@@ -113,7 +113,7 @@ function edit_specimen_type(item){
 				_description = _description.charAt(0).toUpperCase();
 			}
 		
-			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 			if(con != null){
 				con.open();
 
@@ -177,7 +177,7 @@ function delete_specimen_type(item){
 	$(spt_dlg.el).find(".yesButton").click(function() {
 	
 		var deleted = false;
-		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 		if(con != null){
 			con.open();
 
@@ -196,7 +196,7 @@ function delete_specimen_type(item){
 		
 		if(deleted){
 			var hasItems = false;
-			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 			if(con != null){
 				con.open();
 
@@ -276,7 +276,7 @@ function add_specimenType(name, description, tests){
 function populateData(id, options){
 	$(".SpecimenTypeList").html('');
 	
-	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 	if(con != null){
 		con.open();
 
@@ -360,7 +360,7 @@ $(".add-specimen-type").click(function(){
 		if(_name.length > 0){
 		
 			var exists = false;
-			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 			if(con != null){
 				con.open();
 
@@ -392,7 +392,7 @@ $(".add-specimen-type").click(function(){
 					_description = _description.charAt(0).toUpperCase();
 				}
 				
-				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","blis_dict.db"),"","");
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 				if(con != null){
 					con.open();
 

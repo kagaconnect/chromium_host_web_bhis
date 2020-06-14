@@ -5,7 +5,7 @@
 				<i class="mdi mdi-apps"></i>
 			</div>
 			<div class="FlexDisplay">
-				<span class="BLIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
+				<span class="BHIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
 			</div>
 			<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
 			<div class="notification-bell dropdown">
@@ -653,11 +653,11 @@ $('.avatar .submenu .root .nav-button').each(function (index, value) {
 		
 		if(text == "Settings"){
 			backNavigation = "home.htm";
-			var page = System.IO.Path.Combine("web","blis","views", "settings.htm");
+			var page = System.IO.Path.Combine("web","bhis","views", "settings.htm");
 			loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
 		}
 		else if(text == "Sign Out"){
-			var page = System.IO.Path.Combine("web","blis","views", "landing.htm");
+			var page = System.IO.Path.Combine("web","bhis","views", "landing.htm");
 			loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
 		}
 		
@@ -743,7 +743,7 @@ $('#mainPage .info-button button').click(function(){
 	var animated_page = $(this).parents('.animated-page');
 	var section = animated_page.attr("data-path");
 	
-	var sub_path = System.IO.Path.Combine("web","blis","views",section.replace("-","_").toLowerCase());
+	var sub_path = System.IO.Path.Combine("web","bhis","views",section.replace("-","_").toLowerCase());
 	var sub_page = $(this).parents("figcaption").find("span").text().replace(" ","_").toLowerCase();
 	var sub_file = System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),sub_path,sub_page)+".htm";
 	loadSubPage(sub_file, true);
