@@ -27,7 +27,7 @@ For more info about the original application, please refer to the [C4G BLIS](htt
     ├── extensions
     │   └── ChromiumHost.Extensions.OpenStreetMap.dll
     ├── web
-    │   └── blis
+    │   └── bhis
     │       └── ...
     ├── ChromiumHost.Installer.exe
     ├── System.Security.Cryptography.Algorithms.dll
