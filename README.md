@@ -37,9 +37,9 @@ For more info about the original application, please refer to the [C4G BLIS](htt
 #### Windows
 Double clicking the **ChromiumHost.Installer.exe** will download the latest release. If already setup, then by double clicking the **ChromiumHost.exe** will read the arguments from **Configuration.xml**, otherwise can pass arguments like
 
-`ChromiumHost.exe --url=https://blis/index.htm --internal=true --remotedebuggingport=20480 --verbose=false`
+`ChromiumHost.exe --url=https://bhis/index.htm --internal=true --remotedebuggingport=20480 --verbose=false`
 
 #### Linux
 From the terminal type and execute **mono ChromiumHost.Installer.exe** will download the latest release. If already setup, type and execute **mono ChromiumHost.exe**, otherwise can pass arguments like
 
-`mono ChromiumHost.exe --url=https://blis/index.htm --internal=true --remotedebuggingport=20480 --verbose=false`
+`mono ChromiumHost.exe --url=https://bhis/index.htm --internal=true --remotedebuggingport=20480 --verbose=false`
