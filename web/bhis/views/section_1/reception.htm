@@ -106,17 +106,26 @@
 					<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
 						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal;">RECEPTION</h4>
 						<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
-						<div onclick="previous(this)" class="nav-button prev transparent disable" style="height:32px; width:24px; " onclick="proceedTo(this,0)">
+						<!--<div onclick="previous(this)" class="nav-button prev transparent disable" style="height:32px; width:24px; " onclick="proceedTo(this,0)">
 							<i class="mdi mdi-chevron-left" style="margin:0px 0px 0px 0px;"></i>
 						</div>
 						<div onclick="next(this)" class="nav-button next transparent" style="height:32px; width:24px; " >
 							<i class="mdi mdi-chevron-right" style="margin:0px 0px 0px 0px;"></i>
-						</div>
+						</div>-->
 					</div>
 					<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 32px); z-index:2; position:relative;">						
 						<div class="animated-sub-page FlexColumn FlexBoxSizing-BorderBox active scroll scroll2" data-path="section-0"  style="width:100%; height:100%; overflow-y:auto; overflow-x:hidden; display: block;">						
 							<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%; margin:0px 0px 16px 0px;">
-								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+								<div class="FlexDisplay FlexRow Divider-Bottom" style="background:#182538;min-height:32px;max-height:32px;margin:0px 0px 2px 0px;" >
+									<div style="font-size:14px; margin:0px 0px 0px 12px;">
+										<i class="mdi mdi-card-account-details-outline" style="height:100%; color:white;" />
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:150px;">
+										<h4 class="feature-title mt-0" style="margin:8px 0px 8px 10px; font-size: 12px; font-weight:normal; line-height:16px;">General Information</h4>
+									</div>
+								</div>
+								
+								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 8px 0px;" >
 									<div class="FlexDisplay Flex" style="min-width:130px;">
 										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Reference Number</h4>
 									</div>
@@ -275,12 +284,21 @@
 								</div>
 							</div>
 							<div class="FlexDisplay FlexColumn Flex FlexBoxSizing-BorderBox Divider-Top" style="width:100%; margin:8px 0px 8px 0px;">
+								<div class="FlexDisplay FlexRow Divider-Bottom" style="background:#182538;min-height:32px;max-height:32px;margin:0px 0px 2px 0px;" >
+									<div style="font-size:14px; margin:0px 0px 0px 12px;">
+										<i class="mdi mdi-flask" style="height:100%; color:white;" />
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:150px;">
+										<h4 class="feature-title mt-0" style="margin:8px 0px 8px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Specimen</h4>
+									</div>
+								</div>
+								
 								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
 									<!--<div class="FlexDisplay Flex" style="min-width:150px;">
 										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Specimen Type</h4>
 									</div>-->
 									<div class="FlexDisplay Flex" style="min-width:150px;">
-										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Specimen Condition</h4>
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Condition</h4>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:160px;">
 										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Priority</h4>
@@ -330,10 +348,10 @@
 								
 								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
 									<div class="FlexDisplay Flex" style="min-width:150px;">
-										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Specimen Collected Date</h4>
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Collected Date</h4>
 									</div>
 									<div class="FlexDisplay Flex">
-										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px; white-space: nowrap;">Specimen Collected By</h4>
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px; white-space: nowrap;">Collected By</h4>
 									</div>
 								</div>
 								<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">						
@@ -360,10 +378,10 @@
 								
 								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
 									<div class="FlexDisplay Flex" style="min-width:150px;">
-										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Specimen Sent Date</h4>
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Sent Date</h4>
 									</div>
 									<div class="FlexDisplay Flex">
-										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px; white-space: nowrap;">Specimen Sent By</h4>
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px; white-space: nowrap;">Sent By</h4>
 									</div>
 								</div>
 								<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">						
@@ -418,8 +436,73 @@
 									</div>
 								</div>
 							</div>
+							<div class="FlexDisplay FlexColumn Flex FlexBoxSizing-BorderBox Divider-Top" style="width:100%; margin:8px 0px 8px 0px;">
+								<div class="FlexDisplay FlexRow Divider-Bottom" style="background:#182538;min-height:32px;max-height:32px;margin:0px 0px 2px 0px;" >
+									<div style="font-size:14px; margin:0px 0px 0px 12px;">
+										<i class="mdi mdi-card-account-details-star-outline" style="height:100%; color:white;" />
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:150px;">
+										<h4 class="feature-title mt-0" style="margin:8px 0px 8px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Insurance</h4>
+									</div>
+								</div>
+								
+								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+									<div class="FlexDisplay Flex" style="min-width:150px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Card Number</h4>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:160px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Authorization Number</h4>
+									</div>
+								</div>
+								<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">						
+									<div class="FlexDisplay Flex" style="min-width:150px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-smart-card-outline" />
+											</div>
+											<input type="text" placeholder="Card Number"/>
+										</div>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:160px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-smart-card-outline" />
+											</div>
+											<input type="text" placeholder="Authorization Number"/>
+										</div>
+									</div>
+								</div>
+								
+								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+									<div class="FlexDisplay Flex" style="min-width:150px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Preliminanary Diagnosis (Code)</h4>
+									</div>
+									<div class="FlexDisplay Flex">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px; white-space: nowrap;">Final Diagnosis (Code)</h4>
+									</div>
+								</div>
+								<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">						
+									<div class="FlexDisplay Flex" style="min-width:150px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">
+											<div class="icon">
+												<i class="mdi mdi-microscope" />
+											</div>
+											<input type="text" placeholder="Preliminanary Diagnosis (Code)"/>
+										</div>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-microscope" />
+											</div>
+											<input type="text" placeholder="Final Diagnosis (Code)"/>
+										</div>
+									</div>
+								</div>
+							</div>	
+							
 						</div>
-						<div class="animated-sub-page FlexColumn FlexBoxSizing-BorderBox" data-path="section-1"  style="width:100%; height:100%;">						
+						<!--<div class="animated-sub-page FlexColumn FlexBoxSizing-BorderBox" data-path="section-1"  style="width:100%; height:100%;">						
 							<div class="FlexDisplay FlexColumn" style="width:100%;  height:calc(100% - 0px);">
 								<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
 									<div class="FlexDisplay Flex">
@@ -437,22 +520,12 @@
 										<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">
 											<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 12px; font-weight:normal;">Test</h4>
 										</div>
-										<!--<div class="FlexDisplay Flex" style="min-height:32px;">
-											<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 12px; font-weight:normal;">Description</h4>
-										</div>-->
 									</div>
 								</div>
 								<div class="FlexDisplay Flex FlexColumn FlexBoxSizing-BorderBox scroll scroll2 List" style="overflow-y:auto;"></div>
 							</div>
-						</div>
-						<!--<div class="animated-sub-page FlexColumn FlexBoxSizing-BorderBox" data-path="section-2"  style="width:100%; height:100%;">	
-							<div class="FlexDisplay FlexColumn" style="margin:auto auto;">
-								<div class="FlexDisplay" style="margin:0px auto 32px auto;">
-									<i class="mdi mdi-alert-outline" style="text-align:center; font-size:96px;"></i>
-								</div>
-								<div class="FlexDisplay">Under Development</div>
-							</div>
 						</div>-->
+						
 					</div>
 				</div>
 			</div>

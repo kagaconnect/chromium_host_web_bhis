@@ -4,15 +4,285 @@
 			<i class="mdi mdi-apps"></i>
 		</div>
 		<div class="FlexDisplay">
-				<span class="BHIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
-			</div>
+			<span class="BHIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
+		</div>
 	</div>
 	<div class="FlexDisplay Flex ContentPage  inner-section FadeIn"  style="width:100%; height:1px;">		
-		<div class="FlexDisplay FlexColumn" style="margin:auto auto;">
-			<div class="FlexDisplay" style="margin:0px auto 32px auto;">
-				<i class="mdi mdi-alert-outline" style="text-align:center; font-size:96px;"></i>
+		<div class="FlexDisplay FlexColumn FlexGrow FlexBoxSizing-BorderBox" style="height:100%; overflow: hidden; position:relative;">
+			<div class="FlexDisplay" style="margin:16px 16px 0px 16px; height:210px;">
+				<div class="page-container FlexDisplay Flex FlexRow Overflow-Hidden inner-container Round Shadow" style="position:relative; height:calc(100% - 0px);  width:100%;">
+					<div class="FlexDisplay FlexColumn Divider-Right" style="height:calc(100% - 0px); width:256px;">
+						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
+							<div class="FlexDisplay Flex">
+								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">CONSULTATION</h4>
+							</div>
+						</div>
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 0px); z-index:2;">
+							<div class="ConsultationPendingList FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="overflow-y:auto; height:calc(100% - 20px);">
+							</div>
+						</div>	
+					</div>
+					<div class="FlexDisplay FlexGrow FlexColumn" style="height:calc(100% - 0px);">
+						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
+							<div class="FlexDisplay Flex">
+								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">PATIENT INFORMATION</h4>
+							</div>
+						</div>
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 32px); z-index:2;">
+							<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="overflow-y:auto; height:calc(100% - 0px);">
+								
+								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">First Name</h4>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Middle Name</h4>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 4px; font-size: 12px; font-weight:normal; line-height:16px;">Last Name</h4>
+									</div>
+								</div>
+								<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">						
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">
+											<div class="icon">
+												<i class="mdi mdi-account" />
+											</div>
+											<input type="text" placeholder="First Name"/>
+										</div>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-account" />
+											</div>
+											<input type="text" placeholder="Midle Name"/>
+										</div>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-account" />
+											</div>
+											<input type="text" placeholder="Last Name"/>
+										</div>
+									</div>
+								</div>
+								
+								
+								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Gender</h4>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Date Of Birth</h4>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 4px; font-size: 12px; font-weight:normal; line-height:16px;">Phone Number</h4>
+									</div>
+								</div>
+								<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">						
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<div class="Flex btn-group btn-group-toggle gender" data-toggle="buttons" style="margin:0px 4px 0px 0px;">
+											<label class="btn btn-color" tooltip="Ambiguous" flow="right">
+												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">A</div>
+											</label>
+											<label class="btn btn-color" tooltip="Female" flow="up">
+												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">F</div>
+											</label>
+											<label class="btn btn-color" tooltip="Male" flow="up">
+												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">M</div>
+											</label>
+											<label class="btn btn-color" tooltip="Not applicable" flow="up">
+												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">N</div>
+											</label>
+											<label class="btn btn-color" tooltip="Other" flow="up">
+												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">O</div>
+											</label>
+											<label class="btn btn-color" tooltip="Unknown" flow="up">
+												<input type="radio" name="gender_options" autocomplete="off" value=""><div style="width:8px; height:8px; margin:auto auto;">U</div>
+											</label>
+										</div>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-calendar-outline" />
+											</div>
+											<input type="text" placeholder="dd/mm/yyyy" class="datepicker-range-dob" style="padding:0px 0px 0px 8px;"/>
+											<div id="age-manual" class="icon btn-color Divider-Left"  style="border-radius: 0 4px 4px 0; min-width:32px; max-width:32px;">
+												<i class="mdi mdi-calendar-search" />
+											</div>
+										</div>
+									</div>
+									<div class="FlexDisplay Flex" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-cellphone-basic" />
+											</div>
+											<input id="phone_number" type="text" placeholder="Phone Number"/>
+										</div>
+									</div>
+								</div>
+								
+								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+									<div class="FlexDisplay Flex FlexGrow-2" style="min-width:260px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Address</h4>
+									</div>
+									<div class="FlexDisplay Flex FlexGrow" style="min-width:130px;">
+										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 4px; font-size: 12px; font-weight:normal; line-height:16px;">Email</h4>
+									</div>
+								</div>
+								<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">
+									<div class="FlexDisplay Flex FlexGrow-2" style="min-width:260px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-earth" />
+											</div>
+											<input type="text" placeholder="Address"/>
+										</div>
+									</div>
+									<div class="FlexDisplay Flex FlexGrow" style="min-width:130px;">
+										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+											<div class="icon">
+												<i class="mdi mdi-at" />
+											</div>
+											<input id="email_address" type="text" placeholder="Address"/>
+										</div>
+									</div>
+								</div>
+							
+							</div>
+						</div>			
+					</div>			
+				</div>
 			</div>
-			<div class="FlexDisplay">Consultation : Under Development</div>
+			<div class="FlexDisplay Flex FlexGrow" style="margin:16px 16px 16px 16px; height:calc(100% - 256px);"> <!-- height:calc(50% - 0px);-->
+				<div class="page-container FlexDisplay Flex FlexRow Overflow-Hidden inner-container Round Shadow" style="position:relative; height:calc(100% - 0px);  width:100%;">
+					<div class="FlexDisplay FlexColumn Divider-Right" style="height:calc(100% - 0px); width:256px;">
+						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
+							<div class="FlexDisplay Flex">
+								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">HISTORY</h4>
+							</div>
+						</div>
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 0px); z-index:2;">
+							<div class="HistoryList FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="overflow-y:auto; height:calc(100% - 32px);">
+								
+							</div>
+						</div>	
+					</div>
+					<div class="FlexDisplay FlexGrow FlexColumn Divider-Right" style="height:calc(100% - 0px);">
+						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
+							<div class="FlexDisplay Flex">
+								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px; white-space: nowrap;">EXAMINATION, DIAGNOSIS & TREATMENT</h4>
+							</div>
+						</div>
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 32px); z-index:2;">
+							<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="overflow-y:auto; height:calc(100% - 0px);">
+							
+							<!--style="min-height:128px;max-height:128px;"-->
+								<div class="FlexDisplay FlexGrow FlexColumn"  >
+									<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+										<div class="FlexDisplay Flex FlexGrow-2" style="min-width:260px;">
+											<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Examination</h4>
+										</div>
+									</div>
+									<div class="FlexDisplay FlexRow"  style="width:100%; height:calc(100% - 16px); padding:0px 8px;">
+										<div class="FlexDisplay Flex FlexGrow-2" style="min-width:260px;">
+											<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+												<div class="icon">
+													<i class="mdi mdi-earth" />
+												</div>
+												<textarea class="scroll scroll2" type="text" placeholder="Examination" style="padding: 8px 8px 8px 0px; line-height: 1.15; min-height:30px;"/>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="FlexDisplay FlexGrow FlexColumn"  >
+									<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+										<div class="FlexDisplay Flex FlexGrow-2" style="min-width:260px;">
+											<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Treatment</h4>
+										</div>
+									</div>
+									<div class="FlexDisplay FlexRow"  style="width:100%; height:calc(100% - 16px); padding:0px 8px;">
+										<div class="FlexDisplay Flex FlexGrow-2" style="min-width:260px;">
+											<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+												<div class="icon">
+													<i class="mdi mdi-earth" />
+												</div>
+												<textarea class="scroll scroll2" type="text" placeholder="Treatment" style="padding: 8px 8px 8px 0px; line-height: 1.15; min-height:30px;"/>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="FlexDisplay FlexGrow FlexColumn"  >
+									<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+										<div class="FlexDisplay Flex FlexGrow-2" style="min-width:260px;">
+											<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Consultation Notes</h4>
+										</div>
+									</div>
+									<div class="FlexDisplay FlexRow"  style="width:100%; height:calc(100% - 16px); padding:0px 8px;">
+										<div class="FlexDisplay Flex FlexGrow-2" style="min-width:260px;">
+											<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+												<div class="icon">
+													<i class="mdi mdi-earth" />
+												</div>
+												<textarea class="scroll scroll2" type="text" placeholder="Consultation Notes" style="padding: 8px 8px 8px 0px; line-height: 1.15; min-height:30px;"/>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="FlexDisplay FlexGrow FlexColumn"  >
+									<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+										<div class="FlexDisplay Flex FlexGrow-2" style="min-width:260px;">
+											<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Remarks</h4>
+										</div>
+									</div>
+									<div class="FlexDisplay FlexRow"  style="width:100%; height:calc(100% - 16px); padding:0px 8px 8px 8px;">
+										<div class="FlexDisplay Flex FlexGrow-2" style="min-width:260px;">
+											<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
+												<div class="icon">
+													<i class="mdi mdi-earth" />
+												</div>
+												<textarea class="scroll scroll2" type="text" placeholder="Remarks" style="padding: 8px 8px 8px 0px; line-height: 1.15; min-height:30px;"/>
+											</div>
+										</div>
+									</div>
+								</div>
+							
+							
+							
+							
+							</div>
+						</div>		
+					</div>
+					<div class="FlexDisplay FlexColumn" style="height:calc(100% - 0px); width:256px;">
+						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
+							<div class="FlexDisplay Flex">
+								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">TESTS</h4>
+							</div>
+						</div>
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox Divider-Bottom" style="width:100%;  min-height:calc(50% - 32px); max-height:calc(50% - 32px); z-index:2;">
+							<div class="TestsList FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="overflow-y:auto; height:calc(100% - 0px);">
+								
+							</div>
+						</div>
+						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
+							<div class="FlexDisplay Flex">
+								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">PRESCRIPTIONS</h4>
+							</div>
+						</div>
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  min-height:calc(50% - 32px); max-height:calc(50% - 32px); z-index:2;">
+							<div class="PrescriptionsList FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="overflow-y:auto; height:calc(100% - 0px);">
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -21,6 +291,148 @@ $('#backBtn').click(function(){
 	var page = System.IO.Path.Combine("web","bhis","views",backNavigation);
 	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
 });
+
+function removePendingConsultation(item){
+	$(item).parent().remove();
+}
+
+function selectPendingConsultation(item){
+	$(".ConsultationPendingList .CheckBoxBold").each(function(){
+		$(this).removeClass('Checked');
+	});
+
+	$(item).addClass('Checked');
+	
+	$('.HistoryList').html('');	
+	for(var x=0;x<Math.round(Math.random() * 50);x++){
+	//for(var x=0;x<50;x++){
+		showHistory(item);
+	}
+}
+
+function selectHistoryList(item){
+	$(".HistoryList .CheckBoxBold").each(function(){
+		$(this).removeClass('Checked');
+	});
+	
+	$(item).addClass('Checked');
+	
+	$('.TestsList').html('');	
+	for(var x=0;x<Math.round(Math.random() * 50);x++){
+		addTest();
+	}
+	$('.PrescriptionsList').html('');	
+	for(var x=0;x<Math.round(Math.random() * 50);x++){
+		addPrescription();
+	}
+	
+}
+
+function addPendingConsultation(){
+	var index = $('.consultationindex').last().text();
+	if(index.length == 0)index = 1;
+	else index = parseInt($('.consultationindex').last().text())+1;
+	
+	var new_consultation = 'Consultation';
+	
+	var consultation  = '<div onclick="selectPendingConsultation(this)" class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold" style="min-height:32px;">';
+		consultation += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
+		consultation += '		<h4 class="consultationindex feature-title mt-0" style="width:100%; margin:2px 0px 0px 0px; font-size: 10px; font-weight:normal; text-align:center;">'+(index)+'</h4>';
+		consultation += '	</div>';
+		consultation += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
+		consultation += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;">'+new_consultation+'</h4>';
+		consultation += '	</div>';
+		//consultation += '	<div class="FlexDisplay Flex" style="min-height:32px;">';
+		//consultation += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 12px; font-weight:normal;">'+new_test.description+'</h4>';
+		//consultation += '	</div>';
+		consultation += '	<div class="FlexDisplay btn-clear" onclick="removePendingConsultation(this)">';
+		consultation += '		<div style="margin:auto auto; width:16px height:16px; padding:0px 12px; font-size: 14px;"><i class="mdi mdi-close-circle" /></div>';
+		consultation += '	</div>';
+		consultation += '</div>';
+	
+	$('.ConsultationPendingList').append(consultation);
+	//$('.ConsultationPendingList').scrollTop($('.ConsultationPendingList')[0].scrollHeight);
+}
+
+function showHistory(item){
+	var index = $('.historyindex').last().text();
+	if(index.length == 0)index = 1;
+	else index = parseInt($('.historyindex').last().text())+1;
+	
+	var new_history = '2020-06-01 08:00';
+	
+	var history  = '<div onclick="selectHistoryList(this)" class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold" style="min-height:32px;">';
+		history += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
+		history += '		<h4 class="historyindex feature-title mt-0" style="width:100%; margin:2px 0px 0px 0px; font-size: 10px; font-weight:normal; text-align:center;">'+(index)+'</h4>';
+		history += '	</div>';
+		history += '	<div class="FlexDisplay Flex FlexRow" style="min-height:32px; min-width:128px;">';
+		history += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;">'+new_history+'</h4>';
+		history += '	</div>';
+		history += '</div>';
+	
+	$('.HistoryList').append(history);
+	//$('.HistoryList').scrollTop($('.HistoryList')[0].scrollHeight);
+}
+
+function removeTest(item){
+	$(item).parent().remove();
+}
+
+function removePrescription(item){
+	$(item).parent().remove();
+}
+
+function addTest(){
+	var index = $('.testindex').last().text();
+	if(index.length == 0)index = 1;
+	else index = parseInt($('.testindex').last().text())+1;
+	
+	var new_test = 'Test';
+	
+	var test  = '<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px;">';
+		test += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
+		test += '		<h4 class="testindex feature-title mt-0" style="width:100%; margin:2px 0px 0px 0px; font-size: 10px; font-weight:normal; text-align:center;">'+(index)+'</h4>';
+		test += '	</div>';
+		test += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
+		test += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;">'+new_test+'</h4>';
+		test += '	</div>';
+		test += '	<div class="FlexDisplay btn-clear" onclick="removeTest(this)">';
+		test += '		<div style="margin:auto auto; width:16px height:16px; padding:0px 12px; font-size: 14px;"><i class="mdi mdi-close-circle" /></div>';
+		test += '	</div>';
+		test += '</div>';
+	
+	$('.TestsList').append(test);
+	//$('.TestsList').scrollTop($('.TestsList')[0].scrollHeight);
+}
+
+function addPrescription(){
+	var index = $('.prescriptionindex').last().text();
+	if(index.length == 0)index = 1;
+	else index = parseInt($('.prescriptionindex').last().text())+1;
+	
+	var new_Prescription = 'Prescription';
+	
+	var prescription  = '<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px;">';
+		prescription += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
+		prescription += '		<h4 class="prescriptionindex feature-title mt-0" style="width:100%; margin:2px 0px 0px 0px; font-size: 10px; font-weight:normal; text-align:center;">'+(index)+'</h4>';
+		prescription += '	</div>';
+		prescription += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
+		prescription += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;">'+new_Prescription+'</h4>';
+		prescription += '	</div>';
+		prescription += '	<div class="FlexDisplay btn-clear" onclick="removePrescription(this)">';
+		prescription += '		<div style="margin:auto auto; width:16px height:16px; padding:0px 12px; font-size: 14px;"><i class="mdi mdi-close-circle" /></div>';
+		prescription += '	</div>';
+		prescription += '</div>';
+	
+	$('.PrescriptionsList').append(prescription);
+	//$('.PrescriptionsList').scrollTop($('.PrescriptionsList')[0].scrollHeight);
+}
+
+
+
+for(var x=0;x<Math.round(Math.random() * 30);x++){
+	addPendingConsultation();
+}
 
 closeLoadingPage();
 </script>
