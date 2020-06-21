@@ -283,11 +283,11 @@ function getMeasurement(item){
 					var _from = $(this).find(":first-child .from").val().trim();
 					var _to = $(this).find(":first-child .to").val().trim();
 					
-					if(_from.length > 0 && _to.length > 0){	
+					if(_from.length > 0){
 						measurement.Information.push({
 							Index:(index+1),
 							From:_from,
-							To:_to
+							To:_to.length > 0 ? _to : null
 						});
 					}
 					else measurement = null;
@@ -568,6 +568,7 @@ function save_test(){
 				
 				$(test_dlg.el).find(".okButton").unbind( "click" );
 				$(test_dlg.el).find(".okButton").click(function() {
+					clearView();
 					test_dlg.toggle();
 					test_dlg = null;		
 				});
@@ -660,10 +661,17 @@ function save_messagement(con, testID, measurement, parentID){
 		}
 		else if(measurement.TestType == "Alphanumeric Values"){
 			measurement.Information.forEach(function(m,i){
-				save_messagement_settings(con, i+1, testID, messagementID,[
-					{ Setting:"From", Value:m.From },
-					{ Setting:"To", Value:m.To }
-				]);
+				if(m.To == undefined || m.To == null){
+					save_messagement_settings(con, i+1, testID, messagementID,[
+						{ Setting:"From", Value:m.From }
+					]);
+				}
+				else{
+					save_messagement_settings(con, i+1, testID, messagementID,[
+						{ Setting:"From", Value:m.From },
+						{ Setting:"To", Value:m.To }
+					]);
+				}
 			});
 		}
 		else if(measurement.TestType == "Autocomplete"){
@@ -901,20 +909,23 @@ function load_tests(autoScroll=true){
 		if(comm != null){
 			var reader = comm.executeReader();
 			if(reader != null){
+			var index = 0;
 				while(reader.read()){
 					var row = JSON.parse(reader.getValues());	
 					if(row != undefined && row != null){
-						var index = $('.testindex').last().text();
-						if(index.length == 0)index = 1;
-						else index = parseInt($('.testindex').last().text())+1;
-
+						//var index = $('.testindex').last().text();
+						//if(index.length == 0)index = 1;
+						//else index = parseInt($('.testindex').last().text())+1;
+						//console.log(row);
+						//console.log(index);
+						index++;
 
 						var test  = '<div onclick="view_test(this)" data-test-id="'+row.ID+'" data-test-name="'+row.Name+'" class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold" style="min-height:32px;">';
 							test += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
 							test += '		<h4 class="testindex feature-title mt-0" style="width:100%; margin:0px 0px 0px 0px; font-size: 12px; font-weight:normal; text-align:center;">'+(index)+'</h4>';
 							test += '	</div>';
 							test += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
-							test += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 12px; font-weight:normal;">'+row.Name+'</h4>';
+							test += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 12px; font-weight:normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+row.Name+'</h4>';
 							test += '	</div>';
 							test += '	<div class="FlexDisplay FlexRow" style="min-height:32px; min-width:24px; font-size:16px; padding:0px 8px;">';
 							test += '		<i onclick="delete_test(this)" class="mdi mdi-close-circle" style="margin:auto auto;"/>';
@@ -938,6 +949,8 @@ function delete_test(item){
 	var _parent = $(item).parents(".CheckBoxBold");
 	if(_parent != undefined && _parent != null){
 		var _name = _parent.data("test-name");
+		var testID = _parent.data("test-id");
+		
 		var content = '';
 			content += '<div class="bar-container" style="margin:0px;">';
 			content += '	<div class="bar-progress"></div>';
@@ -1013,6 +1026,8 @@ function delete_test(item){
 								_parent.remove();
 								
 								load_tests();
+								
+								clearView();
 								
 								test_dlg.toggle();
 								test_dlg = null;							
@@ -1379,7 +1394,7 @@ function add_testInfo(item, data, modified){
 					_testInfo += '						</div>';
 					_testInfo += '						<h4 class="feature-title mt-0" style="margin:0px 4px 0px 4px; text-align:center; font-size: 12px; font-weight:normal; line-height:16px; padding-top:8px;">/</h4>';
 					_testInfo += '						<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 0px;">';
-					_testInfo += '							<input class="to" type="text" placeholder="" value="'+info.To+'" style="text-align:center;"/>';
+					_testInfo += '							<input class="to" type="text" placeholder="" value="'+(info.To != undefined && info.To != null ? info.To : "")+'" style="text-align:center;"/>';
 					_testInfo += '						</div>';
 					_testInfo += '					</div>';
 					_testInfo += '				</div>';
@@ -1793,6 +1808,28 @@ function getSpecimenTypes(){
 }
 
 
+function clearView(){
+	$(".MeasuresList").html('');
+	
+	$(".CompatibleSpecimenList .checkbox").each(function(){
+		$(this).prop("checked", false).trigger("change");
+	});
+	
+	$('.TestsList').children().each(function(){
+		$(this).removeClass('Checked');
+	});	
+	
+	$(".test-name-input").val("");
+	$(".description-input").val("");
+	SelectItemByValue($(".select-dropdown.lab-sections"), "-2");
+	$(".clinical-data-input").val('');
+	SelectItemByValue($(".select-dropdown.panel-tests"), "No");
+	SelectItemByValue($(".select-dropdown.hide-patient-name"), "No");
+	$(".prevalence-threshold-input").val("");
+	$(".target-tat-input").val("");
+	$(".cost-to-patient-input").val("");
+}
+
 $("#addTests").unbind( "click" );
 $("#addTests").click(function() {
 	var index = $('.TestContainer').last().find(".TestItem").first().find(".MesurementTitle").text().replace("Measurement ","");
@@ -1816,29 +1853,7 @@ $(".clear-test").unbind( "click" );
 $(".clear-test").click(function(){	
 	$(".clear-test .submenu").hide();
 	$(".clear-test").attr('id', '');
-	
-	$(".MeasuresList").html('');
-	
-	$(".CompatibleSpecimenList .checkbox").each(function(){
-		$(this).prop("checked", false).trigger("change");
-	});
-	
-	$('.TestsList').children().each(function(){
-		$(this).removeClass('Checked');
-	});	
-	
-	$(".test-name-input").val("");
-	$(".description-input").val("");
-	SelectItemByValue($(".select-dropdown.lab-sections"), "-2");
-	$(".clinical-data-input").val('');
-	SelectItemByValue($(".select-dropdown.panel-tests"), "No");
-	SelectItemByValue($(".select-dropdown.hide-patient-name"), "No");
-	$(".prevalence-threshold-input").val("");
-	$(".target-tat-input").val("");
-	$(".cost-to-patient-input").val("");
-	
-	
-	
+	clearView();
 });
 
 $(".save").mouseup(function(){
