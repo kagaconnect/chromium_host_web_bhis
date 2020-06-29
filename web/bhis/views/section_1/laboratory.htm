@@ -276,16 +276,129 @@ function selectPendingConsultation(item){
 				}
 				reader.close();
 				
-				rows.forEach(function(item, index){
+				/*rows.forEach(function(item, index){
 					showTests(item, index, con);
-				});
+				});*/
+				
+				showTests(rows[0], 0, con);
 				
 				con.close();				
 			}
 			else con.close();
 		}
 		else con.close();
-	}	
+	}
+
+	$("#addTests").unbind( "click" );
+	$("#addTests").click(function(){
+		addTest();
+	});	
+	
+}
+
+function getRejectionCodes(){
+	var codes = [];
+	
+	codes.push({Code:'OTHER', Reason:'Other Reason'});
+	
+	return codes;
+}
+
+function rejectTest(item){
+	var id = $(item).parents(".TestingItem").data("id");
+	var name = $(item).parents(".TestingItem").data("name");
+	
+	var content = '';
+			content += '<div class="bar-container" style="margin:0px;">';
+			content += '	<div class="bar-progress"></div>';
+			content += '</div>'; 
+			
+			content += '	<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:0px 0px 0px 0px;" >';
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Code</h4>';
+			content += '		</div>';
+			content += '	</div>';
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+			content += '				<div class="icon">';
+			content += '					<i class="mdi mdi-test-tube" />';
+			content += '				</div>';
+			content += '				<select class="rejectionCodes">';
+			content += '					<option selected="">...</option>';
+			
+			getRejectionCodes().forEach(function(element, index){
+				content += '					<option value="'+element.Reason+'">'+element.Code+'</option>';
+			});
+			
+			
+			content += '				</select>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			content += '	<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:0px 0px 0px 0px;" >';
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Comment</h4>';
+			content += '		</div>';
+			content += '	</div>';
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+			content += '				<div class="icon">';
+			content += '					<i class="mdi mdi-test-tube" />';
+			content += '				</div>';
+			content += '				<input type="text" placeholder="Comment"  class="comment-input" style="padding:0px 0px 0px 8px;"/>';	
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			
+			
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:56px; margin-bottom:8px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<div class="FlexDisplay" style="margin:auto auto;">';
+			content += '				<div class="yesButton button button-primary" style="margin:0px 4px 0px 0px;">Yes</div>';
+			content += '				<div class="noButton button button-primary" style="margin:0px 0px 0px 4px;">No</div>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			content += '</div>';
+
+		var rej_dlg = ShowDialog('<i class="mdi mdi-flask-outline"></i>', "Reject test "+name, content,{
+			onCloseDialog : function() {
+				fac_dlg = null;
+				return false; 
+			}
+		},"400px");	
+		
+		create_custom_dropdowns();
+		
+		$(rej_dlg.el).find(".noButton").unbind( "click" );
+		$(rej_dlg.el).find(".noButton").click(function() {
+			rej_dlg.toggle();
+			rej_dlg = null;		
+		});
+		
+		$(rej_dlg.el).find(".yesButton").unbind( "click" );
+		$(rej_dlg.el).find(".yesButton").click(function() {
+			var code = $(rej_dlg.el).find(".select-dropdown.rejectionCodes").find(".current").text();
+			var description = $(rej_dlg.el).find(".comment-input").val();
+			
+			if(code != "..."){
+			
+				//$(item).parents(".TestingItem").remove();
+				
+				rej_dlg.toggle();
+				rej_dlg = null;	
+			}
+		});
+		
+		$(rej_dlg.el).find(".rejectionCodes").change(function() {
+			var text = $(this).text();
+			if(text != "..."){
+				var value = $(this).val();
+				$(rej_dlg.el).find(".comment-input").val(value);
+			}
+		});
 	
 }
 
@@ -413,7 +526,7 @@ function showTests(item, index, con){
 						}
 					});
 					
-					var tests  = '<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox Divider-Bottom" style="width:100%; margin:0px 0px 0px 0px;">';
+					var tests  = '<div data-id="'+item.ID+'" data-name="'+item.Name+'" class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox Divider-Bottom TestingItem" style="width:100%; margin:0px 0px 0px 0px;">';
 							tests += '	<div class="FlexDisplay FlexRow" style="background:#182538;min-height:32px;max-height:32px;margin:0px 0px 0px 0px;" >';
 							tests += '		<div style="font-size:14px; margin:0px 0px 0px 12px;">';
 							tests += '			<i class="mdi mdi-flask" style="height:100%; color:white;" />';
@@ -421,7 +534,7 @@ function showTests(item, index, con){
 							tests += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
 							tests += '			<h4 class="feature-title mt-0" style="margin:8px 0px 8px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+item.Name+'</h4>';
 							tests += '		</div>';
-							tests += '		<div tooltip="reject" flow="left" class="FlexDisplay btn-clear">';
+							tests += '		<div onclick="rejectTest(this)" tooltip="reject" flow="left" class="FlexDisplay btn-clear">';
 							tests += '			<div style="margin:auto auto; width:14px height:14px; padding:0px 14px; font-size:14px;"><i class="mdi mdi-minus-circle" /></div>';
 							tests += '		</div>';
 							tests += '	</div>';
@@ -592,13 +705,83 @@ function showTests(item, index, con){
 	
 }
 
+function getSamplesTypes(){
+	var samplesTypes = [];
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query  = "SELECT ";
+			query += "	`ID` ";
+			query += "	, `Name` ";
+			query += "	, `Description` ";
+			query += "FROM `specimen_types` ";
+				
+		var comm = con.createCommand(query);
+		if(comm != null){
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null){
+						samplesTypes.push(row);
+					}
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+	
+	return samplesTypes;
+}
+
+function getTests(id){
+	var tests = [];
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query  = "select  ";
+			query  += "	`te`.`ID` ";
+			query  += "	,`te`.`Name` ";
+			query  += "	,`te`.`LabSection` ";
+			query  += "	,IFNULL(`te`.`CostToPatient`,0) `CostToPatient` ";
+			query  += "from `compatible_specimens` `co` ";
+			query  += "inner join `tests` `te` ";
+			query  += "on `co`.`TestID` = `te`.`ID` ";
+			query  += "where `co`.`SpecimenTypeID` = @ID ";
+				
+		var comm = con.createCommand(query);
+		if(comm != null){
+			comm.addParameter("@ID", "Int32", id);
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null){
+						tests.push(row);
+					}
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+	
+	return tests;
+}
+
 $('input[type=radio][name=gender_options]').change(function() {
 	$(this).parents(".btn-group-toggle").find(".active").removeClass('active');
 	$(this).parent().addClass('active');
 });
 
 $('input[type=radio][name=gender_options]:not(:checked)').attr('disabled', true);
-
 
 $(".search").unbind( "click" );
 $(".search").click(function(){
@@ -729,12 +912,11 @@ function clearData(){
 	$('.Address').val('');
 	$('.EmailAddress').val('');
 	
-	//$('.datepicker-range-received-in-lab').val('');
-	//$('.ReceivedInLabBy').val('');
-	
 	$('.gender').find("label").each(function(){
 		$(this).removeClass('active');
 	});
+	
+	$("#addTests").unbind( "click" );
 }
 
 function hideNavigationDropMenu(){
@@ -745,6 +927,138 @@ function hideNavigationDropMenu(){
 	$(".save .submenu").hide();
 	$(".save").attr('id', '');
 }
+
+function addTest(){
+	var content = '';
+			content += '<div class="bar-container" style="margin:0px;">';
+			content += '	<div class="bar-progress"></div>';
+			content += '</div>';
+			content += '<div class="FlexDisplay FlexColumn" style="width:100%; min-height:128px;  margin:8px 0px 4px 0px;" >';
+			
+			
+			content += '	<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:0px 0px 0px 0px;" >';
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Specimen Type</h4>';
+			content += '		</div>';
+			content += '	</div>';
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+			content += '				<div class="icon">';
+			content += '					<i class="mdi mdi-test-tube" />';
+			content += '				</div>';
+			content += '				<select class="specimenTypes">';
+			content += '					<option selected="">...</option>';
+			content += '				</select>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			
+			content += '	<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >';
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Tests</h4>';
+			content += '		</div>';
+			content += '	</div>';
+			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+			content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+			content += '				<div class="icon">';
+			content += '					<i class="mdi mdi-flask" />';
+			content += '				</div>';
+			content += '				<select class="tests">';
+			content += '					<option selected="">...</option>';
+			content += '				</select>';
+			content += '			</div>';
+			content += '		</div>';
+			content += '	</div>';
+			
+			content += '</div>';
+			content += '<div class="FlexDisplay FlexRow" style="width:100%; height:auto; margin:4px 0px 8px 0px;" >';
+			content += '	<div class="FlexDisplay Flex"></div>';
+			content += '	<div class="FlexDisplay FlexRow" style="margin:8px 12px; height:auto;" >';
+			content += '			<div class="addTestButton button button-primary" style="margin:0px;">ADD</div>';
+			content += '	</div>';
+			content += '</div>';
+	
+	var dlg = ShowDialog('<i class="mdi mdi-flask-plus-outline"></i>', "Add Tests", content);				
+	$(dlg.el).find(".addTestButton").unbind( "click" );
+	$(dlg.el).find(".addTestButton").click(function() {
+		var testname = $(dlg.el).find("select.tests").val();
+		if(testname != "..."){
+			var id = $(dlg.el).find("select.tests").val();
+			var test = tests.filter(function(v){ return v.ID == id;}).shift();
+			if(test != undefined && test != null){
+				//addTest(true, test);
+				
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+				if(con != null){
+					con.open();
+					showTests(test, 0, con);
+					con.close();
+				}
+				
+				dlg.toggle();
+				dlg = null;
+			}
+		}
+	});
+	
+	var sampleTypes = getSamplesTypes();
+	sampleTypes.forEach(function(element){
+		$(dlg.el).find(".specimenTypes").append('<option value="'+element.ID+'">'+element.Name+'</option>');
+	});
+	
+	create_custom_dropdowns();
+	
+	var _specimenTypes = $(dlg.el).find(".select-dropdown.specimenTypes").find(".list");
+	if(_specimenTypes != undefined && _specimenTypes != null){
+		_specimenTypes.addClass("scroll scroll2");
+		_specimenTypes.css({"overflow-y": "auto", "max-height": "200px"});
+	}
+	
+	var _tests = $(dlg.el).find(".select-dropdown.tests").find(".list");
+	if(_tests != undefined && _tests != null){
+		_tests.addClass("scroll scroll2");
+		_tests.css({"overflow-y": "auto", "max-height": "200px"});
+	}
+	
+	var tests = [];
+	$(dlg.el).find(".specimenTypes").change(function() {
+		var text = $(this).text();
+		if(text != "..."){
+			var value = $(this).val();
+			
+			var _tests = $(dlg.el).find(".select-dropdown.tests");
+			if(_tests != undefined && _tests != null){
+				_tests.remove();
+				
+				$(dlg.el).find("select.tests").html('<option selected="">...</option>');
+				
+				tests = getTests(value);
+				tests.forEach(function(element){
+					$(dlg.el).find("select.tests").append('<option value="'+element.ID+'">'+element.Name+" - "+element.LabSection+'</option>');
+				});
+				
+				create_custom_dropdowns();
+				
+				_tests = $(dlg.el).find(".select-dropdown.tests").find(".list");
+				if(_tests != undefined && _tests != null){
+					_tests.addClass("scroll scroll2");
+					_tests.css({"overflow-y": "auto", "max-height": "200px"});
+				}
+			}
+		}
+		else{
+			$(dlg.el).find("select.tests").html('<option selected="">...</option>');
+		}
+	});
+}
+
+$("#addTests").unbind( "click" );
+$("#addTests").click(function(){
+	addTest();
+});
+
 
 $(".clear").unbind( "click" );
 $(".clear").click(function(){	
