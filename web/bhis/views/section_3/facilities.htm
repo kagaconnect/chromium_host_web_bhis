@@ -123,6 +123,85 @@ function load(item, section){
 	}
 }
 
+function loadPerView(facilities, options, loadPerView){
+	if(facilities != undefined && facilities != null && facilities.length > 0){
+		let sz = (facilities.length > loadPerView ? loadPerView : facilities.length);
+		for(var x=0; x<sz; x++){
+			var facility = facilities.shift();
+			
+			var isChecked = false;
+			if(options != undefined && options != null){
+				if(options.FacilityNumber != undefined && options.FacilityNumber != null &&
+				   options.Location != undefined && options.Location != null){
+					if(facility.FacilityNumber == options.FacilityNumber && facility.Location == options.Location){
+						isChecked = true;
+					}
+				}
+			}
+			
+			var statusType = "mdi-map-marker";
+			var statusColor = "#01579B";
+			
+			if(facility.Latitude == "" || facility.Longitude == ""){
+				statusType = "mdi-map-marker-off";
+				statusColor = "rgba(0,0,0,0.4)";
+			}
+			
+			var operating = "mdi-help-circle";
+			var operatingColor = "#4A148C";
+			
+			if(facility.OperatingStatus == "Closed"){
+				operating = "mdi-cancel";
+				operatingColor = "red";
+			}
+			else if(facility.OperatingStatus == "Closed (Temporary)"){
+				operating = "mdi-alert-circle";
+				operatingColor = "#FFD600";
+			}
+			else if(facility.OperatingStatus == "Operating" || facility.OperatingStatus == "Opert"){
+				operating = "mdi-check-circle";
+				operatingColor = "#669900";
+			}
+			else if(facility.OperatingStatus == "Pending Operation - Under Construction" || facility.OperatingStatus == "Pending Operation - Construction Complete"){
+				operating = "mdi-clock-alert";
+				operatingColor = "#C51162";
+			}
+			
+			//var mappedType = "mdi-link-off";
+			//if(item.IsMapped == "Yes")mappedType = "mdi-link";
+			
+			var FacilityNumber = facility.FacilityNumber;
+			var Location = facility.Location;
+			var Zone = facility.Zone;				
+			var Region  = facility.Region;	
+			var District  = facility.District;	
+			var Council  = facility.Council;	
+			var FacilityType  = facility.FacilityType;
+			var FacilityName = facility.FacilityName;
+			
+			var Latitude = facility.Latitude;
+			var Longitude = facility.Longitude;
+			
+			var IsDefault = facility.IsDefault;
+			
+			
+			var facility = '<div data-isdefault="'+IsDefault+'" data-facilitynumber="'+FacilityNumber+'" data-facilityname="'+FacilityName+'" data-location="'+Location+'" data-zone="'+Zone+'" data-region="'+Region+'" data-district="'+District+'" data-council="'+Council+'" data-facilitytype="'+FacilityType+'" data-latitude="'+Latitude+'" data-longitude="'+Longitude+'" onclick="facility_selected(this)" class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden CheckBoxBold FacilityItem '+(isChecked ? "Checked" : "")+'" style="width:100%; min-width:100%; min-height: 32px; max-height: 32px;" >'; 
+				facility += '	<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; height:100%; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi '+operating+'"></i></span></div>';
+				facility += '	<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; height:100%; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; color:'+statusColor+';"><i class="mdi '+statusType+'"></i></span></div>';
+				facility += '	<div class="FacilityNumber FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; height:100%; padding:8px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:11px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+FacilityNumber+'</span></div>';
+				facility += '	<div class="FacilityRegion FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+Region+'</span></div>';
+				facility += '	<div class="FacilityDistrict FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+District+'</span></div>';
+				facility += '	<div class="FacilityType FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+FacilityType+'</span></div>';
+				facility += '	<div class="FacilityName FlexDisplay" style="width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+FacilityName+'</span></div>';						
+				facility += '	<div class="FlexDisplay" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;" onclick="event.stopPropagation(); edit_facility(this)"><i class="mdi mdi-square-edit-outline" style="margin:0px; padding:0px;"></i></div>';
+				facility += '	<div class="FlexDisplay" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;" onclick="event.stopPropagation(); delete_facility(this)"><i class="mdi mdi-delete-sweep" style="margin:0px; padding:0px;"></i></div>';
+				facility += '</div>';	// tooltip="Edit" flow="left" tooltip="Delete" flow="left"
+				
+			$(".FacilitiesList").append(facility);
+		}
+	}
+}
+
 function populateData(id, options){
 	$(".FacilitiesList").html('');
 	
@@ -147,6 +226,7 @@ function populateData(id, options){
 			query += "	, IFNULL(`Latitude`, '') as `Latitude` ";
 			query += "	, IFNULL(`Longitude`, '') as `Longitude` ";
 			query += "	, `Location`  ";
+			query += "	, `IsDefault`  ";
 			query += "FROM `facilities` ";
 			query += "WHERE (case when (substr(`FacilityName` ,1,1) GLOB '*[^0-9]*') = 0 then '0_9' ";
 			query += "	  		  else upper(substr(`FacilityName` ,1,1)) ";
@@ -168,79 +248,19 @@ function populateData(id, options){
 		}
 		else con.close();
 	}
-		
-	for(var x=0; x<_facilities.length; x++){
-		var facility = _facilities[x];
-		
-		var isChecked = false;
-		if(options != undefined && options != null){
-			if(options.FacilityNumber != undefined && options.FacilityNumber != null &&
-			   options.Location != undefined && options.Location != null){
-				if(facility.FacilityNumber == options.FacilityNumber && facility.Location == options.Location){
-					isChecked = true;
-				}
-			}
-		}
-		
-		var statusType = "mdi-map-marker";
-		var statusColor = "#01579B";
-		
-		if(facility.Latitude == "" || facility.Longitude == ""){
-			statusType = "mdi-map-marker-off";
-			statusColor = "rgba(0,0,0,0.4)";
-		}
-		
-		var operating = "mdi-help-circle";
-		var operatingColor = "#4A148C";
-		
-		if(facility.OperatingStatus == "Closed"){
-			operating = "mdi-cancel";
-			operatingColor = "red";
-		}
-		else if(facility.OperatingStatus == "Closed (Temporary)"){
-			operating = "mdi-alert-circle";
-			operatingColor = "#FFD600";
-		}
-		else if(facility.OperatingStatus == "Operating" || facility.OperatingStatus == "Opert"){
-			operating = "mdi-check-circle";
-			operatingColor = "#669900";
-		}
-		else if(facility.OperatingStatus == "Pending Operation - Under Construction" || facility.OperatingStatus == "Pending Operation - Construction Complete"){
-			operating = "mdi-clock-alert";
-			operatingColor = "#C51162";
-		}
-		
-		//var mappedType = "mdi-link-off";
-		//if(item.IsMapped == "Yes")mappedType = "mdi-link";
-		
-		var FacilityNumber = facility.FacilityNumber;
-		var Location = facility.Location;
-		var Zone = facility.Zone;				
-		var Region  = facility.Region;	
-		var District  = facility.District;	
-		var Council  = facility.Council;	
-		var FacilityType  = facility.FacilityType;
-		var FacilityName = facility.FacilityName;
-		
-		var Latitude = facility.Latitude;
-		var Longitude = facility.Longitude;
-		
-		var facility = '<div data-facilitynumber="'+FacilityNumber+'" data-facilityname="'+FacilityName+'" data-location="'+Location+'" data-zone="'+Zone+'" data-region="'+Region+'" data-district="'+District+'" data-council="'+Council+'" data-facilitytype="'+FacilityType+'" data-latitude="'+Latitude+'" data-longitude="'+Longitude+'" onclick="facility_selected(this)" class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden CheckBoxBold FacilityItem '+(isChecked ? "Checked" : "")+'" style="width:100%; min-width:100%; min-height: 32px; max-height: 32px;" >'; 
-			facility += '	<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; height:100%; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi '+operating+'"></i></span></div>';
-			facility += '	<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; height:100%; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; color:'+statusColor+';"><i class="mdi '+statusType+'"></i></span></div>';
-			facility += '	<div class="FacilityNumber FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; height:100%; padding:8px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:11px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+FacilityNumber+'</span></div>';
-			facility += '	<div class="FacilityRegion FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+Region+'</span></div>';
-			facility += '	<div class="FacilityDistrict FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+District+'</span></div>';
-			facility += '	<div class="FacilityType FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+FacilityType+'</span></div>';
-			facility += '	<div class="FacilityName FlexDisplay" style="width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+FacilityName+'</span></div>';						
-			facility += '	<div class="FlexDisplay" tooltip="Edit" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;" onclick="event.stopPropagation(); edit_facility(this)"><i class="mdi mdi-square-edit-outline" style="margin:0px; padding:0px;"></i></div>';
-			facility += '	<div class="FlexDisplay" tooltip="Delete" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;" onclick="event.stopPropagation(); delete_facility(this)"><i class="mdi mdi-delete-sweep" style="margin:0px; padding:0px;"></i></div>';
-			facility += '</div>';	
-			
-		$(".FacilitiesList").append(facility);
-	}
 	
+	
+	loadPerView(_facilities, options, 500);
 	$(".FacilitiesList").scrollTop(0);
+	
+	$('.FacilitiesList').unbind( "scroll" );
+	$('.FacilitiesList').on('scroll', function() {
+		let div = $(this).get(0);
+				
+		if(div.scrollTop + div.clientHeight == div.scrollHeight) {
+			loadPerView(_facilities, options, 500);
+		}
+	});
 }
 
 function facility_selected(item){
@@ -581,7 +601,7 @@ function Render(item){
 	mapMarkers = new L.LayerGroup();
 	var _map = L.map('mapid', { zoomControl:false, layers: [mapMarkers] });	
 	//var layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	var layer = L.tileLayer('/openstreetmap/BLIS 3.6/{s}/{z}/{x}/{y}', { //Using an extension to allow User-Agent to be passed
+	var layer = L.tileLayer('/openstreetmap/BHIS 3.6/{s}/{z}/{x}/{y}', { //Using an extension to allow User-Agent to be passed
 		maxZoom: maxZoom,
 		minZoom: 2,
 		attribution: '&copy; <u style="color:#0078A8;">OpenStreetMap</u> contributors',
@@ -591,7 +611,7 @@ function Render(item){
 	
 	if(item.Latitude != "" && item.Longitude != ""){
 		var reCenter = getLatLong(latlong);	
-		_map.setView([reCenter[0],reCenter[1]-0.002],17);
+		_map.setView([reCenter[0],reCenter[1]-0.000],17);
 		
 		//var marker = L.marker(getLatLong(latlong)).addTo(_map);
 		var marker = L.marker(reCenter);
@@ -1199,6 +1219,8 @@ function edit_facility(item){
 		options.Council = _parent.data("council");
 		options.Facilitytype = _parent.data("facilitytype");
 		
+		options.IsDefault = _parent.data("isdefault");
+		
 		options.Locations = [];
 		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 		if(con != null){
@@ -1505,6 +1527,11 @@ function facility_popup(options){
 			
 			content += '</div>';
 			content += '<div class="FlexDisplay FlexRow" style="width:100%; height:auto; margin:4px 0px 8px 0px;" >';
+			if(options.Mode == "Edit" && options.IsDefault == 0){
+				content += '	<div class="FlexDisplay FlexRow" style="margin:8px 12px; height:auto;" >';
+				content += '		<div class="defaultButton button button-primary" style="margin:0px;">SET AS DEFAULT</div>';
+				content += '	</div>';
+			}
 			content += '	<div class="FlexDisplay Flex"></div>';
 			content += '	<div class="FlexDisplay FlexRow" style="margin:8px 12px; height:auto;" >';
 			content += '			<div class="saveFacilityButton button button-primary" style="margin:0px;">SAVE</div>';
@@ -1880,6 +1907,63 @@ function facility_popup(options){
 						item.parent().attr("tooltip","Facility type is required");
 					}
 				}			
+			}
+			
+		});
+		
+		$(fac_dlg.el).find(".defaultButton").unbind( "click" );
+		$(fac_dlg.el).find(".defaultButton").click(function() {
+			var _id = $(fac_dlg.el).find(".id-input").val().trim();			
+			var _location 		=  $(fac_dlg.el).find(".select-dropdown.locationsSelector .current").text();
+			var _zone 			=  $(fac_dlg.el).find(".select-dropdown.zonesSelector .current").text();
+			
+			if(_id.trim().length > 0 &&
+				_location != "Locations..."  && 
+				(_location == "Mainland" ? _zone != "Zones..." : true )){
+				
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+				if(con != null){
+					con.open();
+
+					var exists = false;
+					var query   = "SELECT `FacilityNumber` ";
+						query  += "FROM `facilities` "; 
+						query  += "WHERE `FacilityNumber` = @FacilityNumber  ";
+						query  += "AND `Location` = @Location  ";
+					
+					var comm = con.createCommand(query);
+					if(comm != null){
+						comm.addParameter("@FacilityNumber", "String", _id.trim());
+						comm.addParameter("@Location", "String", _location);
+						var reader = comm.executeReader();
+						if(reader != null){
+							exists = reader.read();
+							reader.close();			
+						}
+					}
+					
+					if(exists){
+						var query    = "UPDATE `facilities` SET `IsDefault` = 0 ";					
+						var comm = con.createCommand(query);
+						if(comm != null){
+							comm.executeNonQuery();
+						}
+						
+						var query    = "UPDATE `facilities` SET `IsDefault` = 1 ";	
+							query   += "WHERE `FacilityNumber` = @FacilityNumber ";
+							query   += "AND `Location` = @Location ";
+							
+						var comm = con.createCommand(query);
+						if(comm != null){
+							comm.addParameter("@FacilityNumber", "String", _id);
+							comm.addParameter("@Location", "String", _location);
+							comm.executeNonQuery();
+						}
+						
+						con.close();
+					}
+					else con.close();
+				}
 			}
 			
 		});

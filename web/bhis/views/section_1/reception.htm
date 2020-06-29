@@ -148,7 +148,7 @@
 									<div class="FlexDisplay Flex" style="min-width:130px;">
 										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
 											<div class="icon">
-												<i class="mdi mdi-account-badge-horizontal-outline" />
+												<i class="mdi mdi-badge-account-outline" />
 											</div>
 											<input type="text" placeholder="Patient Number"/>
 										</div>
@@ -156,7 +156,7 @@
 									<div class="FlexDisplay Flex" style="min-width:130px;">
 										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 4px;">
 											<div class="icon">
-												<i class="mdi mdi-account-card-details-outline" />
+												<i class="mdi mdi-badge-account-outline" />
 											</div>
 											<input type="text" placeholder="National ID"/>
 										</div>
@@ -406,35 +406,7 @@
 									</div>
 								</div>
 								
-								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
-									<div class="FlexDisplay Flex" style="min-width:150px;">
-										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Received In Lab Date</h4>
-									</div>
-									<div class="FlexDisplay Flex">
-										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px; white-space: nowrap;">Received In Lab By</h4>
-									</div>
-								</div>
-								<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">						
-									<div class="FlexDisplay Flex" style="min-width:150px;">
-										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">
-											<div class="icon">
-												<i class="mdi mdi-calendar-outline" />
-											</div>
-											<input type="text" placeholder="dd/mm/yyyy hh:mm" class="datepicker-range-received-in-lab" style="padding:0px 0px 0px 8px;"/>
-											<!--<div class="icon btn-color Divider-Left"  style="border-radius: 0 4px 4px 0; min-width:32px; max-width:32px;">
-												<i class="mdi mdi-calendar-search" />
-											</div>-->
-										</div>
-									</div>
-									<div class="FlexDisplay Flex" style="min-width:130px;">
-										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
-											<div class="icon">
-												<i class="mdi mdi-doctor" />
-											</div>
-											<input type="text" placeholder="Received In Lab By"/>
-										</div>
-									</div>
-								</div>
+								
 							</div>
 							<div class="FlexDisplay FlexColumn Flex FlexBoxSizing-BorderBox Divider-Top" style="width:100%; margin:8px 0px 8px 0px;">
 								<div class="FlexDisplay FlexRow Divider-Bottom" style="background:#182538;min-height:32px;max-height:32px;margin:0px 0px 2px 0px;" >
@@ -538,6 +510,8 @@ var map = null;
 var scanner = null;
 var mapMarkers = null;
 var transitioning = false;
+var currentFacility = null;
+var referenceFacility = null;
 
 function camera_selected(item){
 	if(scanner != null){
@@ -552,110 +526,6 @@ function camera_selected(item){
 			console.error(e);
 		});
 	}
-}
-
-function getSamplesTypes(){
-	return [{
-		value: 13,
-		name: "Aspirate",
-		tests:[]
-	}, {
-		value: 10,
-		name: "CSF",
-		tests:[]
-	}, {
-		value: 8,
-		name: "Dried Blood Spot",
-		tests:[]
-	}, {
-		value: 14,
-		name: "Nasal Swab",
-		tests:[]
-	}, {
-		value: 23,
-		name: "Plasma",
-		tests:[]
-	}, {
-		value: 18,
-		name: "Plasma EDTA",
-		tests:[]
-	}, {
-		value: 16,
-		name: "Rectal Swab",
-		tests:[]
-	}, {
-		value: 15,
-		name: "Semen",
-		tests:[]
-	}, {
-		value: 7,
-		name: "Serum",
-		tests:["Alkaline Phosphatase","ALT/SGPT","Amylase","AST/SGOT"]
-	}, {
-		value: 22,
-		name: "SKIN",
-		tests:[]
-	}, {
-		value: 9,
-		name: "Sputum",
-		tests:[]
-	}, {
-		value: 12,
-		name: "Stool",
-		tests:["Stool Analysis"]
-	}, {
-		value: 17,
-		name: "Throat Swab",
-		tests:[]
-	}, {
-		value: 24,
-		name: "U/S",
-		tests:[]
-	}, {
-		value: 11,
-		name: "Urine",
-		tests:[]
-	}, {
-		value: 21,
-		name: "V/S",
-		tests:[]
-	}, {
-		value: 6,
-		name: "Whole Blood",
-		tests:["FACSCount","HGB"]
-	}];
-}
-
-function specimen_selected(item){
-	if(dlg != null){
-		var specimen = getSamplesTypes().filter(function(i){ return i.value == item.value; }).shift();
-		
-		var _tests = $(dlg.el).find(".select-dropdown.tests");
-		if(_tests != undefined && _tests != null){
-			_tests.remove();
-			
-			$(dlg.el).find("select.tests").html('<option selected="">...</option>');
-			if(specimen != undefined && specimen != null){
-				if(specimen.tests != undefined && specimen.tests != null && specimen.tests.length > 0){
-					specimen.tests.forEach(function(element){
-						$(dlg.el).find("select.tests").append('<option>'+element+'</option>');
-					});
-				}
-			}
-			
-			create_custom_dropdowns();
-			
-			_tests = $(dlg.el).find(".select-dropdown.tests").find(".list");
-			if(_tests != undefined && _tests != null){
-				_tests.addClass("scroll scroll2");
-				_tests.css({"overflow-y": "auto", "max-height": "200px"});
-			}
-		}
-	}
-}
-
-function test_selected(item){
-
 }
 
 function previous(item){
@@ -726,122 +596,11 @@ $('input[type=radio][name=gender_options]').change(function() {
 	//});
 });
 
-$('#addTests').click(function(){
-	var content = '';
-			content += '<div class="bar-container" style="margin:0px;">';
-			content += '	<div class="bar-progress"></div>';
-			content += '</div>';
-			content += '<div class="FlexDisplay FlexColumn" style="width:100%; min-height:128px;  margin:8px 0px 4px 0px;" >';
-			
-			
-			content += '	<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:0px 0px 0px 0px;" >';
-			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-			content += '			<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Specimen Type</h4>';
-			content += '		</div>';
-			content += '	</div>';
-			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
-			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-			content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
-			content += '				<div class="icon">';
-			content += '					<i class="mdi mdi-test-tube" />';
-			content += '				</div>';
-			content += '				<select class="specimenTypes" onchange="specimen_selected(this)">';
-			//content += '					<option selected="">Choose...</option>';
-			content += '					<option selected="">...</option>';
-			content += '				</select>';
-			content += '			</div>';
-			content += '		</div>';
-			content += '	</div>';
-			
-			content += '	<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >';
-			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-			content += '			<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Tests</h4>';
-			content += '		</div>';
-			content += '	</div>';
-			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
-			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-			content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
-			content += '				<div class="icon">';
-			content += '					<i class="mdi mdi-flask" />';
-			content += '				</div>';
-			content += '				<select class="tests" onchange="test_selected(this)">';
-			//content += '					<option selected="">Choose...</option>';
-			content += '					<option selected="">...</option>';
-			content += '				</select>';
-			content += '			</div>';
-			content += '		</div>';
-			content += '	</div>';
-			
-			content += '</div>';
-			content += '<div class="FlexDisplay FlexRow" style="width:100%; height:auto; margin:4px 0px 8px 0px;" >';
-			content += '	<div class="FlexDisplay Flex"></div>';
-			content += '	<div class="FlexDisplay FlexRow" style="margin:8px 12px; height:auto;" >';
-			content += '			<div class="addTestButton button button-primary" style="margin:0px;">ADD</div>';
-			content += '	</div>';
-			content += '</div>';
-	
-	dlg = ShowDialog('<i class="mdi mdi-flask-plus-outline"></i>', "Add Tests", content);				
-	$(dlg.el).find(".addTestButton").unbind( "click" );
-	$(dlg.el).find(".addTestButton").click(function() {
-		var new_test = $(dlg.el).find("select.tests").val();
-		if(new_test != "..."){
-			
-			var index = $('.testindex').last().text();
-			if(index.length == 0)index = 1;
-			else index = parseInt($('.testindex').last().text())+1;
-			
-			var test  = '<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px;">';
-				test += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
-				test += '		<h4 class="testindex feature-title mt-0" style="width:100%; margin:0px 0px 0px 0px; font-size: 12px; font-weight:normal; text-align:center;">'+(index)+'</h4>';
-				test += '	</div>';
-				test += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
-				test += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 12px; font-weight:normal;">'+new_test+'</h4>';
-				test += '	</div>';
-				//test += '	<div class="FlexDisplay Flex" style="min-height:32px;">';
-				//test += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 12px; font-weight:normal;">'+new_test.description+'</h4>';
-				//test += '	</div>';
-				test += '	<div class="FlexDisplay btn-clear" onclick="removeTest(this)">';
-				test += '		<div style="margin:auto auto; width:16px height:16px; padding:0px 16px;"><i class="mdi mdi-close-circle" /></div>';
-				test += '	</div>';
-				test += '</div>';
-			
-			$('.List').append(test);
-			$('.List').scrollTop($('.List')[0].scrollHeight);
-			
-			dlg.toggle();
-			dlg = null;
-		}
-	});
-	
-	
-	getSamplesTypes().forEach(function(element){
-		$(dlg.el).find(".specimenTypes").append('<option value="'+element.value+'">'+element.name+'</option>');
-	});
-	
-	create_custom_dropdowns();
-	
-	var _specimenTypes = $(dlg.el).find(".select-dropdown.specimenTypes").find(".list");
-	if(_specimenTypes != undefined && _specimenTypes != null){
-		_specimenTypes.addClass("scroll scroll2");
-		_specimenTypes.css({"overflow-y": "auto", "max-height": "200px"});
-	}
-	
-	var _tests = $(dlg.el).find(".select-dropdown.tests").find(".list");
-	if(_tests != undefined && _tests != null){
-		_tests.addClass("scroll scroll2");
-		_tests.css({"overflow-y": "auto", "max-height": "200px"});
-	}
-});
-
 $("#backBtn").unbind( "click" );
 $('#backBtn').click(function(){
 	var page = System.IO.Path.Combine("web","bhis","views",backNavigation);
 	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
 });
-
-function removeTest(item){
-	$(item).parent().remove();
-}
 
 function hideNavigationDropMenu(){
 	$(".search .submenu").hide();
@@ -852,6 +611,320 @@ function hideNavigationDropMenu(){
 	$(".save").attr('id', '');
 }
 
+function fetchFacility(){
+	var loadedMap = false;
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query  = "SELECT ";
+			query += "	`ID` ";
+			query += "	, `FacilityNumber` ";
+			query += "	, `FacilityName` ";
+			query += "	, `CommonName` ";
+			query += "	, `Zone` ";
+			query += "	, `Region` ";
+			query += "	, `District` ";
+			query += "	, `Council` ";
+			query += "	, `Ward` ";
+			query += "	, `VillageStreet` ";
+			query += "	, `FacilityType` ";
+			query += "	, `OperatingStatus` ";
+			query += "	, IFNULL(`Latitude`, '') as `Latitude` ";
+			query += "	, IFNULL(`Longitude`, '') as `Longitude` ";
+			query += "	, `Location`  ";
+			query += "	, `IsDefault`  ";
+			query += "FROM `facilities` ";
+			query += "WHERE `IsDefault` = '1' ";
+				
+		var comm = con.createCommand(query);
+		if(comm != null){
+			var reader = comm.executeReader();
+			if(reader != null){
+				if(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null){
+						map = Render({Latitude:row.Latitude,Longitude:row.Longitude});
+						
+						$("#facility_name_text").val(row.FacilityName);
+						$("#facility_region_text").val(row.Region);
+						$("#facility_district_text").val(row.District);
+						$("#facility_type_text").val(row.FacilityType);
+						
+						loadedMap = true;
+						
+						currentFacility = row;
+					}
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+	
+	if(!loadedMap)map = Render({Latitude:"",Longitude:""});
+}
+
+function fetchFacilities(dlg, id, options){
+	dlg.find(".FacilitiesList").html('');
+	
+	var _facilities = [];
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query  = "SELECT ";
+			query += "	`ID` ";
+			query += "	, `FacilityNumber` ";
+			query += "	, `FacilityName` ";
+			query += "	, `CommonName` ";
+			query += "	, `Zone` ";
+			query += "	, `Region` ";
+			query += "	, `District` ";
+			query += "	, `Council` ";
+			query += "	, `Ward` ";
+			query += "	, `VillageStreet` ";
+			query += "	, `FacilityType` ";
+			query += "	, `OperatingStatus` ";
+			query += "	, IFNULL(`Latitude`, '') as `Latitude` ";
+			query += "	, IFNULL(`Longitude`, '') as `Longitude` ";
+			query += "	, `Location`  ";
+			query += "	, `IsDefault`  ";
+			query += "FROM `facilities` ";
+			query += "WHERE (case when (substr(`FacilityName` ,1,1) GLOB '*[^0-9]*') = 0 then '0_9' ";
+			query += "	  		  else upper(substr(`FacilityName` ,1,1)) ";
+			query += "	      end) = @ID";
+				
+		var comm = con.createCommand(query);
+		if(comm != null){
+			comm.addParameter("@ID", "String", id);
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null)_facilities.push(row);
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+	
+	
+	loadPerViewEx(dlg, _facilities, options, 500);
+	dlg.find(".FacilitiesList").scrollTop(0);
+	
+	dlg.find(".FacilitiesList").unbind( "scroll" );
+	dlg.find(".FacilitiesList").on('scroll', function() {
+		let div = $(this).get(0);				
+		if(div.scrollTop + div.clientHeight == div.scrollHeight) {
+			loadPerViewEx(dlg, _facilities, options, 500);
+		}
+	});
+}
+
+function loadPerViewEx(dlg, facilities, options, loadPerView){
+	if(facilities != undefined && facilities != null && facilities.length > 0){
+		let sz = (facilities.length > loadPerView ? loadPerView : facilities.length);
+		for(var x=0; x<sz; x++){
+			var facility = facilities.shift();
+			
+			var isChecked = false;
+			if(options != undefined && options != null){
+				if(options.FacilityNumber != undefined && options.FacilityNumber != null &&
+				   options.Location != undefined && options.Location != null){
+					if(facility.FacilityNumber == options.FacilityNumber && facility.Location == options.Location){
+						isChecked = true;
+					}
+				}
+			}
+			
+			var statusType = "mdi-map-marker";
+			var statusColor = "#01579B";
+			
+			if(facility.Latitude == "" || facility.Longitude == ""){
+				statusType = "mdi-map-marker-off";
+				statusColor = "rgba(0,0,0,0.4)";
+			}
+			
+			var operating = "mdi-help-circle";
+			var operatingColor = "#4A148C";
+			
+			if(facility.OperatingStatus == "Closed"){
+				operating = "mdi-cancel";
+				operatingColor = "red";
+			}
+			else if(facility.OperatingStatus == "Closed (Temporary)"){
+				operating = "mdi-alert-circle";
+				operatingColor = "#FFD600";
+			}
+			else if(facility.OperatingStatus == "Operating" || facility.OperatingStatus == "Opert"){
+				operating = "mdi-check-circle";
+				operatingColor = "#669900";
+			}
+			else if(facility.OperatingStatus == "Pending Operation - Under Construction" || facility.OperatingStatus == "Pending Operation - Construction Complete"){
+				operating = "mdi-clock-alert";
+				operatingColor = "#C51162";
+			}
+			
+			//var mappedType = "mdi-link-off";
+			//if(item.IsMapped == "Yes")mappedType = "mdi-link";
+			
+			var FacilityNumber = facility.FacilityNumber;
+			var Location = facility.Location;
+			var Zone = facility.Zone;				
+			var Region  = facility.Region;	
+			var District  = facility.District;	
+			var Council  = facility.Council;	
+			var FacilityType  = facility.FacilityType;
+			var FacilityName = facility.FacilityName;
+			
+			var Latitude = facility.Latitude;
+			var Longitude = facility.Longitude;
+			
+			var IsDefault = facility.IsDefault;
+			
+			
+			var _facility = '<div data-isdefault="'+IsDefault+'" data-facilitynumber="'+FacilityNumber+'" data-facilityname="'+FacilityName+'" data-location="'+Location+'" data-zone="'+Zone+'" data-region="'+Region+'" data-district="'+District+'" data-council="'+Council+'" data-facilitytype="'+FacilityType+'" data-latitude="'+Latitude+'" data-longitude="'+Longitude+'" class="FlexDisplay FlexRow Divider-Bottom Overflow-Hidden CheckBoxBold FacilityItem '+(isChecked ? "Checked" : "")+'" style="width:100%; min-width:100%; min-height: 32px; max-height: 32px;" >'; 
+				_facility += '	<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; height:100%; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi '+operating+'"></i></span></div>';
+				_facility += '	<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; height:100%; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; color:'+statusColor+';"><i class="mdi '+statusType+'"></i></span></div>';
+				_facility += '	<div class="FacilityNumber FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; height:100%; padding:8px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:11px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+FacilityNumber+'</span></div>';
+				_facility += '	<div class="FacilityRegion FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+Region+'</span></div>';
+				_facility += '	<div class="FacilityDistrict FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+District+'</span></div>';
+				_facility += '	<div class="FacilityType FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+FacilityType+'</span></div>';
+				_facility += '	<div class="FacilityName FlexDisplay" style="width:100%; height:100%; overflow:hidden; padding:8px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+FacilityName+'</span></div>';						
+				_facility += '</div>';
+			
+			var el = $(_facility);
+			el.unbind( "click" );
+			el.click(function(){
+				var item = this;
+				var _FacilityNumber = $(item).children().eq(1).text();
+				var _Region = $(item).children().eq(2).text();
+				var _District = $(item).children().eq(3).text();
+				var _FacilityType = $(item).children().eq(4).text();
+				var _FacilityName = $(item).children().eq(5).text();
+				
+				var _Latitude = $(item).data("latitude");
+				var _Longitude = $(item).data("longitude");
+					
+				if(map != undefined && map != null){
+					if(_Latitude.toString() != "" && _Longitude != ""){
+						var latlong = _Longitude+","+_Latitude;				
+						var reCenter = getLatLong(latlong);	
+
+						map.options.maxZoom = 18;
+						map.eachLayer(function(layer) {
+							if(layer instanceof L.TileLayer )
+								layer.options.maxZoom = 18;
+						});
+
+						map.flyTo([reCenter[0]-0.000,reCenter[1]],17);
+						
+						mapMarkers.clearLayers();
+						var marker = L.marker(reCenter);
+						marker.addTo(mapMarkers);
+					}
+					else {
+						mapMarkers.clearLayers();
+						map.options.maxZoom = 2;
+						map.eachLayer(function(layer) {
+							if(layer instanceof L.TileLayer )
+								layer.options.maxZoom = 2;
+						});
+						map.setView([-50.109307, 6.434463],2);
+					}
+				}
+				
+				$("#facility_name_text").val(facility.FacilityName);
+				$("#facility_region_text").val(facility.Region);
+				$("#facility_district_text").val(facility.District);
+				$("#facility_type_text").val(facility.FacilityType);
+				referenceFacility = facility;
+				
+				dlg.toggle();
+				dlg = null;
+			});
+
+			dlg.find(".FacilitiesList").append(el);
+		}
+	}
+}
+
+function preparePagerEx(dlg, host, column, table, callback){
+	dlg.find(host).html('');
+	
+	var pagerList = [];
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query  = "SELECT distinct ";
+		query += "(case when (substr(`"+column+"` ,1,1) GLOB '*[^0-9]*') = 0 then '0_9' ";
+		query += "	  else upper(substr(`"+column+"` ,1,1)) ";
+		query += "end) as `Tag`  ";
+		query += "FROM `"+table+"`  ";
+		query += "ORDER BY `"+column+"` ";
+		
+		var comm = con.createCommand(query);
+		if(comm != null){
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null)pagerList.push(row.Tag);
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+
+	var pages  = '<div id="Page_0_9" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager '+(pagerList.includes('0_9') ? '' : 'Disabled')+'" style="height:32px;">';
+		pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">0-9</span>';
+		pages += '</div>';
+	dlg.find(host).html(pages);
+	
+	if(pagerList.includes('0_9')){
+		createPagerClickEventEx(dlg, '0_9', host, callback);
+	}
+
+	for(x=65;x<65+26;x++){
+		var c = String.fromCharCode(x);
+		var pages = '<div id="Page_'+c+'" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager Divider-Left '+(pagerList.includes(c) ? '' : 'Disabled')+'" style="height:32px;">';
+			pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">'+c+'</span>';
+			pages += '</div>';
+		dlg.find(host).append(pages);
+		
+		if(pagerList.includes(c)){
+			createPagerClickEventEx(dlg, c, host, callback);
+		}
+	}
+		
+	return pagerList;
+}
+
+function createPagerClickEventEx(dlg, id, host, callback){
+	$('#Page_'+id).removeClass('Disabled');						
+	$('#Page_'+id).off("click");
+	$('#Page_'+id).click(function(){
+		if(!$(this).hasClass('Disabled')){
+			dlg.find(host).find('.Pager').each(function(){
+				$(this).removeClass('Selected');
+			});
+			$(this).addClass('Selected');
+			
+			var _id = $(this).attr('id').replace('Page_','');	
+			if(callback != undefined && callback != null)callback(dlg, _id);
+		}
+	});
+}
 
 $("#facility_search_button").click(function(){
 	var facility_search_text = $("#facility_search_text").val();
@@ -886,105 +959,14 @@ $("#facility_search_button").click(function(){
 			facility_dlg = null;
 			return false; 
 		}
-	},"720px","720px");	
+	},"720px","720px");
 	
-	var pages = '';
-	pages += '<div id="Page_0_9" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager Disabled" style="height:32px;">';
-	pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">0-9</span>';
-	pages += '</div>';
-
-	var selected = "Page_";
-	for(var x=65;x<65+26;x++){
-		var c = String.fromCharCode(x);
-		pages += '<div id="Page_'+c+'" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager Divider-Left Disabled" style="height:32px;">';
-		pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">'+c+'</span>';
-		pages += '</div>';
+	var pagerList = preparePagerEx($(facility_dlg.el), ".PagingBox", "FacilityName", "facilities", fetchFacilities);
+	if(pagerList.length > 0){
+		var fisrtID = pagerList.shift();
+		$('#Page_'+fisrtID).addClass('Selected');
+		fetchFacilities($(facility_dlg.el), fisrtID);
 	}
-	
-	$(facility_dlg.el).find(".PagingBox").html(pages);
-	
-	
-	
-	for(var x=0; x<50; x++){
-		var statusType = "mdi-map-marker";
-		var statusColor = "#01579B";
-		var operating = "mdi-help-circle";
-		var operatingColor = "#4A148C";
-		
-		var mappedType = "mdi-link-off";
-		//if(item.IsMapped == "Yes")mappedType = "mdi-link";
-		
-		var FacilityNumber = "1010"+x.toString().padStart(2, '0')+"-1";
-		var Location = "Mainland";			
-		var Region  = "Dar es Salaam";	
-		var District  = "Ilala";	
-		var FacilityType  = "National Laboratory";
-		var FacilityName = "NHLQATC";
-		
-		var Latitude = "-6.812102";
-		var Longitude = "39.297465";
-
-		var facility = '<div data-latitude="'+Latitude+'" data-longitude="'+Longitude+'" class="FacilityButton FlexDisplay FlexRow Divider-Bottom Overflow-Hidden CheckBoxBold" style="width:100%; min-width:100%; min-height: 32px; max-height: 32px;" >'; 
-			facility += '	<div class="FlexDisplay Divider-Right" style="min-width:32px; max-width:32px; height:100%; padding:0px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi '+operating+'"></i></span></div>';
-			facility += '	<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; height:100%; padding:10px 0px 0px 0px;"><span style="text-align:center; display:inline-block; width:100%; font-size:11px; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+FacilityNumber+'</span></div>';
-			facility += '	<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:10px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+Region+'</span></div>';
-			facility += '	<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:10px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+District+'</span></div>';
-			facility += '	<div class="FlexDisplay Divider-Right" style="min-width:100px; max-width:100px; width:100%; height:100%; overflow:hidden; padding:10px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3;">'+FacilityType+'</span></div>';
-			facility += '	<div class="FlexDisplay" style="width:100%; height:100%; overflow:hidden; padding:10px 8px 0px 8px; font-size:11px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1.3; text-align:left;">'+FacilityName+'</span></div>';						
-			facility += '</div>';	
-			
-		$(facility_dlg.el).find(".FacilitiesList").append(facility);
-	}
-	
-	
-	$(facility_dlg.el).find(".FacilityButton").each(function(index, value) {
-		$(this).click(function(){
-			var _FacilityNumber = $(this).children().eq(1).text();
-			var _Region = $(this).children().eq(2).text();
-			var _District = $(this).children().eq(3).text();
-			var _FacilityType = $(this).children().eq(4).text();
-			var _FacilityName = $(this).children().eq(5).text();
-			
-			var _Latitude = $(this).data("latitude");
-			var _Longitude = $(this).data("longitude");
-			
-			$("#facility_name_text").val(_FacilityName);
-			$("#facility_region_text").val(_Region);
-			$("#facility_district_text").val(_District);
-			$("#facility_type_text").val(_FacilityType);
-			
-			if(map != undefined && map != null && _Latitude.toString() != ""){
-				var latlong = _Longitude+","+_Latitude;				
-				var reCenter = getLatLong(latlong);	
-
-				map.options.maxZoom = 18;
-				map.eachLayer(function(layer) {
-					if(layer instanceof L.TileLayer )
-						layer.options.maxZoom = 18;
-				});
-
-				map.flyTo([reCenter[0]-0.002,reCenter[1]],17);
-				
-				mapMarkers.clearLayers();
-				var marker = L.marker(reCenter);
-				marker.addTo(mapMarkers);
-			}
-			else {
-				mapMarkers.clearLayers();
-				map.options.maxZoom = 2;
-				map.eachLayer(function(layer) {
-					if(layer instanceof L.TileLayer )
-						layer.options.maxZoom = 2;
-				});
-				map.setView([-50.109307, 6.434463],2);
-			}
-
-			facility_dlg.toggle();
-			facility_dlg = null;
-		});
-	});
-	
-	
 	
 });
 
@@ -1294,7 +1276,7 @@ function Render(item){
 
 	if(item.Latitude != ""){
 		var reCenter = getLatLong(latlong);	
-		_map.setView([reCenter[0],reCenter[1]-0.002],17);
+		_map.setView([reCenter[0],reCenter[1]],17);
 	
 		var marker = L.marker(reCenter);
 		marker.addTo(mapMarkers);
@@ -1328,53 +1310,46 @@ function Render(item){
 	return _map;
 }
 
-
 var dateOptions = {language: 'en' ,dateFormat: 'dd/mm/yyyy' /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
 
 var dob_datepicker = InitDatePicker($('.datepicker-range-dob'), dateOptions);
 
 var specimen_collected_datepicker_dateTimeOptions 	= {language: 'en' ,dateFormat: 'dd/mm/yyyy' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
 var specimen_sent_datepicker_dateTimeOptions 		= {language: 'en' ,dateFormat: 'dd/mm/yyyy' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
-var received_in_lab_datepicker_dateTimeOptions 		= {language: 'en' ,dateFormat: 'dd/mm/yyyy' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
 
 specimen_collected_datepicker_dateTimeOptions.onSelect = function(formattedDate, date, inst){
 	var dt = $('.datepicker-range-specimen-collected').val();
 	if(dt.trim().length > 0){
 		var specimen_collected_datetime = getDateTime('.datepicker-range-specimen-collected');
 		var specimen_sent_datetime = getDateTime('.datepicker-range-specimen-sent');
-		var received_in_lab_datetime = getDateTime('.datepicker-range-received-in-lab');
+		//var received_in_lab_datetime = getDateTime('.datepicker-range-received-in-lab');
 		
 		if(specimen_sent_datetime != null && specimen_sent_datetime < specimen_collected_datetime){
 			specimen_sent_datepicker.clear();
 		}
 		
-		if(received_in_lab_datetime != null && received_in_lab_datetime && received_in_lab_datetime < specimen_collected_datetime){
-			received_in_lab_datepicker.clear();
-		}
+		//if(received_in_lab_datetime != null && received_in_lab_datetime && received_in_lab_datetime < specimen_collected_datetime){
+		//	received_in_lab_datepicker.clear();
+		//}
 		
 		specimen_sent_datepicker.update({minDate: specimen_collected_datetime});
-		received_in_lab_datepicker.update({minDate: specimen_collected_datetime});
+		//received_in_lab_datepicker.update({minDate: specimen_collected_datetime});
 	}
 }
 
 specimen_sent_datepicker_dateTimeOptions.onSelect = function(formattedDate, date, inst){
 	var dt = $('.datepicker-range-specimen-sent').val();
 	if(dt.trim().length > 0){		
-		var received_in_lab_datetime = getDateTime('.datepicker-range-received-in-lab');		
-		if(received_in_lab_datetime != null && received_in_lab_datetime < date){
-			received_in_lab_datepicker.clear();
-		}
-		received_in_lab_datepicker.update({minDate: date});
+		//var received_in_lab_datetime = getDateTime('.datepicker-range-received-in-lab');		
+		//if(received_in_lab_datetime != null && received_in_lab_datetime < date){
+		//	received_in_lab_datepicker.clear();
+		//}
+		//received_in_lab_datepicker.update({minDate: date});
 	}
 }
 
 var specimen_collected_datepicker = InitDatePicker($('.datepicker-range-specimen-collected'), specimen_collected_datepicker_dateTimeOptions);
 var specimen_sent_datepicker = InitDatePicker($('.datepicker-range-specimen-sent'), specimen_sent_datepicker_dateTimeOptions);
-var received_in_lab_datepicker = InitDatePicker($('.datepicker-range-received-in-lab'), received_in_lab_datepicker_dateTimeOptions);
-
-//$('#phone_number').on('change keydown paste input', function(){
-//	
-//});
 
 focusEvents($('#phone_number'),
 	function(){
@@ -1408,9 +1383,7 @@ focusEvents($('#email_address'),
 	}
 );
 
-
-//map = Render({Latitude:"-6.812102",Longitude:"39.297465"});
-map = Render({Latitude:"",Longitude:""});
+fetchFacility();
 
 hideNavigationDropMenu();
 

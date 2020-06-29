@@ -11,7 +11,7 @@
 		<div class="FlexDisplay FlexColumn FlexGrow FlexBoxSizing-BorderBox" style="height:100%; overflow: hidden; position:relative;">
 			<div class="FlexDisplay" style="margin:16px 16px 0px 16px; height:210px;">
 				<div class="page-container FlexDisplay Flex FlexRow Overflow-Hidden inner-container Round Shadow" style="position:relative; height:calc(100% - 0px);  width:100%;">
-					<div class="FlexDisplay FlexColumn Divider-Right" style="height:calc(100% - 0px); width:256px;">
+					<div class="FlexDisplay FlexColumn Divider-Right" style="height:calc(100% - 0px); max-width:512px;min-width:512px;">
 						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
 							<div class="FlexDisplay Flex">
 								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">CONSULTATION</h4>
@@ -48,7 +48,7 @@
 											<div class="icon">
 												<i class="mdi mdi-account" />
 											</div>
-											<input type="text" placeholder="First Name"/>
+											<input readonly type="text" placeholder="First Name"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -56,7 +56,7 @@
 											<div class="icon">
 												<i class="mdi mdi-account" />
 											</div>
-											<input type="text" placeholder="Midle Name"/>
+											<input readonly type="text" placeholder="Midle Name"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -64,7 +64,7 @@
 											<div class="icon">
 												<i class="mdi mdi-account" />
 											</div>
-											<input type="text" placeholder="Last Name"/>
+											<input readonly type="text" placeholder="Last Name"/>
 										</div>
 									</div>
 								</div>
@@ -109,10 +109,10 @@
 											<div class="icon">
 												<i class="mdi mdi-calendar-outline" />
 											</div>
-											<input type="text" placeholder="dd/mm/yyyy" class="datepicker-range-dob" style="padding:0px 0px 0px 8px;"/>
-											<div id="age-manual" class="icon btn-color Divider-Left"  style="border-radius: 0 4px 4px 0; min-width:32px; max-width:32px;">
+											<input readonly type="text" placeholder="dd/mm/yyyy" class="datepicker-range-dob" style="padding:0px 0px 0px 8px;"/>
+											<!--<div id="age-manual" class="icon btn-color Divider-Left"  style="border-radius: 0 4px 4px 0; min-width:32px; max-width:32px;">
 												<i class="mdi mdi-calendar-search" />
-											</div>
+											</div>-->
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -120,7 +120,7 @@
 											<div class="icon">
 												<i class="mdi mdi-cellphone-basic" />
 											</div>
-											<input id="phone_number" type="text" placeholder="Phone Number"/>
+											<input readonly id="phone_number" type="text" placeholder="Phone Number"/>
 										</div>
 									</div>
 								</div>
@@ -139,7 +139,7 @@
 											<div class="icon">
 												<i class="mdi mdi-earth" />
 											</div>
-											<input type="text" placeholder="Address"/>
+											<input readonly type="text" placeholder="Address"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex FlexGrow" style="min-width:130px;">
@@ -147,7 +147,7 @@
 											<div class="icon">
 												<i class="mdi mdi-at" />
 											</div>
-											<input id="email_address" type="text" placeholder="Address"/>
+											<input readonly id="email_address" type="text" placeholder="Address"/>
 										</div>
 									</div>
 								</div>
@@ -171,7 +171,29 @@
 							</div>
 						</div>	
 					</div>
-					<div class="FlexDisplay FlexGrow FlexColumn Divider-Right" style="height:calc(100% - 0px);">
+					<div class="FlexDisplay FlexColumn" style="height:calc(100% - 0px); width:256px;">
+						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
+							<div class="FlexDisplay Flex">
+								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">TESTS</h4>
+							</div>
+						</div>
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox Divider-Bottom" style="width:100%;  min-height:calc(50% - 32px); max-height:calc(50% - 32px); z-index:2;">
+							<div class="TestsList FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="overflow-y:auto; height:calc(100% - 0px);">
+								
+							</div>
+						</div>
+						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
+							<div class="FlexDisplay Flex">
+								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">PRESCRIPTIONS</h4>
+							</div>
+						</div>
+						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  min-height:calc(50% - 32px); max-height:calc(50% - 32px); z-index:2;">
+							<div class="PrescriptionsList FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="overflow-y:auto; height:calc(100% - 0px);">
+								
+							</div>
+						</div>
+					</div>
+					<div class="FlexDisplay FlexGrow FlexColumn Divider-Left" style="height:calc(100% - 0px);">
 						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
 							<div class="FlexDisplay Flex">
 								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px; white-space: nowrap;">EXAMINATION, DIAGNOSIS & TREATMENT</h4>
@@ -259,28 +281,7 @@
 							</div>
 						</div>		
 					</div>
-					<div class="FlexDisplay FlexColumn" style="height:calc(100% - 0px); width:256px;">
-						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
-							<div class="FlexDisplay Flex">
-								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">TESTS</h4>
-							</div>
-						</div>
-						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox Divider-Bottom" style="width:100%;  min-height:calc(50% - 32px); max-height:calc(50% - 32px); z-index:2;">
-							<div class="TestsList FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="overflow-y:auto; height:calc(100% - 0px);">
-								
-							</div>
-						</div>
-						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
-							<div class="FlexDisplay Flex">
-								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">PRESCRIPTIONS</h4>
-							</div>
-						</div>
-						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  min-height:calc(50% - 32px); max-height:calc(50% - 32px); z-index:2;">
-							<div class="PrescriptionsList FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="overflow-y:auto; height:calc(100% - 0px);">
-								
-							</div>
-						</div>
-					</div>
+					
 				</div>
 			</div>
 		</div>
@@ -342,16 +343,12 @@ function addPendingConsultation(){
 		consultation += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
 		consultation += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;">'+new_consultation+'</h4>';
 		consultation += '	</div>';
-		//consultation += '	<div class="FlexDisplay Flex" style="min-height:32px;">';
-		//consultation += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 12px; font-weight:normal;">'+new_test.description+'</h4>';
-		//consultation += '	</div>';
 		consultation += '	<div class="FlexDisplay btn-clear" onclick="removePendingConsultation(this)">';
 		consultation += '		<div style="margin:auto auto; width:16px height:16px; padding:0px 12px; font-size: 14px;"><i class="mdi mdi-close-circle" /></div>';
 		consultation += '	</div>';
 		consultation += '</div>';
 	
 	$('.ConsultationPendingList').append(consultation);
-	//$('.ConsultationPendingList').scrollTop($('.ConsultationPendingList')[0].scrollHeight);
 }
 
 function showHistory(item){
@@ -425,10 +422,14 @@ function addPrescription(){
 		prescription += '</div>';
 	
 	$('.PrescriptionsList').append(prescription);
-	//$('.PrescriptionsList').scrollTop($('.PrescriptionsList')[0].scrollHeight);
 }
 
+$('input[type=radio][name=gender_options]').change(function() {
+	$(this).parents(".btn-group-toggle").find(".active").removeClass('active');
+	$(this).parent().addClass('active');
+});
 
+$('input[type=radio][name=gender_options]:not(:checked)').attr('disabled', true);
 
 for(var x=0;x<Math.round(Math.random() * 30);x++){
 	addPendingConsultation();
