@@ -6,6 +6,31 @@
 		<div class="FlexDisplay">
 			<span class="BHIS-Title" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:normal; font-size:12px; color:#ffffff; margin:auto 8px;">Basic Laboratory Information System</span>
 		</div>
+		<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
+		<div class="search dropdown" tooltip="search" flow="down">
+			<div class="nav-button transparent dropdown">
+				<i class="mdi mdi-account-search"></i>
+			</div>
+			<div class="submenu">
+				<ul class="root"/>
+			</div>
+		</div>
+		<div class="clear dropdown" tooltip="clear" flow="down">
+			<div class="nav-button transparent dropdown">
+				<i class="mdi mdi-rotate-left"></i>
+			</div>
+			<div class="submenu">
+				<ul class="root"/>
+			</div>
+		</div>
+		<div class="save dropdown" tooltip="save" flow="down">
+			<div class="nav-button transparent dropdown">
+				<i class="mdi mdi-check-circle"></i>
+			</div>
+			<div class="submenu">
+				<ul class="root"/>
+			</div>
+		</div>
 	</div>
 	<div class="FlexDisplay Flex ContentPage  inner-section FadeIn"  style="width:100%; height:1px;">		
 		<div class="FlexDisplay FlexColumn FlexGrow FlexBoxSizing-BorderBox" style="height:100%; overflow: hidden; position:relative;">
@@ -48,7 +73,7 @@
 											<div class="icon">
 												<i class="mdi mdi-account" />
 											</div>
-											<input readonly type="text" placeholder="First Name"/>
+											<input readonly class="FirstName" type="text" placeholder="First Name"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -56,7 +81,7 @@
 											<div class="icon">
 												<i class="mdi mdi-account" />
 											</div>
-											<input readonly type="text" placeholder="Midle Name"/>
+											<input readonly class="MiddleName" type="text" placeholder="Middle Name"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -64,7 +89,7 @@
 											<div class="icon">
 												<i class="mdi mdi-account" />
 											</div>
-											<input readonly type="text" placeholder="Last Name"/>
+											<input readonly class="LasttName" type="text" placeholder="Last Name"/>
 										</div>
 									</div>
 								</div>
@@ -85,22 +110,22 @@
 									<div class="FlexDisplay Flex" style="min-width:130px;">
 										<div class="Flex btn-group btn-group-toggle gender" data-toggle="buttons" style="margin:0px 4px 0px 0px;">
 											<label class="btn btn-color" tooltip="Ambiguous" flow="right">
-												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">A</div>
+												<input value="A" type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">A</div>
 											</label>
 											<label class="btn btn-color" tooltip="Female" flow="up">
-												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">F</div>
+												<input value="F" type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">F</div>
 											</label>
 											<label class="btn btn-color" tooltip="Male" flow="up">
-												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">M</div>
+												<input value="M" type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">M</div>
 											</label>
 											<label class="btn btn-color" tooltip="Not applicable" flow="up">
-												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">N</div>
+												<input value="N" type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">N</div>
 											</label>
 											<label class="btn btn-color" tooltip="Other" flow="up">
-												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">O</div>
+												<input value="O" type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">O</div>
 											</label>
 											<label class="btn btn-color" tooltip="Unknown" flow="up">
-												<input type="radio" name="gender_options" autocomplete="off" value=""><div style="width:8px; height:8px; margin:auto auto;">U</div>
+												<input value="U" type="radio" name="gender_options" autocomplete="off" value=""><div style="width:8px; height:8px; margin:auto auto;">U</div>
 											</label>
 										</div>
 									</div>
@@ -109,7 +134,7 @@
 											<div class="icon">
 												<i class="mdi mdi-calendar-outline" />
 											</div>
-											<input readonly type="text" placeholder="dd/mm/yyyy" class="datepicker-range-dob" style="padding:0px 0px 0px 8px;"/>
+											<input readonly class="DateOfBirth" type="text" placeholder="dd/mm/yyyy" class="datepicker-range-dob" style="padding:0px 0px 0px 8px;"/>
 											<!--<div id="age-manual" class="icon btn-color Divider-Left"  style="border-radius: 0 4px 4px 0; min-width:32px; max-width:32px;">
 												<i class="mdi mdi-calendar-search" />
 											</div>-->
@@ -120,7 +145,7 @@
 											<div class="icon">
 												<i class="mdi mdi-cellphone-basic" />
 											</div>
-											<input readonly id="phone_number" type="text" placeholder="Phone Number"/>
+											<input readonly class="PhoneNumber" id="phone_number" type="text" placeholder="Phone Number"/>
 										</div>
 									</div>
 								</div>
@@ -139,7 +164,7 @@
 											<div class="icon">
 												<i class="mdi mdi-earth" />
 											</div>
-											<input readonly type="text" placeholder="Address"/>
+											<input readonly class="Address" type="text" placeholder="Address"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex FlexGrow" style="min-width:130px;">
@@ -147,7 +172,7 @@
 											<div class="icon">
 												<i class="mdi mdi-at" />
 											</div>
-											<input readonly id="email_address" type="text" placeholder="Address"/>
+											<input readonly class="EmailAddress" id="email_address" type="text" placeholder="Address"/>
 										</div>
 									</div>
 								</div>
@@ -177,7 +202,7 @@
 											<div class="icon">
 												<i class="mdi mdi-doctor" />
 											</div>
-											<input type="text" placeholder="Received In Lab By"/>
+											<input class="ReceivedInLabBy" type="text" placeholder="Received In Lab By"/>
 										</div>
 									</div>
 								</div>
@@ -227,7 +252,7 @@ function addPendingConsultation(){
 		consultation += '		<h4 class="consultationindex feature-title mt-0" style="width:100%; margin:2px 0px 0px 0px; font-size: 10px; font-weight:normal; text-align:center;">'+(index)+'</h4>';
 		consultation += '	</div>';
 		consultation += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
-		consultation += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;">'+new_consultation+'</h4>';
+		consultation += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+new_consultation+'</h4>';
 		consultation += '	</div>';
 		consultation += '</div>';
 	
@@ -240,6 +265,23 @@ function selectPendingConsultation(item){
 	});
 
 	$(item).addClass('Checked');
+	
+	var c = Math.round(Math.random() * 5);	
+	$('.FirstName').val('FirstName '+c);
+	$('.MiddleName').val('MiddleName '+c);
+	$('.LastName').val('LastName '+c);
+	
+	$('.DateOfBirth').val('DateOfBirth '+c);
+	$('.PhoneNumber').val('PhoneNumber '+c);
+	
+	$('.Address').val('Address '+c);
+	$('.EmailAddress').val('EmailAddress '+c);
+	
+	var rand = ["A","F","M","N","O","U"];
+	$('.gender').find("label").each(function(){
+		$(this).removeClass('active');
+	});
+	$('.gender').find("input[type='radio'][value='"+rand[c]+"']").parent().addClass('active');
 	
 	$('.TestsList').html('');	
 	
@@ -560,6 +602,205 @@ $('input[type=radio][name=gender_options]').change(function() {
 
 $('input[type=radio][name=gender_options]:not(:checked)').attr('disabled', true);
 
+
+$(".search").unbind( "click" );
+$(".search").click(function(){
+	$(".save .submenu").hide();
+	$(".save").attr('id', '');
+	
+	$(".clear .submenu").hide();
+	$(".clear").attr('id', '');
+	
+	if(!$(".search").hasClass("Disabled")){
+		$(".search").addClass("Disabled");
+		
+		Instascan.Camera.getCameras().then(function (cameras) {
+			var content = '';
+				content += '<div class="bar-container" style="margin:0px;">';
+				content += '	<div class="bar-progress"></div>';
+				content += '</div>';
+				
+				if (cameras.length > 0){
+					content += '<div class="FlexDisplay FlexColumn" style="width:100%; min-height:320px;  margin:8px 0px 4px 0px;" >';
+					content += '	<div class="FlexDisplay Flex FlexRow Divider-Bottom"  style="width:100%; position:relative; padding:2px 8px;">';
+					content += '		<video class="camera_preview" style="background:black; object-fit: cover; min-width:305px; max-width:305px; min-height:270px; max-height:270px"></video>';
+					content += '		<div class="preloader-scan">';
+					content += '			<div class="diode">';
+					content += '				<div class="laser"></div>';
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+					content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';
+					content += '				<div class="icon">';
+					content += '					<i class="mdi mdi-camera" />';
+					content += '				</div>';
+					content += '				<select class="cameras" onchange="camera_selected(this)">';
+					cameras.forEach(function(element, index){
+						if(index == 0)content += '					<option value="'+element.id+'" selected="">'+element.name+'</option>';
+						else 		  content += '					<option value="'+element.id+'">'+element.name+'</option>';
+					});
+					content += '				</select>';
+					content += '			</div>';
+					content += '		</div>';
+					content += '	</div>';
+				}
+				
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:8px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+				content += '				<div class="icon" style="padding-top:0px;">';	
+				content += '					<i class="mdi mdi-account-badge-horizontal-outline" />';	
+				content += '				</div>';	
+				content += '				<input type="text" placeholder="Name or ID" class="name-id" style="padding:0px 0px 0px 8px;"/>';	
+				content += '				<div class="icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+				content += '					<i class="mdi mdi-magnify-scan" />';
+				content += '				</div>';
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '</div>';
+			
+			
+			var search_dlg = ShowDialog('<i class="mdi mdi-account-group"></i>', "Search", content,{
+				onCloseDialog : function() {
+					if(scanner != null){
+						scanner.stop();
+						scanner = null;
+						search_dlg = null;
+					}
+					$(".search").removeClass("Disabled");
+					return false; 
+				}
+			},"320px");	
+			
+			if (cameras.length > 0){
+				scanner = new Instascan.Scanner({
+					continuous: true,
+					video: $(search_dlg.el).find(".camera_preview").get(0),
+					mirror: true,
+					captureImage: false,
+					backgroundScan: true,
+					refractoryPeriod: 5000,
+					scanPeriod: 1
+				});
+				scanner.addListener('scan', function (content) {
+					if(content != undefined && content != null){
+						
+						
+						scanner.stop();
+						search_dlg.toggle();		
+						scanner = null;
+						search_dlg = null;
+					}		
+				});
+				
+				create_custom_dropdowns();
+				scanner.start(cameras[0]);
+			}
+
+			$(search_dlg.el).find(".scan").unbind( "click" );
+			$(search_dlg.el).find(".scan").click(function() {
+				//var result = scanner.scan();
+				//console.log(result);
+				//console.log(result.content);
+				//console.log(result.image);
+			});		
+		})
+		.catch(function (e) {
+			console.error(e);
+		});
+	}
+});
+
+function clearData(){
+	$(".ConsultationPendingList .CheckBoxBold").each(function(){
+		$(this).removeClass('Checked');
+	});
+	
+	$('.TestsList').html('');
+	
+	$('.FirstName').val('');
+	$('.MiddleName').val('');
+	$('.LastName').val('');
+	
+	$('.DateOfBirth').val('');
+	$('.PhoneNumber').val('');
+	
+	$('.Address').val('');
+	$('.EmailAddress').val('');
+	
+	$('.datepicker-range-received-in-lab').val('');
+	$('.ReceivedInLabBy').val('');
+	
+	$('.gender').find("label").each(function(){
+		$(this).removeClass('active');
+	});
+}
+
+function hideNavigationDropMenu(){
+	$(".search .submenu").hide();
+	$(".search").attr('id', '');
+	$(".clear .submenu").hide();
+	$(".clear").attr('id', '');
+	$(".save .submenu").hide();
+	$(".save").attr('id', '');
+}
+
+$(".clear").unbind( "click" );
+$(".clear").click(function(){	
+	$(".search .submenu").hide();
+	$(".search").attr('id', '');
+	
+	$(".save .submenu").hide();
+	$(".save").attr('id', '');
+	
+	clearData();
+	
+});
+
+$(".save").unbind( "click" );
+$(".save").click(function(){	
+	$(".search .submenu").hide();
+	$(".search").attr('id', '');
+	
+	$(".clear .submenu").hide();
+	$(".clear").attr('id', '');
+});
+
+$(".search").mouseup(function(){
+	return false;
+});
+$(".clear").mouseup(function(){
+	return false;
+});
+$(".save").mouseup(function(){
+	return false;
+});
+$(".submenu").mouseup(function(){
+	return false;
+});
+
+$('.search .submenu .root .nav-button').each(function (index, value) {
+	$(this).click(function(){
+		var text = $(this).text().trim();
+		
+		
+	});
+});
+$('.clear .submenu .root .nav-button').each(function (index, value) {
+	$(this).click(function(){
+		
+	});
+});
+$('.save .submenu .root .nav-button').each(function (index, value) {
+	$(this).click(function(){
+		
+	});
+});
+
 var received_in_lab_datepicker_dateTimeOptions	= {language: 'en' ,dateFormat: 'dd/mm/yyyy' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
 var received_in_lab_datepicker 					= InitDatePicker($('.datepicker-range-received-in-lab'), received_in_lab_datepicker_dateTimeOptions);
 
@@ -567,5 +808,6 @@ for(var x=0;x<Math.round(Math.random() * 30);x++){
 	addPendingConsultation();
 }
 
+hideNavigationDropMenu();
 closeLoadingPage();
 </script>

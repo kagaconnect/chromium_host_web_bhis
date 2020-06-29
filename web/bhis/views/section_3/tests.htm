@@ -1878,6 +1878,8 @@ $('.clear-test .submenu .root .nav-button').each(function (index, value) {
 	});
 });
 
+hideNavigationDropMenu();
+
 $(".lab-sections").html('<option value="-2" data-display-text="Lab Section" selected="">Lab Section</option>');
 getLabSections().forEach(function(item, index){ 
 	$(".lab-sections").append('<option value="'+(item == "--New--" ? -1 : index)+'" data-display-text="'+item+'">'+item+'</option>');
@@ -1944,7 +1946,6 @@ focusEvents($('.cost-to-patient-input'),
 	}
 );
 
-hideNavigationDropMenu();
 
 load_tests();
 
