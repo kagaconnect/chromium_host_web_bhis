@@ -189,7 +189,7 @@
 							<div class="FlexDisplay Flex">
 								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px; white-space: nowrap;">TESTS</h4>
 							</div>
-							<div tooltip="add test" flow="left" id="addTests" class="FlexDisplay btn-clear">
+							<div tooltip="add test" flow="left" id="addTests" class="FlexHidden btn-clear">
 								<div style="margin:auto auto; width:14px height:14px; padding:0px 14px; font-size:14px;"><i class="mdi mdi-flask-plus-outline" /></div>
 							</div>
 						</div>
@@ -281,6 +281,8 @@ function selectPendingConsultation(item){
 				});*/
 				
 				showTests(rows[0], 0, con);
+				showTests(rows[1], 1, con);
+				showTests(rows[2], 2, con);
 				
 				con.close();				
 			}
@@ -289,6 +291,7 @@ function selectPendingConsultation(item){
 		else con.close();
 	}
 
+	$("#addTests").addClass( "FlexDisplay" );
 	$("#addTests").unbind( "click" );
 	$("#addTests").click(function(){
 		addTest();
@@ -305,101 +308,106 @@ function getRejectionCodes(){
 }
 
 function rejectTest(item){
-	var id = $(item).parents(".TestingItem").data("id");
-	var name = $(item).parents(".TestingItem").data("name");
-	
-	var content = '';
-			content += '<div class="bar-container" style="margin:0px;">';
-			content += '	<div class="bar-progress"></div>';
-			content += '</div>'; 
+	if(!$(item).parents(".TestingItem").hasClass('Rejected')){
+		var id = $(item).parents(".TestingItem").data("id");
+		var name = $(item).parents(".TestingItem").data("name");
+		
+		var content = '';
+				content += '<div class="bar-container" style="margin:0px;">';
+				content += '	<div class="bar-progress"></div>';
+				content += '</div>'; 
+				
+				content += '	<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:0px 0px 0px 0px;" >';
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Code</h4>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+				content += '				<div class="icon">';
+				content += '					<i class="mdi mdi-test-tube" />';
+				content += '				</div>';
+				content += '				<select class="rejectionCodes">';
+				content += '					<option selected="">...</option>';
+				
+				getRejectionCodes().forEach(function(element, index){
+					content += '					<option value="'+element.Reason+'">'+element.Code+'</option>';
+				});
+				
+				
+				content += '				</select>';
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:0px 0px 0px 0px;" >';
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Comment</h4>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
+				content += '				<div class="icon">';
+				content += '					<i class="mdi mdi-test-tube" />';
+				content += '				</div>';
+				content += '				<input type="text" placeholder="Comment"  class="comment-input" style="padding:0px 0px 0px 8px;"/>';	
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				
+				
+				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:56px; margin-bottom:8px; padding:2px 8px;">';						
+				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+				content += '			<div class="FlexDisplay" style="margin:auto auto;">';
+				content += '				<div class="yesButton button button-primary" style="margin:0px 4px 0px 0px;">Yes</div>';
+				content += '				<div class="noButton button button-primary" style="margin:0px 0px 0px 4px;">No</div>';
+				content += '			</div>';
+				content += '		</div>';
+				content += '	</div>';
+				content += '</div>';
+
+			var rej_dlg = ShowDialog('<i class="mdi mdi-flask-outline"></i>', "Reject test "+name, content,{
+				onCloseDialog : function() {
+					fac_dlg = null;
+					return false; 
+				}
+			},"400px");	
 			
-			content += '	<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:0px 0px 0px 0px;" >';
-			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-			content += '			<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Code</h4>';
-			content += '		</div>';
-			content += '	</div>';
-			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
-			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-			content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
-			content += '				<div class="icon">';
-			content += '					<i class="mdi mdi-test-tube" />';
-			content += '				</div>';
-			content += '				<select class="rejectionCodes">';
-			content += '					<option selected="">...</option>';
+			create_custom_dropdowns();
 			
-			getRejectionCodes().forEach(function(element, index){
-				content += '					<option value="'+element.Reason+'">'+element.Code+'</option>';
+			$(rej_dlg.el).find(".noButton").unbind( "click" );
+			$(rej_dlg.el).find(".noButton").click(function() {
+				rej_dlg.toggle();
+				rej_dlg = null;		
 			});
 			
-			
-			content += '				</select>';
-			content += '			</div>';
-			content += '		</div>';
-			content += '	</div>';
-			content += '	<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:0px 0px 0px 0px;" >';
-			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-			content += '			<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Comment</h4>';
-			content += '		</div>';
-			content += '	</div>';
-			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
-			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-			content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">';
-			content += '				<div class="icon">';
-			content += '					<i class="mdi mdi-test-tube" />';
-			content += '				</div>';
-			content += '				<input type="text" placeholder="Comment"  class="comment-input" style="padding:0px 0px 0px 8px;"/>';	
-			content += '			</div>';
-			content += '		</div>';
-			content += '	</div>';
-			
-			
-			content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:56px; margin-bottom:8px; padding:2px 8px;">';						
-			content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-			content += '			<div class="FlexDisplay" style="margin:auto auto;">';
-			content += '				<div class="yesButton button button-primary" style="margin:0px 4px 0px 0px;">Yes</div>';
-			content += '				<div class="noButton button button-primary" style="margin:0px 0px 0px 4px;">No</div>';
-			content += '			</div>';
-			content += '		</div>';
-			content += '	</div>';
-			content += '</div>';
-
-		var rej_dlg = ShowDialog('<i class="mdi mdi-flask-outline"></i>', "Reject test "+name, content,{
-			onCloseDialog : function() {
-				fac_dlg = null;
-				return false; 
-			}
-		},"400px");	
-		
-		create_custom_dropdowns();
-		
-		$(rej_dlg.el).find(".noButton").unbind( "click" );
-		$(rej_dlg.el).find(".noButton").click(function() {
-			rej_dlg.toggle();
-			rej_dlg = null;		
-		});
-		
-		$(rej_dlg.el).find(".yesButton").unbind( "click" );
-		$(rej_dlg.el).find(".yesButton").click(function() {
-			var code = $(rej_dlg.el).find(".select-dropdown.rejectionCodes").find(".current").text();
-			var description = $(rej_dlg.el).find(".comment-input").val();
-			
-			if(code != "..."){
-			
-				//$(item).parents(".TestingItem").remove();
+			$(rej_dlg.el).find(".yesButton").unbind( "click" );
+			$(rej_dlg.el).find(".yesButton").click(function() {
+				var code = $(rej_dlg.el).find(".select-dropdown.rejectionCodes").find(".current").text();
+				var description = $(rej_dlg.el).find(".comment-input").val();
 				
-				rej_dlg.toggle();
-				rej_dlg = null;	
-			}
-		});
-		
-		$(rej_dlg.el).find(".rejectionCodes").change(function() {
-			var text = $(this).text();
-			if(text != "..."){
-				var value = $(this).val();
-				$(rej_dlg.el).find(".comment-input").val(value);
-			}
-		});
-	
+				if(code != "..."){	
+					//reject in database then display
+							
+					$(item).parents(".TestingItem").addClass('Rejected');
+					//$(item).remove();
+					$(item).attr("tooltip",code+' : '+description);
+					$(item).html('<div style="margin:auto auto; width:14px height:14px; padding:0px 14px; font-size:14px;"><i class="mdi mdi-information" /></div>');
+					
+					rej_dlg.toggle();
+					rej_dlg = null;	
+				}
+			});
+			
+			$(rej_dlg.el).find(".rejectionCodes").change(function() {
+				var text = $(this).text();
+				if(text != "..."){
+					var value = $(this).val();
+					$(rej_dlg.el).find(".comment-input").val(value);
+				}
+			});
+	}
 }
 
 function showTests(item, index, con){
@@ -526,8 +534,10 @@ function showTests(item, index, con){
 						}
 					});
 					
+					//if rejected display accordingly
+					
 					var tests  = '<div data-id="'+item.ID+'" data-name="'+item.Name+'" class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox Divider-Bottom TestingItem" style="width:100%; margin:0px 0px 0px 0px;">';
-							tests += '	<div class="FlexDisplay FlexRow" style="background:#182538;min-height:32px;max-height:32px;margin:0px 0px 0px 0px;" >';
+							tests += '	<div class="FlexDisplay FlexRow Title" style="min-height:32px;max-height:32px;margin:0px 0px 0px 0px;" >';
 							tests += '		<div style="font-size:14px; margin:0px 0px 0px 12px;">';
 							tests += '			<i class="mdi mdi-flask" style="height:100%; color:white;" />';
 							tests += '		</div>';
@@ -544,7 +554,7 @@ function showTests(item, index, con){
 					
 					messurements.forEach(function(messurement){
 							if(messurement.Type == "Alphanumeric Values"){
-								tests += '	<div class="FlexDisplay FlexRow" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+								tests += '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
 								tests += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
 								tests += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
 								tests += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+messurement.Name+'</h4>';
@@ -570,7 +580,7 @@ function showTests(item, index, con){
 							else if(messurement.Type == "Numeric Range"){
 								var information = messurement.Information.filter(function(i){ return i.Gender.toLowerCase() == "male"; }).shift();
 								if(information != undefined && information != null){
-									tests += '	<div class="FlexDisplay FlexRow" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+									tests += '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
 									tests += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
 									tests += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
 									tests += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+item.Name+'</h4>';
@@ -588,7 +598,7 @@ function showTests(item, index, con){
 								}
 							}
 							else if(messurement.Type == "Autocomplete"){
-								tests += '	<div class="FlexDisplay FlexRow" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+								tests += '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
 								tests += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
 								tests += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
 								tests += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+messurement.Name+'</h4>';
@@ -612,7 +622,7 @@ function showTests(item, index, con){
 							else if(messurement.Type == "Free Text"){
 								var information = messurement.Information.filter(function(i){ return i.Gender.toLowerCase() == "male"; }).shift();
 								if(information != undefined && information != null){
-									tests += '	<div class="FlexDisplay FlexRow" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+									tests += '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
 									tests += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
 									tests += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
 									tests += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+item.Name+'</h4>';
@@ -632,7 +642,7 @@ function showTests(item, index, con){
 							
 					});
 					
-					tests += '	<div class="FlexDisplay FlexRow" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+					tests += '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
 					tests += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
 					tests += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
 					tests += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Result:</h4>';
@@ -656,7 +666,7 @@ function showTests(item, index, con){
 					tests += '		</div>';
 					tests += '	</div>';
 					tests += '	';
-					tests += '	<div class="FlexDisplay FlexRow" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+					tests += '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
 					tests += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
 					tests += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
 					tests += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Received In Lab:</h4>';
@@ -916,6 +926,7 @@ function clearData(){
 		$(this).removeClass('active');
 	});
 	
+	$("#addTests").removeClass( "FlexDisplay" );	
 	$("#addTests").unbind( "click" );
 }
 

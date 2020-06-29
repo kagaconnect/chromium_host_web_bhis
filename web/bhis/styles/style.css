@@ -27,6 +27,9 @@ input[type=checkbox],input[type=radio]{
     padding:0
 }
 
+.TestingItem .Title {background:#182538;}
+.TestingItem.Rejected .Title{background:#c4183c;}
+.TestingItem.Rejected .Testing { pointer-events: none; opacity:0.4; }
 
 .lights-off ::placeholder {
   color:#6c7a8f;
