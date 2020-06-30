@@ -106,12 +106,6 @@
 					<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
 						<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal;">RECEPTION</h4>
 						<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
-						<!--<div onclick="previous(this)" class="nav-button prev transparent disable" style="height:32px; width:24px; " onclick="proceedTo(this,0)">
-							<i class="mdi mdi-chevron-left" style="margin:0px 0px 0px 0px;"></i>
-						</div>
-						<div onclick="next(this)" class="nav-button next transparent" style="height:32px; width:24px; " >
-							<i class="mdi mdi-chevron-right" style="margin:0px 0px 0px 0px;"></i>
-						</div>-->
 					</div>
 					<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 32px); z-index:2; position:relative;">						
 						<div class="animated-sub-page FlexColumn FlexBoxSizing-BorderBox active scroll scroll2" data-path="section-0"  style="width:100%; height:100%; overflow-y:auto; overflow-x:hidden; display: block;">						
@@ -142,7 +136,7 @@
 											<div class="icon">
 												<i class="mdi mdi-arrow-decision-outline" />
 											</div>
-											<input type="text" placeholder="Reference Number"/>
+											<input class="ReferenceNumber" type="text" placeholder="Reference Number"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -150,7 +144,7 @@
 											<div class="icon">
 												<i class="mdi mdi-badge-account-outline" />
 											</div>
-											<input type="text" placeholder="Patient Number"/>
+											<input class="PatientNumber" type="text" placeholder="Patient Number"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -158,7 +152,7 @@
 											<div class="icon">
 												<i class="mdi mdi-badge-account-outline" />
 											</div>
-											<input type="text" placeholder="National ID"/>
+											<input class="NationalID" type="text" placeholder="National ID"/>
 										</div>
 									</div>
 								</div>
@@ -180,7 +174,7 @@
 											<div class="icon">
 												<i class="mdi mdi-account" />
 											</div>
-											<input type="text" placeholder="First Name"/>
+											<input class="FirstName" type="text" placeholder="First Name"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -188,7 +182,7 @@
 											<div class="icon">
 												<i class="mdi mdi-account" />
 											</div>
-											<input type="text" placeholder="Midle Name"/>
+											<input class="MiddleName" type="text" placeholder="Middle Name"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -196,7 +190,7 @@
 											<div class="icon">
 												<i class="mdi mdi-account" />
 											</div>
-											<input type="text" placeholder="Last Name"/>
+											<input class="LastName" type="text" placeholder="Last Name"/>
 										</div>
 									</div>
 								</div>
@@ -216,22 +210,22 @@
 									<div class="FlexDisplay Flex" style="min-width:130px;">
 										<div class="Flex btn-group btn-group-toggle gender" data-toggle="buttons" style="margin:0px 4px 0px 0px;">
 											<label class="btn btn-color" tooltip="Ambiguous" flow="right">
-												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">A</div>
+												<input value="A" type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">A</div>
 											</label>
 											<label class="btn btn-color" tooltip="Female" flow="up">
-												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">F</div>
+												<input value="F" type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">F</div>
 											</label>
 											<label class="btn btn-color" tooltip="Male" flow="up">
-												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">M</div>
+												<input value="M" type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">M</div>
 											</label>
 											<label class="btn btn-color" tooltip="Not applicable" flow="up">
-												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">N</div>
+												<input value="N" type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">N</div>
 											</label>
 											<label class="btn btn-color" tooltip="Other" flow="up">
-												<input type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">O</div>
+												<input value="O" type="radio" name="gender_options" autocomplete="off"><div style="width:8px; height:8px; margin:auto auto;">O</div>
 											</label>
 											<label class="btn btn-color" tooltip="Unknown" flow="up">
-												<input type="radio" name="gender_options" autocomplete="off" value=""><div style="width:8px; height:8px; margin:auto auto;">U</div>
+												<input value="U" type="radio" name="gender_options" autocomplete="off" value=""><div style="width:8px; height:8px; margin:auto auto;">U</div>
 											</label>
 										</div>
 									</div>
@@ -270,7 +264,7 @@
 											<div class="icon">
 												<i class="mdi mdi-earth" />
 											</div>
-											<input type="text" placeholder="Address"/>
+											<input class="Address" type="text" placeholder="Address"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex FlexGrow" style="min-width:130px;">
@@ -294,9 +288,6 @@
 								</div>
 								
 								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
-									<!--<div class="FlexDisplay Flex" style="min-width:150px;">
-										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Specimen Type</h4>
-									</div>-->
 									<div class="FlexDisplay Flex" style="min-width:150px;">
 										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Condition</h4>
 									</div>
@@ -305,23 +296,12 @@
 									</div>
 								</div>
 								<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">						
-									<!--<div class="FlexDisplay Flex" style="min-width:150px;">
-										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">
-											<div class="icon">
-												<i class="mdi mdi-test-tube" />
-											</div>
-											<select>
-												<option selected="">Choose...</option>
-												<option>...</option>
-											</select>
-										</div>
-									</div>-->
 									<div class="FlexDisplay Flex" style="min-width:150px;">
 										<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
 											<div class="icon">
 												<i class="mdi mdi-contrast" />
 											</div>
-											<select>
+											<select class="SpecimenCondition">
 												<option selected="">Choose...</option>
 												<option>Good</option>
 												<option>Suitable</option>
@@ -335,7 +315,7 @@
 											<div class="icon">
 												<i class="mdi mdi-clock-fast" />
 											</div>
-											<select>
+											<select class="SpecimenPriority">
 												<option selected="">Choose...</option>
 												<option>Routine</option>
 												<option>Stat</option>
@@ -361,9 +341,6 @@
 												<i class="mdi mdi-calendar-outline" />
 											</div>
 											<input type="text" placeholder="dd/mm/yyyy hh:mm" class="datepicker-range-specimen-collected" style="padding:0px 0px 0px 8px;"/>
-											<!--<div class="icon btn-color Divider-Left"  style="border-radius: 0 4px 4px 0; min-width:32px; max-width:32px;">
-												<i class="mdi mdi-calendar-search" />
-											</div>-->
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -371,12 +348,12 @@
 											<div class="icon">
 												<i class="mdi mdi-doctor" />
 											</div>
-											<input type="text" placeholder="Specimen Collected By"/>
+											<input class="SpecimenCollectedBy" type="text" placeholder="Specimen Collected By"/>
 										</div>
 									</div>
 								</div>
 								
-								<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+								<!--<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
 									<div class="FlexDisplay Flex" style="min-width:150px;">
 										<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Sent Date</h4>
 									</div>
@@ -391,9 +368,6 @@
 												<i class="mdi mdi-calendar-outline" />
 											</div>
 											<input type="text" placeholder="dd/mm/yyyy hh:mm" class="datepicker-range-specimen-sent" style="padding:0px 0px 0px 8px;"/>
-											<!--<div class="icon btn-color Divider-Left"  style="border-radius: 0 4px 4px 0; min-width:32px; max-width:32px;">
-												<i class="mdi mdi-calendar-search" />
-											</div>-->
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -401,10 +375,10 @@
 											<div class="icon">
 												<i class="mdi mdi-doctor" />
 											</div>
-											<input type="text" placeholder="Specimen Sent By"/>
+											<input class="SpecimenSentBy" type="text" placeholder="Specimen Sent By"/>
 										</div>
 									</div>
-								</div>
+								</div>-->
 								
 								
 							</div>
@@ -432,7 +406,7 @@
 											<div class="icon">
 												<i class="mdi mdi-smart-card-outline" />
 											</div>
-											<input type="text" placeholder="Card Number"/>
+											<input class="InsuranceCardNumber" type="text" placeholder="Card Number"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:160px;">
@@ -440,7 +414,7 @@
 											<div class="icon">
 												<i class="mdi mdi-smart-card-outline" />
 											</div>
-											<input type="text" placeholder="Authorization Number"/>
+											<input class="InsuranceAuthorizationNumber" type="text" placeholder="Authorization Number"/>
 										</div>
 									</div>
 								</div>
@@ -459,7 +433,7 @@
 											<div class="icon">
 												<i class="mdi mdi-microscope" />
 											</div>
-											<input type="text" placeholder="Preliminanary Diagnosis (Code)"/>
+											<input class="InsurancePreliminanaryDiagnosisCode" type="text" placeholder="Preliminanary Diagnosis (Code)"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -467,37 +441,13 @@
 											<div class="icon">
 												<i class="mdi mdi-microscope" />
 											</div>
-											<input type="text" placeholder="Final Diagnosis (Code)"/>
+											<input class="InsuranceFinalDiagnosisCode" type="text" placeholder="Final Diagnosis (Code)"/>
 										</div>
 									</div>
 								</div>
 							</div>	
 							
 						</div>
-						<!--<div class="animated-sub-page FlexColumn FlexBoxSizing-BorderBox" data-path="section-1"  style="width:100%; height:100%;">						
-							<div class="FlexDisplay FlexColumn" style="width:100%;  height:calc(100% - 0px);">
-								<div class="FlexDisplay FlexRow Divider-Bottom" style="height:32px; " >
-									<div class="FlexDisplay Flex">
-										<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Tests</h4>
-									</div>
-									<div id="addTests" class="FlexDisplay btn-clear">
-										<div style="margin:auto auto; width:16px height:16px; padding:0px 16px;"><i class="mdi mdi-file-document-box-plus-outline" /></div>
-									</div>
-								</div>
-								<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox">
-									<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px;">
-										<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px">
-											<h4 class="feature-title mt-0" style="width:100%; margin:0px 0px 0px 0px; font-size: 12px; font-weight:normal; text-align:center;">#</h4>
-										</div>
-										<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">
-											<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 12px; font-weight:normal;">Test</h4>
-										</div>
-									</div>
-								</div>
-								<div class="FlexDisplay Flex FlexColumn FlexBoxSizing-BorderBox scroll scroll2 List" style="overflow-y:auto;"></div>
-							</div>
-						</div>-->
-						
 					</div>
 				</div>
 			</div>
@@ -540,60 +490,11 @@ function previous(item){
 	}
 }
 
-function next(item){
-	if(!transitioning && !$(item).hasClass('disable')){
-		var section = parseInt($('.animated-sub-page.active').data("path").replace("section-",""));
-		var other_section = parseInt($('.animated-sub-page').last().data("path").replace("section-",""));
-		if(section<other_section){
-			if(section+1 == other_section)$(item).addClass('disable');
-			$('.nav-button.prev').removeClass('disable');			
-			proceedTo(item, ++section);
-		}
-	}
-}
-
-function proceedTo(item, index){
-	transitioning = true;
-	var navigateFrom = $('.animated-sub-page.active');
-	var indexFrom = navigateFrom.data("path").replace("section-","");
-
-	if(index != indexFrom){					
-		var navigateTo = $("#mainPage").find(`[data-path='section-${index}']`);
-		
-		navigateTo.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
-			transitioning = false;
-		});	
-		
-		navigateFrom.removeClass('transition-busy');
-		navigateFrom.removeClass('transition-enter');
-		navigateFrom.removeClass('transition-grow');
-		navigateFrom.removeClass('transition-shrink');
-		navigateFrom.removeClass('transition-enter-right-no-scale');
-		navigateFrom.removeClass('transition-enter-left-no-scale');
-		if(indexFrom < index) navigateFrom.addClass('transition-leave-left-no-scale');
-		else navigateFrom.addClass('transition-leave-right-no-scale');
-		  
-		navigateTo.removeClass('transition-busy');
-		navigateTo.removeClass('transition-enter');
-		navigateTo.removeClass('transition-grow');
-		navigateTo.removeClass('transition-shrink');
-		navigateTo.removeClass('transition-leave-right-no-scale');
-		navigateTo.removeClass('transition-leave-left-no-scale');
-		if(indexFrom < index) navigateTo.addClass('transition-enter-right-no-scale');
-		else navigateTo.addClass('transition-enter-left-no-scale');
-		
-		navigateFrom.removeClass("active");
-		navigateTo.addClass('active');
-	}
-}
-
 $('input[type=radio][name=gender_options]').change(function() {
 	$(this).parents(".btn-group-toggle").find(".active").removeClass('active');
 	$(this).parent().addClass('active');
-	//.prev("label")
-	//$( "li" ).each(function() {
-	//  $( this ).addClass( "foo" );
-	//});
+	
+	$(this).parents(".btn-group-toggle").removeClass('is-invalid');
 });
 
 $("#backBtn").unbind( "click" );
@@ -926,6 +827,48 @@ function createPagerClickEventEx(dlg, id, host, callback){
 	});
 }
 
+function clear(){
+	
+	
+	$(".ReferenceNumber").val('');
+	$(".PatientNumber").val('');
+	$(".NationalID").val('');
+	$(".FirstName").val('');
+	$(".MiddleName").val('');
+	$(".LastName").val('');
+	
+	$('.gender').removeClass('is-invalid');
+	$('.gender').find("label").each(function(){
+		$(this).removeClass('active');
+	}); 
+	
+	$(".datepicker-range-dob").val('');
+	$("#phone_number").val('');
+	$(".Address").val('');
+	$("#email_address").val('');
+
+	reset_custom_dropdown(".SpecimenCondition", 'Choose...');
+	reset_custom_dropdown(".SpecimenPriority", 'Choose...');
+	
+	$(".datepicker-range-specimen-collected").val('');
+	$(".SpecimenCollectedBy").val('');
+	//$(".datepicker-range-specimen-sent").val('');
+	//$(".SpecimenSentBy").val('');
+	
+	$(".InsuranceCardNumber").val('');
+	$(".InsuranceAuthorizationNumber").val('');
+	$(".InsurancePreliminanaryDiagnosisCode").val('');
+	$(".InsuranceFinalDiagnosisCode").val('');
+	
+	
+	$(".FirstName").parent().removeClass("is-invalid");
+	$(".LastName").parent().removeClass("is-invalid");
+	$(".SpecimenCondition").parent().removeClass("is-invalid");
+	$(".SpecimenPriority").parent().removeClass("is-invalid");
+	
+	
+}
+
 $("#facility_search_button").click(function(){
 	var facility_search_text = $("#facility_search_text").val();
 	
@@ -1175,6 +1118,7 @@ $(".clear").click(function(){
 	$(".save .submenu").hide();
 	$(".save").attr('id', '');
 	
+	clear();
 });
 
 $(".save").unbind( "click" );
@@ -1185,15 +1129,69 @@ $(".save").click(function(){
 	$(".clear .submenu").hide();
 	$(".clear").attr('id', '');
 	
-	/*var X=$(this).attr('id');
-	if(X==1) {
-		$(".save .submenu").hide();
-		$(this).attr('id', '0'); 
+	var ReferenceNumber = $(".ReferenceNumber").val();
+	var PatientNumber = $(".PatientNumber").val();
+	var NationalID = $(".NationalID").val();
+	var FirstName = $(".FirstName").val();
+	var MiddleName = $(".MiddleName").val();
+	var LastName = $(".LastName").val();
+	
+	var Gender = $('.gender').find("label.active input").val();
+	
+	var DateOfBirth = $(".datepicker-range-dob").val();
+	var PhoneNumber = $("#phone_number").val();
+	var Address = $(".Address").val();
+	var EmailAddress = $("#email_address").val();
+
+	var SpecimenCondition = $(".SpecimenCondition").val();
+	var SpecimenPriority = $(".SpecimenPriority").val();
+	var SpecimenCollectedDate = $(".datepicker-range-specimen-collected").val();
+	var SpecimenCollectedBy = $(".SpecimenCollectedBy").val();
+	//var SpecimenSentDate = $(".datepicker-range-specimen-sent").val();
+	//var SpecimenSentBy = $(".SpecimenSentBy").val();
+	
+	var InsuranceCardNumber = $(".InsuranceCardNumber").val();
+	var InsuranceAuthorizationNumber = $(".InsuranceAuthorizationNumber").val();
+	var InsurancePreliminanaryDiagnosisCode = $(".InsurancePreliminanaryDiagnosisCode").val();
+	var InsuranceFinalDiagnosisCode = $(".InsuranceFinalDiagnosisCode").val();
+	
+	
+	if((Gender != undefined && Gender != null) &&
+	   (FirstName != undefined && FirstName != null && FirstName.trim().length > 0) &&
+	   (LastName != undefined && LastName != null && LastName.trim().length > 0) &&
+	   (SpecimenCondition != undefined && SpecimenCondition != null && SpecimenCondition != "Choose...") &&
+	   (SpecimenPriority != undefined && SpecimenPriority != null && SpecimenPriority != "Choose...")
+	   ){
+	
 	}
-	else {
-		$(".save .submenu").show();
-		$(this).attr('id', '1');
-	}*/
+	else{
+	
+		if(FirstName != undefined && FirstName != null && FirstName.trim().length == 0){
+			$(".FirstName").parent().addClass("is-invalid");
+			$('.FirstName').focus(function(){ $(this).parent().removeClass("is-invalid"); });
+		}
+		
+		if(LastName != undefined && LastName != null && LastName.trim().length == 0){
+			$(".LastName").parent().addClass("is-invalid");
+			$('.LastName').focus(function(){ $(this).parent().removeClass("is-invalid"); });
+		}
+		
+		if(SpecimenCondition != undefined && SpecimenCondition != null && SpecimenCondition == "Choose..."){
+			$(".SpecimenCondition").parent().addClass("is-invalid");
+			$('.SpecimenCondition').focus(function(){ $(this).parent().removeClass("is-invalid"); });
+		}
+		
+		if(SpecimenPriority != undefined && SpecimenPriority != null && SpecimenPriority == "Choose..."){
+			$(".SpecimenPriority").parent().addClass("is-invalid");
+			$('.SpecimenPriority').focus(function(){ $(this).parent().removeClass("is-invalid"); });
+		}
+		
+		if (Gender == undefined || Gender == null){
+			$('.gender').addClass("is-invalid");
+		}
+		
+	}
+	
 });
 
 $(".search").mouseup(function(){
@@ -1315,18 +1313,18 @@ var dateOptions = {language: 'en' ,dateFormat: 'dd/mm/yyyy' /*,range:true ,multi
 var dob_datepicker = InitDatePicker($('.datepicker-range-dob'), dateOptions);
 
 var specimen_collected_datepicker_dateTimeOptions 	= {language: 'en' ,dateFormat: 'dd/mm/yyyy' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
-var specimen_sent_datepicker_dateTimeOptions 		= {language: 'en' ,dateFormat: 'dd/mm/yyyy' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
+//var specimen_sent_datepicker_dateTimeOptions 		= {language: 'en' ,dateFormat: 'dd/mm/yyyy' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
 
 specimen_collected_datepicker_dateTimeOptions.onSelect = function(formattedDate, date, inst){
 	var dt = $('.datepicker-range-specimen-collected').val();
 	if(dt.trim().length > 0){
 		var specimen_collected_datetime = getDateTime('.datepicker-range-specimen-collected');
-		var specimen_sent_datetime = getDateTime('.datepicker-range-specimen-sent');
+		//var specimen_sent_datetime = getDateTime('.datepicker-range-specimen-sent');
 		//var received_in_lab_datetime = getDateTime('.datepicker-range-received-in-lab');
 		
-		if(specimen_sent_datetime != null && specimen_sent_datetime < specimen_collected_datetime){
-			specimen_sent_datepicker.clear();
-		}
+		//if(specimen_sent_datetime != null && specimen_sent_datetime < specimen_collected_datetime){
+		//	specimen_sent_datepicker.clear();
+		//}
 		
 		//if(received_in_lab_datetime != null && received_in_lab_datetime && received_in_lab_datetime < specimen_collected_datetime){
 		//	received_in_lab_datepicker.clear();
@@ -1337,19 +1335,19 @@ specimen_collected_datepicker_dateTimeOptions.onSelect = function(formattedDate,
 	}
 }
 
-specimen_sent_datepicker_dateTimeOptions.onSelect = function(formattedDate, date, inst){
-	var dt = $('.datepicker-range-specimen-sent').val();
-	if(dt.trim().length > 0){		
-		//var received_in_lab_datetime = getDateTime('.datepicker-range-received-in-lab');		
-		//if(received_in_lab_datetime != null && received_in_lab_datetime < date){
-		//	received_in_lab_datepicker.clear();
-		//}
-		//received_in_lab_datepicker.update({minDate: date});
-	}
-}
+//specimen_sent_datepicker_dateTimeOptions.onSelect = function(formattedDate, date, inst){
+//	var dt = $('.datepicker-range-specimen-sent').val();
+//	if(dt.trim().length > 0){		
+//		//var received_in_lab_datetime = getDateTime('.datepicker-range-received-in-lab');		
+//		//if(received_in_lab_datetime != null && received_in_lab_datetime < date){
+//		//	received_in_lab_datepicker.clear();
+//		//}
+//		//received_in_lab_datepicker.update({minDate: date});
+//	}
+//}
 
 var specimen_collected_datepicker = InitDatePicker($('.datepicker-range-specimen-collected'), specimen_collected_datepicker_dateTimeOptions);
-var specimen_sent_datepicker = InitDatePicker($('.datepicker-range-specimen-sent'), specimen_sent_datepicker_dateTimeOptions);
+//var specimen_sent_datepicker = InitDatePicker($('.datepicker-range-specimen-sent'), specimen_sent_datepicker_dateTimeOptions);
 
 focusEvents($('#phone_number'),
 	function(){

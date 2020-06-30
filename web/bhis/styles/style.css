@@ -2117,13 +2117,13 @@ body,a,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 
 .nav-button .mdi{
 	display:block; 
-	color:rgba(0, 0, 0, 0.6);
+	color:rgba(255, 255, 255, 0.6);
 	margin:10px 0px 0px 0px;
 }
 
-.lights-off .nav-button .mdi{
+/*.lights-off .nav-button .mdi{
 	color:rgba(255, 255, 255, 0.6); 
-}
+}*/
 
 .nav-button.disable .mdi{
 	color:rgba(0, 0, 0, 0.1);
@@ -2147,12 +2147,12 @@ body,a,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 }
 
 .nav-button:hover .mdi{
-	color:rgba(0, 0, 0, 0.9);  
+	color:rgba(255, 255, 255, 0.9);  
 }
 
-.lights-off .nav-button:hover .mdi{
+/*.lights-off .nav-button:hover .mdi{
 	color:rgba(255, 255, 255, 0.9);
-}
+}*/
 
 .nav-button.disable:hover .mdi{
 	color:rgba(0, 0, 0, 0.1);
@@ -3426,6 +3426,35 @@ select {
     clip:rect(0,0,0,0);
     pointer-events:none
 }
+
+
+.btn-group-toggle.is-invalid .btn.btn-color {
+	border: 1px solid #c4183c; 
+	box-shadow: 0 5px 11.5px rgba(196, 24, 60, 0.1);
+}
+
+.btn-group-toggle.is-invalid:focus-within,
+.btn-group-toggle:focus-within .btn.btn-color,
+.btn-group-toggle:active .btn.btn-color {
+	border: 1px solid #007bff;
+	box-shadow: 0 0.313rem 0.719rem rgba(0, 123, 255, 0.1), 0 0.156rem 0.125rem rgba(0, 0, 0, 0.06);
+}
+
+
+
+/*.form-control:focus-within .select-dropdown .list{
+    border: 1px solid #007bff; 
+}
+
+ box-shadow: 0 5px 11.5px rgba(196, 24, 60, 0.1);  box-shadow: 0 5px 11.5px rgba(196, 24, 60, 0.1), 0 1px 1px 0.1rem rgba(196, 24, 60, 0.2); 
+ 
+.form-control.is-invalid:focus-within .select-dropdown .list{
+    border: 1px solid #c4183c; 
+}
+
+.form-control.is-valid:focus-within .select-dropdown .list{
+    border: 1px solid #17c671; 
+}*/
 
 
 .btn.btn-clear {

@@ -220,6 +220,26 @@ function preparePager(id, column, table, callback){
 	return pagerList;
 }
 
+function reset_custom_dropdown(id,value) {
+	var select = $(id);
+	
+    $(".select-dropdown"+id).remove();
+	select.val('Choose...').trigger("change");
+	
+	
+	
+	select.after('<div class="select-dropdown ' + (select.attr('class') || '') + '" tabindex="0"><span class="current"></span><div class="list"><ul></ul></div></div>');
+	var dropdown = select.next();
+	var options = select.find('option');
+	var selected = select.find('option:selected');
+	dropdown.find('.current').html(selected.data('display-text') || selected.text());
+	options.each(function(j, o) {
+		var display = $(o).data('display-text') || '';
+		dropdown.find('ul').append('<li class="option ' + ($(o).is(':selected') ? 'selected' : '') + '" data-value="' + $(o).val() + '" data-display-text="' + display + '">' + $(o).text() + '</li>');
+	});
+  
+}
+
 
 function create_custom_dropdowns() {
   $('select').each(function(i, select) {
