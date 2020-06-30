@@ -234,7 +234,7 @@
 											<div class="icon">
 												<i class="mdi mdi-calendar-outline" />
 											</div>
-											<input type="text" placeholder="dd/mm/yyyy" class="datepicker-range-dob" style="padding:0px 0px 0px 8px;"/>
+											<input type="text" placeholder="yyyy-mm-dd" class="datepicker-range-dob" style="padding:0px 0px 0px 8px;"/>
 											<div id="age-manual" class="icon btn-color Divider-Left"  style="border-radius: 0 4px 4px 0; min-width:32px; max-width:32px;">
 												<i class="mdi mdi-calendar-search" />
 											</div>
@@ -340,7 +340,7 @@
 											<div class="icon">
 												<i class="mdi mdi-calendar-outline" />
 											</div>
-											<input type="text" placeholder="dd/mm/yyyy hh:mm" class="datepicker-range-specimen-collected" style="padding:0px 0px 0px 8px;"/>
+											<input type="text" placeholder="yyyy-mm-dd hh:mm" class="datepicker-range-specimen-collected" style="padding:0px 0px 0px 8px;"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -367,7 +367,7 @@
 											<div class="icon">
 												<i class="mdi mdi-calendar-outline" />
 											</div>
-											<input type="text" placeholder="dd/mm/yyyy hh:mm" class="datepicker-range-specimen-sent" style="padding:0px 0px 0px 8px;"/>
+											<input type="text" placeholder="yyyy-mm-dd hh:mm" class="datepicker-range-specimen-sent" style="padding:0px 0px 0px 8px;"/>
 										</div>
 									</div>
 									<div class="FlexDisplay Flex" style="min-width:130px;">
@@ -852,8 +852,6 @@ function clear(){
 	
 	$(".datepicker-range-specimen-collected").val('');
 	$(".SpecimenCollectedBy").val('');
-	//$(".datepicker-range-specimen-sent").val('');
-	//$(".SpecimenSentBy").val('');
 	
 	$(".InsuranceCardNumber").val('');
 	$(".InsuranceAuthorizationNumber").val('');
@@ -865,7 +863,7 @@ function clear(){
 	$(".LastName").parent().removeClass("is-invalid");
 	$(".SpecimenCondition").parent().removeClass("is-invalid");
 	$(".SpecimenPriority").parent().removeClass("is-invalid");
-	
+	$(".datepicker-range-dob").parent().removeClass("is-invalid");
 	
 }
 
@@ -1147,8 +1145,6 @@ $(".save").click(function(){
 	var SpecimenPriority = $(".SpecimenPriority").val();
 	var SpecimenCollectedDate = $(".datepicker-range-specimen-collected").val();
 	var SpecimenCollectedBy = $(".SpecimenCollectedBy").val();
-	//var SpecimenSentDate = $(".datepicker-range-specimen-sent").val();
-	//var SpecimenSentBy = $(".SpecimenSentBy").val();
 	
 	var InsuranceCardNumber = $(".InsuranceCardNumber").val();
 	var InsuranceAuthorizationNumber = $(".InsuranceAuthorizationNumber").val();
@@ -1156,13 +1152,122 @@ $(".save").click(function(){
 	var InsuranceFinalDiagnosisCode = $(".InsuranceFinalDiagnosisCode").val();
 	
 	
-	if((Gender != undefined && Gender != null) &&
+			
+	if(currentFacility != undefined && currentFacility != null &&
+	   (Gender != undefined && Gender != null) &&
 	   (FirstName != undefined && FirstName != null && FirstName.trim().length > 0) &&
 	   (LastName != undefined && LastName != null && LastName.trim().length > 0) &&
 	   (SpecimenCondition != undefined && SpecimenCondition != null && SpecimenCondition != "Choose...") &&
-	   (SpecimenPriority != undefined && SpecimenPriority != null && SpecimenPriority != "Choose...")
+	   (SpecimenPriority != undefined && SpecimenPriority != null && SpecimenPriority != "Choose...") &&
+	   (DateOfBirth != undefined && DateOfBirth != null && DateOfBirth.trim().length > 0)
 	   ){
-	
+			//100019-92006-00001
+			var dt = new Date();
+			var dateTimeStamp = `${dt.getFullYear().toString().padStart(4, '0')}-${(dt.getMonth()+1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')}`;
+			dateTimeStamp += ` ${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}:${dt.getSeconds().toString().padStart(2, '0')}`;
+			var requestID = `${currentFacility.FacilityNumber}${dt.getFullYear().toString().substr(-2).padStart(2, '0')}${(dt.getMonth()+1).toString().padStart(2, '0')}-`;
+			requestID += '00001';
+			var registeredBy = 'Sys';
+				
+				
+			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+			if(con != null){
+				con.open();
+				
+				var query = "INSERT INTO `Reception`(";
+					query += "	`DateTimeStamp`";
+					query += "	,`Versionstamp`";
+					query += "	,`RequestID`";
+					if(!isEmpty(ReferenceNumber))query += "	,`ReferringRequestID`";
+					if(!isEmpty(NationalID))query += "	,`NationalID`";
+					if(!isEmpty(PatientNumber))query += "	,`PatientID`";
+					query += "	,`PatientName`";
+					if(!isEmpty(MiddleName))query += "	,`PatientMiddleName`";
+					query += "	,`PatientLastName`";
+					query += "	,`PatientAge`";
+					query += "	,`HL7SexCode`";
+					if(!isEmpty(PhoneNumber))query += "	,`PhoneNumber`";
+					if(!isEmpty(Address))query += "	,`Address`";
+					if(!isEmpty(EmailAddress))query += "	,`Email`";
+					if(!isEmpty(SpecimenCollectedDate))query += "	,`SpecimenDateTime`";
+					if(!isEmpty(SpecimenCollectedBy))query += "	,`SpecimenCollectedBy`";
+					query += "	,`RegisteredDateTime`";
+					query += "	,`RequestingFacilityCode`";
+					query += "	,`TestingFacilityCode`";
+					query += "	,`RegisteredBy`";
+					query += "	,`RequestTypeCode`";
+					query += "	,`SpecimenCondition`";
+					if(!isEmpty(InsuranceCardNumber))query += "	,`InsuranceCardNumber`";
+					if(!isEmpty(InsuranceAuthorizationNumber))query += "	,`InsuranceAuthorizationNumber`";
+					if(!isEmpty(InsurancePreliminanaryDiagnosisCode))query += "	,`InsurancePreliminaryDiagnosisCode`";
+					if(!isEmpty(InsuranceFinalDiagnosisCode))query += "	,`InsuranceFinalDiagnosisCode`";
+					query += ") VALUES (";
+					query += "	@DateTimeStamp";
+					query += "	,@Versionstamp";
+					query += "	,@RequestID";
+					if(!isEmpty(ReferenceNumber))query += "	,@ReferringRequestID";
+					if(!isEmpty(NationalID))query += "	,@NationalID";
+					if(!isEmpty(PatientNumber))query += "	,@PatientID";
+					query += "	,@PatientName";
+					if(!isEmpty(MiddleName))query += "	,@PatientMiddleName";
+					query += "	,@PatientLastName";
+					query += "	,@PatientAge";
+					query += "	,@HL7SexCode";
+					if(!isEmpty(PhoneNumber))query += "	,@PhoneNumber";
+					if(!isEmpty(Address))query += "	,@Address";
+					if(!isEmpty(EmailAddress))query += "	,@Email";
+					if(!isEmpty(SpecimenCollectedDate))query += "	,@SpecimenDateTime";
+					if(!isEmpty(SpecimenCollectedBy))query += "	,@SpecimenCollectedBy";
+					query += "	,@RegisteredDateTime";
+					query += "	,@RequestingFacilityCode";
+					query += "	,@TestingFacilityCode";
+					query += "	,@RegisteredBy";
+					query += "	,@RequestTypeCode";
+					query += "	,@SpecimenCondition";
+					if(!isEmpty(InsuranceCardNumber))query += "	,@InsuranceCardNumber";
+					if(!isEmpty(InsuranceAuthorizationNumber))query += "	,@InsuranceAuthorizationNumber";
+					if(!isEmpty(InsurancePreliminanaryDiagnosisCode))query += "	,@InsurancePreliminaryDiagnosisCode";
+					if(!isEmpty(InsuranceFinalDiagnosisCode))query += "	,@InsuranceFinalDiagnosisCode";
+					query += ")";
+					
+				var comm = con.createCommand(query);
+				if(comm != null){
+					comm.addParameter("@DateTimeStamp", "String", dateTimeStamp);
+					comm.addParameter("@Versionstamp", "String", getVersion().toString());
+					comm.addParameter("@RequestID", "String", requestID);
+					if(!isEmpty(ReferenceNumber))comm.addParameter("@ReferringRequestID", "String", ReferenceNumber);
+					if(!isEmpty(NationalID))comm.addParameter("@NationalID", "String", NationalID);
+					if(!isEmpty(PatientNumber))comm.addParameter("@PatientID", "String", PatientNumber);
+					comm.addParameter("@PatientName", "String", FirstName);
+					if(!isEmpty(MiddleName))comm.addParameter("@PatientMiddleName", "String", MiddleName);
+					comm.addParameter("@PatientLastName", "String", LastName);
+					comm.addParameter("@PatientAge", "String", DateOfBirth);
+					comm.addParameter("@HL7SexCode", "String", Gender);
+					if(!isEmpty(PhoneNumber))comm.addParameter("@PhoneNumber", "String", PhoneNumber);
+					if(!isEmpty(Address))comm.addParameter("@Address", "String", Address);
+					if(!isEmpty(EmailAddress))comm.addParameter("@Email", "String", EmailAddress);
+					if(!isEmpty(SpecimenCollectedDate))comm.addParameter("@SpecimenDateTime", "String", SpecimenCollectedDate);
+					if(!isEmpty(SpecimenCollectedBy))comm.addParameter("@SpecimenCollectedBy", "String", SpecimenCollectedBy);
+					comm.addParameter("@RegisteredDateTime", "String", dateTimeStamp);
+					comm.addParameter("@RequestingFacilityCode", "String", (referenceFacility != undefined && referenceFacility != null ? referenceFacility.FacilityNumber : currentFacility.FacilityNumber));
+					comm.addParameter("@TestingFacilityCode", "String", currentFacility.FacilityNumber);
+					comm.addParameter("@RegisteredBy", "String", registeredBy);
+					comm.addParameter("@RequestTypeCode", "String", SpecimenPriority);
+					comm.addParameter("@SpecimenCondition", "String", SpecimenCondition);
+					if(!isEmpty(InsuranceCardNumber))comm.addParameter("@InsuranceCardNumber", "String", InsuranceCardNumber);
+					if(!isEmpty(InsuranceAuthorizationNumber))comm.addParameter("@InsuranceAuthorizationNumber", "String", InsuranceAuthorizationNumber);
+					if(!isEmpty(InsurancePreliminanaryDiagnosisCode))comm.addParameter("@InsurancePreliminaryDiagnosisCode", "String", InsurancePreliminanaryDiagnosisCode);
+					if(!isEmpty(InsuranceFinalDiagnosisCode))comm.addParameter("@InsuranceFinalDiagnosisCode", "String", InsuranceFinalDiagnosisCode);
+				
+					comm.executeNonQuery();
+				}
+				
+				con.close();
+			}
+			
+			
+			
+			
 	}
 	else{
 	
@@ -1184,6 +1289,10 @@ $(".save").click(function(){
 		if(SpecimenPriority != undefined && SpecimenPriority != null && SpecimenPriority == "Choose..."){
 			$(".SpecimenPriority").parent().addClass("is-invalid");
 			$('.SpecimenPriority').focus(function(){ $(this).parent().removeClass("is-invalid"); });
+		}
+		
+		if(DateOfBirth != undefined && DateOfBirth != null && DateOfBirth.trim().length == 0){
+			$(".datepicker-range-dob").parent().addClass("is-invalid");
 		}
 		
 		if (Gender == undefined || Gender == null){
@@ -1308,12 +1417,12 @@ function Render(item){
 	return _map;
 }
 
-var dateOptions = {language: 'en' ,dateFormat: 'dd/mm/yyyy' /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
+var dateOptions = {language: 'en' ,dateFormat: 'yyyy-mm-dd' /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
 
 var dob_datepicker = InitDatePicker($('.datepicker-range-dob'), dateOptions);
 
-var specimen_collected_datepicker_dateTimeOptions 	= {language: 'en' ,dateFormat: 'dd/mm/yyyy' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
-//var specimen_sent_datepicker_dateTimeOptions 		= {language: 'en' ,dateFormat: 'dd/mm/yyyy' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
+var specimen_collected_datepicker_dateTimeOptions 	= {language: 'en' ,dateFormat: 'yyyy-mm-dd' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
+//var specimen_sent_datepicker_dateTimeOptions 		= {language: 'en' ,dateFormat: 'yyyy-mm-dd' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
 
 specimen_collected_datepicker_dateTimeOptions.onSelect = function(formattedDate, date, inst){
 	var dt = $('.datepicker-range-specimen-collected').val();
@@ -1330,7 +1439,7 @@ specimen_collected_datepicker_dateTimeOptions.onSelect = function(formattedDate,
 		//	received_in_lab_datepicker.clear();
 		//}
 		
-		specimen_sent_datepicker.update({minDate: specimen_collected_datetime});
+		//specimen_sent_datepicker.update({minDate: specimen_collected_datetime});
 		//received_in_lab_datepicker.update({minDate: specimen_collected_datetime});
 	}
 }
@@ -1348,6 +1457,22 @@ specimen_collected_datepicker_dateTimeOptions.onSelect = function(formattedDate,
 
 var specimen_collected_datepicker = InitDatePicker($('.datepicker-range-specimen-collected'), specimen_collected_datepicker_dateTimeOptions);
 //var specimen_sent_datepicker = InitDatePicker($('.datepicker-range-specimen-sent'), specimen_sent_datepicker_dateTimeOptions);
+
+focusEvents($('.datepicker-range-dob'),
+	function(){
+		$(this).parent().removeClass("is-invalid");
+	},
+	function(){
+		var val = $(this).val();
+		if(val.trim().length > 0){
+			if (/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/im.test(val.trim())){
+				$(this).parent().removeClass("is-invalid");
+			}
+			else $(this).parent().addClass("is-invalid");
+		}
+		else $(this).parent().removeClass("is-invalid");
+	}
+);
 
 focusEvents($('#phone_number'),
 	function(){

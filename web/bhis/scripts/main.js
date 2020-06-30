@@ -531,4 +531,10 @@ function SqlLiteConnection(host, user, pass){
 	return null;
 }
 
+function isEmpty(value){
+	if(value == undefined || value == null) return true;
+	
+	return value != undefined && value != null && value.trim() == 0;
+}
+
 init();
