@@ -302,7 +302,66 @@ function selectPendingConsultation(item){
 function getRejectionCodes(){
 	var codes = [];
 	
-	codes.push({Code:'OTHER', Reason:'Other Reason'});
+	codes.push({Reason:'Absence of Humidity Indicators', Code:'HUMID'});
+	codes.push({Reason:'Analyzer Hardware Error', Code:'ANAL'});
+	codes.push({Reason:'Anatomical Site not Indicated', Code:'IND'});
+	codes.push({Reason:'Blood received in wrong tube', Code:'WRONG'});
+	codes.push({Reason:'Broken/Leaked in Transit', Code:'LEAK'});
+	codes.push({Reason:'CD4 sample older than 48 hours', Code:'OLD48'});
+	codes.push({Reason:'Changes made in Parameters', Code:'CM'});
+	codes.push({Reason:'Clotted anti coagulated sample', Code:'CLOT'});
+	codes.push({Reason:'Clotted detected by Analyzer', Code:'CLOTT'});
+	codes.push({Reason:'Contaminated Specimen', Code:'CONT'});
+	codes.push({Reason:'Dry Specimen', Code:'DRY'});
+	codes.push({Reason:'Duplicate Test Order', Code:'DUP'});
+	codes.push({Reason:'Empty container received', Code:'EMPT'});
+	codes.push({Reason:'Expired Transport Media', Code:'EXP'});
+	codes.push({Reason:'FBC Sample older than 4 hours', Code:'OLD4'});
+	codes.push({Reason:'Haemolysed Samples', Code:'HAEM'});
+	codes.push({Reason:'Humidity colour Change >30%', Code:'COL'});
+	codes.push({Reason:'Illegible Specimen ID', Code:'ILLEG'});
+	codes.push({Reason:'Improper Packaging', Code:'IMP'});
+	codes.push({Reason:'Improper Preservation', Code:'PRES'});
+	codes.push({Reason:'Improper Transiport Media', Code:'TRANS'});
+	codes.push({Reason:'Inadequately labeled samples', Code:'INLS'});
+	codes.push({Reason:'Inappropriate Anatomical Site', Code:'ANAT'});
+	codes.push({Reason:'Incorrect Container/Tube', Code:'INCT'});
+	codes.push({Reason:'Insufficient Patient Details', Code:'INSF'});
+	codes.push({Reason:'Insufficient Sample', Code:'INS'});
+	codes.push({Reason:'Laboratory Accident', Code:'ACC'});
+	codes.push({Reason:'Lipemic', Code:'LIP'});
+	codes.push({Reason:'Mislabelled Specimen', Code:'MISL'});
+	codes.push({Reason:'No Request Form Received', Code:'NOR'});
+	codes.push({Reason:'NO Sample Received', Code:'NOSR'});
+	codes.push({Reason:'Not done. Reagent out of stock', Code:'OS'});
+	codes.push({Reason:'Overfilled container', Code:'OVER'});
+	codes.push({Reason:'please repeat', Code:'SPUN2'});
+	codes.push({Reason:'See Comment', Code:'COM'});
+	codes.push({Reason:'Slide Broken Beyond Repair', Code:'SBR'});
+	codes.push({Reason:'Slide Smeared on Frosted End', Code:'SSF'});
+	codes.push({Reason:'Soiled Containers', Code:'SOIL'});
+	codes.push({Reason:'Spec contaminated with urine', Code:'CONU'});
+	codes.push({Reason:'Specimen 3 days old on receipt', Code:'DAY3'});
+	codes.push({Reason:'Specimen Not Labelled', Code:'SNL'});
+	codes.push({Reason:'Specimen older than 6 hours', Code:'OLD6'});
+	codes.push({Reason:'specimen unlabelled', Code:'SPUN'});
+	codes.push({Reason:'Specimens older than 30 min', Code:'OLD30'});
+	codes.push({Reason:'Taken Date not Indicated', Code:'TKN'});
+	codes.push({Reason:'Test not performed in this lab', Code:'ND'});
+	codes.push({Reason:'There is no test Requested', Code:'REQ'});
+	codes.push({Reason:'Too Old Sample/Specimen', Code:'OLD'});
+	codes.push({Reason:'Uder filling of tubes', Code:'UFT'});
+	codes.push({Reason:'Unacceptable Temperature', Code:'TEMP'});
+	codes.push({Reason:'Unknown', Code:'REJMF'});
+	codes.push({Reason:'Unpaid Specimen', Code:'UNP'});
+	codes.push({Reason:'Unsterile cont for culture', Code:'UNSTC'});
+	codes.push({Reason:'Unsuitable for test ordered', Code:'UNS'});
+	codes.push({Reason:'Volume Sensor Failure', Code:'VOL'});
+	codes.push({Reason:'Was added for Training Purpose', Code:'TRAIN'});
+	codes.push({Reason:'Wrong Patient Folder Number', Code:'PATN'});
+	codes.push({Reason:'Wrong Patient Name', Code:'PANT'});
+	codes.push({Reason:'Wrong Specimen', Code:'WRNG'});
+	codes.push({Reason:'Wrong Test Order', Code:'TEST '});
 	
 	return codes;
 }
@@ -332,7 +391,7 @@ function rejectTest(item){
 				content += '					<option selected="">...</option>';
 				
 				getRejectionCodes().forEach(function(element, index){
-					content += '					<option value="'+element.Reason+'">'+element.Code+'</option>';
+					content += '					<option value="'+element.Code+'">'+element.Code+' - '+element.Reason+'</option>';
 				});
 				
 				
@@ -376,6 +435,12 @@ function rejectTest(item){
 			
 			create_custom_dropdowns();
 			
+			var rejectDropDowns = $(rej_dlg.el).find(".select-dropdown.rejectionCodes .list");
+			if(rejectDropDowns != undefined && rejectDropDowns != null){
+				rejectDropDowns.addClass("scroll scroll2");
+				rejectDropDowns.css({"overflow-y": "auto", "max-height": "200px"});
+			}
+			
 			$(rej_dlg.el).find(".noButton").unbind( "click" );
 			$(rej_dlg.el).find(".noButton").click(function() {
 				rej_dlg.toggle();
@@ -384,15 +449,15 @@ function rejectTest(item){
 			
 			$(rej_dlg.el).find(".yesButton").unbind( "click" );
 			$(rej_dlg.el).find(".yesButton").click(function() {
-				var code = $(rej_dlg.el).find(".select-dropdown.rejectionCodes").find(".current").text();
-				var description = $(rej_dlg.el).find(".comment-input").val();
+				var description = $(rej_dlg.el).find(".select-dropdown.rejectionCodes").find(".current").text();
+				var code = $(rej_dlg.el).find(".comment-input").val();
 				
-				if(code != "..."){	
+				if(description != "..."){	
 					//reject in database then display
 							
 					$(item).parents(".TestingItem").addClass('Rejected');
 					//$(item).remove();
-					$(item).attr("tooltip",code+' : '+description);
+					$(item).attr("tooltip",description);
 					$(item).html('<div style="margin:auto auto; width:14px height:14px; padding:0px 14px; font-size:14px;"><i class="mdi mdi-information" /></div>');
 					
 					rej_dlg.toggle();
@@ -404,7 +469,7 @@ function rejectTest(item){
 				var text = $(this).text();
 				if(text != "..."){
 					var value = $(this).val();
-					$(rej_dlg.el).find(".comment-input").val(value);
+					//$(rej_dlg.el).find(".comment-input").val(value);
 				}
 			});
 	}

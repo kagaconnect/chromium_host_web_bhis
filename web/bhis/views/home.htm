@@ -77,7 +77,7 @@
 				
 				<div class="Slider Animation-3ms" style="width:4px; height:47px; top:0px; right:0px; top:0px;"></div>
 			</div>
-			<div class="FlexDisplay FlexBoxSizing-BorderBox FadeIn" style="width:100%; height:100%; overflow: hidden; position:relative;">
+			<div class="FlexDisplay FlexBoxSizing-BorderBox FadeIn animated-pages" style="width:100%; height:100%; overflow: hidden; position:relative;">
 				
 				<div class="animated-page FlexBoxSizing-BorderBox active" data-path="section-0" style="padding:16px; height:100%;">
 					<div class="page-container Flex FlexColumn Overflow-Hidden inner-container Round Shadow" style="position:relative;  width:100%;">
@@ -722,6 +722,8 @@ $('.side-bar .Button').each(function (index, value) {
 					
 					navigateFrom.removeClass("active");
 					navigateTo.addClass('active');
+					
+					activeSection = 'section-'+index;
 				}
 				else {
 					navigateFrom.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
@@ -748,6 +750,18 @@ $('#mainPage .info-button button').click(function(){
 	var sub_file = System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),sub_path,sub_page)+".htm";
 	loadSubPage(sub_file, true);
 });
+
+if(activeSection != undefined && activeSection != null){
+	var navigateFrom = $('.animated-page.active');
+	var navigateTo = $("#mainPage").find("[data-path='"+activeSection+"']");
+	
+	navigateFrom.removeClass("active");
+	navigateTo.addClass('active');
+	
+	var index = activeSection.replace("section-","");
+	var pos = 48*(index);
+	$('.side-bar .Slider').css({"top":pos+"px"});
+}
 
 hideNavigationDropMenu();
 

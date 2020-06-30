@@ -3,6 +3,7 @@ const rootEl = doc.documentElement;
 const body = doc.body;
 
 var backNavigation = "landing.htm";
+var activeSection = "section-0";
 
 rootEl.classList.remove('no-js');
 rootEl.classList.add('js');
