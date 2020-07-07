@@ -595,9 +595,6 @@ function addTest(canDelete, item){
 		tp += '--------------------------&#13;&#10;';
 		tp += item.RejectedBy;
 	}
-	//&nbsp; 
-	
-	//(item.RejectionDescription.match(new RegExp('.{1,' + 16 + '}', 'g')).join('&#13;&#10;'))
 	 
 	var test  = '<div data-rejectioncode="'+item.RejectionCode+'" data-rejectiondescription="'+item.RejectionDescription+'" data-rejectedby="'+item.RejectedBy+'" data-id="'+item.ID+'" data-name="'+item.Name+'" data-description="'+item.Description+'" data-labsection="'+item.LabSection+'" data-price="'+parseFloat(item.CostToPatient).toFixed(2)+'" class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; ">';
 		test += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
@@ -614,7 +611,6 @@ function addTest(canDelete, item){
 		test += '</div>';
 	
 	$('.TestsList').append(test);
-	//$('.TestsList').scrollTop($('.TestsList')[0].scrollHeight);
 	
 	updateTestCost();
 }

@@ -717,166 +717,242 @@ function showTests(item, con){
 						}
 					});					
 					
-					var tests  = '<div data-rejectioncode="'+item.RejectionCode+'" data-rejectiondescription="'+item.RejectionDescription+'" data-rejectedby="'+item.RejectedBy+'" data-id="'+item.ID+'" data-name="'+item.Name+'" data-requestid="'+item.RequestID+'" data-consultationdatetime="'+item.ConsultationDateTime+'" class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox Divider-Bottom TestingItem '+(!isEmpty(item.RejectionCode) ? 'Rejected' : '')+'" style="width:100%; margin:0px 0px 0px 0px;">';
-							tests += '	<div class="FlexDisplay FlexRow Title" style="min-height:32px;max-height:32px;margin:0px 0px 0px 0px;" >';
-							tests += '		<div style="font-size:14px; margin:0px 0px 0px 12px;">';
-							tests += '			<i class="mdi mdi-flask" style="height:100%; color:white;" />';
-							tests += '		</div>';
-							tests += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-							tests += '			<h4 class="feature-title mt-0" style="margin:8px 0px 8px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+item.Name+'</h4>';
-							tests += '		</div>';
-							tests += '		<div onclick="rejectTest(this)" tooltip="'+(!isEmpty(item.RejectionCode) ? item.RejectionCode +' - '+item.RejectionDescription : 'reject')+'" flow="left" class="FlexDisplay btn-clear">';
-							tests += '			<div style="margin:auto auto; width:14px height:14px; padding:0px 14px; font-size:14px;"><i class="mdi mdi-minus-circle" /></div>';
-							tests += '		</div>';
-							tests += '	</div>';
-							tests += '	';
-							
-							
+					var test  = '<div data-rejectioncode="'+item.RejectionCode+'" data-rejectiondescription="'+item.RejectionDescription+'" data-rejectedby="'+item.RejectedBy+'" data-id="'+item.ID+'" data-name="'+item.Name+'" data-requestid="'+item.RequestID+'" data-consultationdatetime="'+item.ConsultationDateTime+'" class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox Divider-Bottom TestingItem '+(!isEmpty(item.RejectionCode) ? 'Rejected' : '')+'" style="width:100%; margin:0px 0px 0px 0px;">';
+						test += '	<div class="FlexDisplay FlexRow Title" style="min-height:32px;max-height:32px;margin:0px 0px 0px 0px;" >';
+						test += '		<div style="font-size:14px; margin:0px 0px 0px 12px;">';
+						test += '			<i class="mdi mdi-flask" style="height:100%; color:white;" />';
+						test += '		</div>';
+						test += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+						test += '			<h4 class="feature-title mt-0" style="margin:8px 0px 8px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+item.Name+'</h4>';
+						test += '		</div>';
+						test += '		<div onclick="rejectTest(this)" tooltip="'+(!isEmpty(item.RejectionCode) ? item.RejectionCode +' - '+item.RejectionDescription : 'reject')+'" flow="left" class="FlexDisplay btn-clear">';
+						test += '			<div style="margin:auto auto; width:14px height:14px; padding:0px 14px; font-size:14px;"><i class="mdi mdi-minus-circle" /></div>';
+						test += '		</div>';
+						test += '	</div>';
+						test += '</div>';	
+					
+					var testEl = $(test);
 					
 					messurements.forEach(function(messurement){
 							if(messurement.Type == "Alphanumeric Values"){
-								tests += '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
-								tests += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
-								tests += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
-								tests += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+messurement.Name+'</h4>';
-								tests += '			</div>';
-								tests += '		</div>';
-								tests += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
-								tests += '			<div class="FlexDisplay Flex FlexRow form-control">';
-								tests += '				<div class="icon" tooltip="'+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
-								tests += '					<i class="mdi '+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? "mdi-information" : "mdi-progress-alert" )+'" />';
-								tests += '				</div>';
-								tests += '				<select class="ResultDropDown">';
-								tests += '					<option selected="">Choose...</option>';
-								messurement.Information.forEach(function(information){
-									tests += '<option>'+information.From+'</option>';
-									if(information.To != undefined && information.To != null)
-										tests += '<option>'+information.To+'</option>';
+								var paramters  = '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+									paramters += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
+									paramters += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
+									paramters += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+messurement.Name+'</h4>';
+									paramters += '			</div>';
+									paramters += '		</div>';
+									paramters += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+									paramters += '			<div class="FlexDisplay Flex FlexRow form-control">';
+									paramters += '				<div class="icon" tooltip="'+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
+									paramters += '					<i class="mdi '+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? "mdi-information" : "mdi-progress-alert" )+'" />';
+									paramters += '				</div>';
+									paramters += '				<select class="ResultDropDown">';
+									paramters += '					<option selected="">Choose...</option>';
+									messurement.Information.forEach(function(information){
+										paramters += '<option>'+information.From+'</option>';
+										if(information.To != undefined && information.To != null)
+											paramters += '<option>'+information.To+'</option>';
+									});
+									paramters += '				</select>';
+									paramters += '			</div>';
+									paramters += '		</div>';
+									paramters += '	</div>';
+								
+								var paramtersEl = $(paramters);
+								testEl.append(paramtersEl);
+								
+								paramtersEl.find(".ResultDropDown").unbind( "change" );
+								paramtersEl.find(".ResultDropDown").on('change', function (e) {
+									var optionSelected = $("option:selected", this);
+									var valueSelected = this.value;
+									//console.log(optionSelected);
+									//console.log(valueSelected);
 								});
-								tests += '				</select>';
-								tests += '			</div>';
-								tests += '		</div>';
-								tests += '	</div>';
 							}
 							else if(messurement.Type == "Numeric Range"){
 								var information = messurement.Information.filter(function(i){ return i.Gender.toLowerCase() == "male"; }).shift();
 								if(information != undefined && information != null){
-									tests += '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
-									tests += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
-									tests += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
-									tests += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+item.Name+'</h4>';
-									tests += '			</div>';
-									tests += '		</div>';
-									tests += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
-									tests += '			<div class="FlexDisplay Flex FlexRow form-control">';
-									tests += '				<div class="icon" tooltip="('+information.From+'-'+information.To+')'+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
-									tests += '					<i class="mdi mdi-information" />';
-									tests += '				</div>';
-									tests += '				<input type="text" placeholder="'+messurement.Name+'"/>';
-									tests += '			</div>';
-									tests += '		</div>';
-									tests += '	</div>';
+									var paramters  = '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+										paramters += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
+										paramters += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
+										paramters += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+item.Name+'</h4>';
+										paramters += '			</div>';
+										paramters += '		</div>';
+										paramters += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+										paramters += '			<div class="FlexDisplay Flex FlexRow form-control">';
+										paramters += '				<div class="icon" tooltip="('+information.From+'-'+information.To+')'+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
+										paramters += '					<i class="mdi mdi-information" />';
+										paramters += '				</div>';
+										paramters += '				<input class="ResultInput" type="text" placeholder="'+messurement.Name+'"/>';
+										paramters += '			</div>';
+										paramters += '		</div>';
+										paramters += '	</div>';
+									
+									var paramtersEl = $(paramters);
+									testEl.append(paramtersEl);
+									
+									paramtersEl.find(".ResultInput").unbind( "change" );
+									paramtersEl.find(".ResultInput").on('change', function (e) {
+										var valueSelected = this.value;
+										//console.log(valueSelected);
+									});
 								}
 							}
 							else if(messurement.Type == "Autocomplete"){
-								tests += '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
-								tests += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
-								tests += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
-								tests += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+messurement.Name+'</h4>';
-								tests += '			</div>';
-								tests += '		</div>';
-								tests += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
-								tests += '			<div class="FlexDisplay Flex FlexRow form-control">';
-								tests += '				<div class="icon" tooltip="'+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
-								tests += '					<i class="mdi '+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? "mdi-information" : "mdi-progress-alert" )+'" />';
-								tests += '				</div>';
-								tests += '				<select class="ResultDropDown">';
-								tests += '					<option selected="">Choose...</option>';
-								messurement.Information.forEach(function(information){
-									tests += '<option>'+information.Value+'</option>';
+								var paramters  = '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+									paramters += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
+									paramters += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
+									paramters += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+messurement.Name+'</h4>';
+									paramters += '			</div>';
+									paramters += '		</div>';
+									paramters += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+									paramters += '			<div class="FlexDisplay Flex FlexRow form-control">';
+									paramters += '				<div class="icon" tooltip="'+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
+									paramters += '					<i class="mdi '+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? "mdi-information" : "mdi-progress-alert" )+'" />';
+									paramters += '				</div>';
+									paramters += '				<select class="ResultDropDown">';
+									paramters += '					<option selected="">Choose...</option>';
+									messurement.Information.forEach(function(information){
+										paramters += '<option>'+information.Value+'</option>';
+									});
+									paramters += '				</select>';
+									paramters += '			</div>';
+									paramters += '		</div>';
+									paramters += '	</div>';
+									
+								var paramtersEl = $(paramters);
+								testEl.append(paramtersEl);
+								
+								paramtersEl.find(".ResultDropDown").unbind( "change" );
+								paramtersEl.find(".ResultDropDown").on('change', function (e) {
+									var optionSelected = $("option:selected", this);
+									var valueSelected = this.value;
+									//console.log(optionSelected);
+									//console.log(valueSelected);
 								});
-								tests += '				</select>';
-								tests += '			</div>';
-								tests += '		</div>';
-								tests += '	</div>';
 							}
 							else if(messurement.Type == "Free Text"){
 								var information = messurement.Information.filter(function(i){ return i.Gender.toLowerCase() == "male"; }).shift();
 								if(information != undefined && information != null){
-									tests += '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
-									tests += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
-									tests += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
-									tests += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+item.Name+'</h4>';
-									tests += '			</div>';
-									tests += '		</div>';
-									tests += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
-									tests += '			<div class="FlexDisplay Flex FlexRow form-control">';
-									tests += '				<div class="icon" tooltip="('+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
-									tests += '					<i class="mdi '+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? "mdi-information" : "mdi-progress-alert" )+'" />';
-									tests += '				</div>';
-									tests += '				<input type="text" placeholder="'+messurement.Name+'"/>';
-									tests += '			</div>';
-									tests += '		</div>';
-									tests += '	</div>';
+									var paramters  = '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+										paramters += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
+										paramters += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
+										paramters += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+item.Name+'</h4>';
+										paramters += '			</div>';
+										paramters += '		</div>';
+										paramters += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+										paramters += '			<div class="FlexDisplay Flex FlexRow form-control">';
+										paramters += '				<div class="icon" tooltip="('+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
+										paramters += '					<i class="mdi '+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? "mdi-information" : "mdi-progress-alert" )+'" />';
+										paramters += '				</div>';
+										paramters += '				<input class="ResultInput" type="text" placeholder="'+messurement.Name+'"/>';
+										paramters += '			</div>';
+										paramters += '		</div>';
+										paramters += '	</div>';
+										
+									var paramtersEl = $(paramters);
+									testEl.append(paramtersEl);
+									
+									paramtersEl.find(".ResultInput").unbind( "change" );
+									paramtersEl.find(".ResultInput").on('change', function (e) {
+										var valueSelected = this.value;
+										//console.log(valueSelected);
+									});
 								}
 							}
-							
 					});
 					
-					tests += '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
-					tests += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
-					tests += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
-					tests += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Result:</h4>';
-					tests += '			</div>';
-					tests += '		</div>';
-					tests += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
-					tests += '			<div class="FlexDisplay Flex FlexRow form-control">';
-					tests += '				<div class="icon">';
-					tests += '					<i class="mdi mdi-flask" />';
-					tests += '				</div>';
-					tests += '				<input type="text" placeholder="Interpretation"/>';
-					tests += '			</div>';
-					tests += '		</div>';
-					tests += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
-					tests += '			<div class="FlexDisplay Flex FlexRow form-control">';
-					tests += '				<div class="icon">';
-					tests += '					<i class="mdi mdi-flask" />';
-					tests += '				</div>';
-					tests += '				<input type="text" placeholder="Remarks (Optional)"/>';
-					tests += '			</div>';
-					tests += '		</div>';
-					tests += '	</div>';
-					tests += '	';
-					tests += '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
-					tests += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
-					tests += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
-					tests += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Received In Lab:</h4>';
-					tests += '			</div>';
-					tests += '		</div>';
-					tests += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
-					tests += '			<div class="FlexDisplay Flex FlexRow form-control">';
-					tests += '				<div class="icon">';
-					tests += '					<i class="mdi mdi-calendar-outline" />';
-					tests += '				</div>';
-					tests += '				<input type="text" placeholder="dd/mm/yyyy hh:mm" class="datepicker-range-received-in-lab" style="padding:0px 0px 0px 8px;"/>';
-					tests += '			</div>';
-					tests += '		</div>';
-					tests += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
-					tests += '			<div class="FlexDisplay Flex FlexRow form-control">';
-					tests += '				<div class="icon">';
-					tests += '					<i class="mdi mdi-doctor" />';
-					tests += '				</div>';
-					tests += '				<input type="text" placeholder="By"/>';
-					tests += '			</div>';
-					tests += '		</div>';
-					tests += '	</div>';
-					tests += '	';
-					tests += '	<div class="FlexDisplay FlexRow" style="min-height:8px;max-height:8px;" >';
-					tests += '		<div class="FlexDisplay Divider-Right" style="min-width:257px;max-width:257px;"></div>';
-					tests += '	</div>';
-					tests += '</div>';
+					var result = '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+						result += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
+						result += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
+						result += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Result:</h4>';
+						result += '			</div>';
+						result += '		</div>';
+						result += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+						result += '			<div class="FlexDisplay Flex FlexRow form-control">';
+						result += '				<div class="icon">';
+						result += '					<i class="mdi mdi-flask" />';
+						result += '				</div>';
+						result += '				<input class="ResultInterpretationInput" type="text" placeholder="Interpretation"/>';
+						result += '			</div>';
+						result += '		</div>';
+						result += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+						result += '			<div class="FlexDisplay Flex FlexRow form-control">';
+						result += '				<div class="icon">';
+						result += '					<i class="mdi mdi-flask" />';
+						result += '				</div>';
+						result += '				<input class="ResultRemarkssInput" type="text" placeholder="Remarks (Optional)"/>';
+						result += '			</div>';
+						result += '		</div>';
+						result += '	</div>';
+					var resultEl = $(result);
 					
-					$('.TestsList').append(tests);
+					resultEl.find(".ResultInterpretationInput").unbind( "change" );
+					resultEl.find(".ResultInterpretationInput").on('change', function (e) {
+						var valueSelected = this.value;
+						//console.log(valueSelected);
+					});
+					
+					resultEl.find(".ResultRemarkssInput").unbind( "change" );
+					resultEl.find(".ResultRemarkssInput").on('change', function (e) {
+						var valueSelected = this.value;
+						//console.log(valueSelected);
+					});
+					
+					var received  = '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+						received += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
+						received += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
+						received += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Received In Lab:</h4>';
+						received += '			</div>';
+						received += '		</div>';
+						received += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+						received += '			<div class="FlexDisplay Flex FlexRow form-control">';
+						received += '				<div class="icon">';
+						received += '					<i class="mdi mdi-calendar-outline" />';
+						received += '				</div>';
+						received += '				<input type="text" placeholder="dd/mm/yyyy hh:mm" class="datepicker-range-received-in-lab" style="padding:0px 0px 0px 8px;"/>';
+						received += '			</div>';
+						received += '		</div>';
+						received += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+						received += '			<div class="FlexDisplay Flex FlexRow form-control">';
+						received += '				<div class="icon">';
+						received += '					<i class="mdi mdi-doctor" />';
+						received += '				</div>';
+						received += '				<input class="ResultedBy" type="text" placeholder="By"/>';
+						received += '			</div>';
+						received += '		</div>';
+						received += '	</div>';
+					var receivedEl = $(received);
+					
+					
+					var received_in_lab_datepicker = InitDatePicker(receivedEl.find(".datepicker-range-received-in-lab"), {
+						language: 'en',
+						dateFormat: 'dd/mm/yyyy',
+						timepicker: true, 
+						timeFormat: 'hh:ii', 
+						position: "top left",
+						maxDate:new Date(),
+						onSelect:function(formattedDate, date, inst){
+							console.log(item.Name+":"+formattedDate);
+						}
+					});
+					
+					receivedEl.find(".ResultedBy").unbind( "change" );
+					receivedEl.find(".ResultedBy").on('change', function (e) {
+						var valueSelected = this.value;
+						console.log(valueSelected);
+					});
+					
+					var spacer  = '	<div class="FlexDisplay FlexRow" style="min-height:8px;max-height:8px;" >';
+						spacer += '		<div class="FlexDisplay Divider-Right" style="min-width:257px;max-width:257px;"></div>';
+						spacer += '	</div>';
+					var spacerEl = $(spacer);
+					
+					testEl.append(resultEl);
+					testEl.append(receivedEl);
+					testEl.append(spacerEl);
+					
+					$('.TestsList').append(testEl);	
 					
 					create_custom_dropdowns();
 					
@@ -887,8 +963,7 @@ function showTests(item, con){
 					}
 					
 					
-					var received_in_lab_datepicker_dateTimeOptions	= {language: 'en' ,dateFormat: 'dd/mm/yyyy' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
-					var received_in_lab_datepicker 					= InitDatePicker($('.datepicker-range-received-in-lab'), received_in_lab_datepicker_dateTimeOptions);
+					
 				}
 			}				
 		}

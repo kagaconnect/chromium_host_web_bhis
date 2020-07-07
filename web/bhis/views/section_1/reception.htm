@@ -1560,7 +1560,7 @@ var dateOptions = {language: 'en' ,dateFormat: 'yyyy-mm-dd' /*,range:true ,multi
 
 var dob_datepicker = InitDatePicker($('.datepicker-range-dob'), dateOptions);
 
-var specimen_collected_datepicker_dateTimeOptions 	= {language: 'en' ,dateFormat: 'yyyy-mm-dd' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
+var specimen_collected_datepicker_dateTimeOptions 	= {language: 'en' ,dateFormat: 'yyyy-mm-dd' ,timepicker: true, timeFormat: 'hh:ii', position: "top left", maxDate:new Date() /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
 //var specimen_sent_datepicker_dateTimeOptions 		= {language: 'en' ,dateFormat: 'yyyy-mm-dd' ,timepicker: true, timeFormat: 'hh:ii', position: "top left" /*,range:true ,multipleDatesSeparator:" - " ,toggleSelected: false */ };
 
 specimen_collected_datepicker_dateTimeOptions.onSelect = function(formattedDate, date, inst){
