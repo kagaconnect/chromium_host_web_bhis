@@ -218,7 +218,7 @@ function addPendingConsultation(item){
 	else index = parseInt($('.consultationindex').last().text())+1;
 	
 	var new_consultation = item.RequestID+' : '+item.ConsultedBy;
-	
+	Results[item.RequestID] = [];
 	
 	var consultation  = '<div data-id="'+item.RequestID+'" class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold" style="min-height:32px;">';
 		consultation += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
@@ -258,8 +258,7 @@ function selectPendingConsultation(el, item){
 		addTest(item);
 	});
 	
-	Results =[];
-	
+	//Results[item.RequestID] = [];
 	fetchData(item.RequestID);
 	fetchTests(item.RequestID, item.ConsultationDateTime);
 }
@@ -740,12 +739,6 @@ function showTests(item, con){
 					var testEl = $(test);
 					
 					messurements.forEach(function(messurement, index){
-							//var requestID = $(".ConsultationPendingList .CheckBoxBold.Checked").data('id');		
-							//var t = Results.filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID; }).shift();
-							//console.log(messurement);
-							//console.log(index);
-							//console.log(currentTest);
-							//console.log(testID);
 							if(messurement.Type == "Alphanumeric Values"){
 								var paramters  = '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
 									paramters += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
@@ -1013,7 +1006,7 @@ function updateResult(testID, code, description, key, value){
 	if(!isEmpty(value)){
 		var requestID = $(".ConsultationPendingList .CheckBoxBold.Checked").data('id');		
 		if(!isEmpty(description)){
-			var t = Results.filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID && v.LIMSObservationDesc == description; }).shift();
+			var t = Results[requestID].filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID && v.LIMSObservationDesc == description; }).shift();
 			if(t == undefined && t == null){
 				t = {
 					//DateTimeStamp
@@ -1028,9 +1021,9 @@ function updateResult(testID, code, description, key, value){
 					AnalysisDateTime:(!isEmpty(key) && key.toLowerCase() == 'analysisdatetime' ? value : null),
 					TestedBy:(!isEmpty(key) && key.toLowerCase() == 'testedby' ? value : null)
 				};
-				Results.push(t);
+				Results[requestID].push(t);
 				
-				t.OBXSetID = Results.filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID }).length;
+				t.OBXSetID = Results[requestID].filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID }).length;
 			}
 			else {
 				t.Versionstamp = getVersion().toString();
@@ -1041,7 +1034,7 @@ function updateResult(testID, code, description, key, value){
 			}
 		}
 		else{
-			var ts = Results.filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID });
+			var ts = Results[requestID].filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID });
 			ts.forEach(function(t){
 				t.Versionstamp = getVersion().toString();
 				t.LIMSRptResult = (!isEmpty(key) && key.toLowerCase() == 'limsrptresult' ? value : t.LIMSRptResult);
@@ -1270,7 +1263,11 @@ function clearData(){
 	$("#addTests").removeClass( "FlexDisplay" );	
 	$("#addTests").unbind( "click" );
 	
-	Results =[];
+	Object.keys(Results).forEach(function(key){
+		Results[key]=[];
+	});
+	
+	//Results =[];
 }
 
 function hideNavigationDropMenu(){
