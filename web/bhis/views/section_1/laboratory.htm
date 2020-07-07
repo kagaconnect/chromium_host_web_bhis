@@ -36,7 +36,7 @@
 		<div class="FlexDisplay FlexColumn FlexGrow FlexBoxSizing-BorderBox" style="height:100%; overflow: hidden; position:relative;">
 			<div class="FlexDisplay" style="margin:16px 16px 0px 16px; height:218px;">
 				<div class="page-container FlexDisplay Flex FlexRow Overflow-Hidden inner-container Round Shadow" style="position:relative; height:calc(100% - 0px);  width:100%;">
-					<div class="FlexDisplay FlexColumn Divider-Right" style="height:calc(100% - 0px); width:256px;">
+					<div class="FlexDisplay FlexColumn Divider-Right" style="height:calc(100% - 0px); max-width:412px;min-width:412px;"> 
 						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
 							<div class="FlexDisplay Flex">
 								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">CONSULTATION</h4>
@@ -210,93 +210,162 @@ $('#backBtn').click(function(){
 	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
 });
 
-function addPendingConsultation(){
+function addPendingConsultation(item){
 	var index = $('.consultationindex').last().text();
 	if(index.length == 0)index = 1;
 	else index = parseInt($('.consultationindex').last().text())+1;
 	
-	var new_consultation = 'Consultation';
+	var new_consultation = item.RequestID+' : '+item.ConsultedBy;
 	
-	var consultation  = '<div onclick="selectPendingConsultation(this)" class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold" style="min-height:32px;">';
+	
+	var consultation  = '<div data-id="'+item.RequestID+'" class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold" style="min-height:32px;">';
 		consultation += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
 		consultation += '		<h4 class="consultationindex feature-title mt-0" style="width:100%; margin:2px 0px 0px 0px; font-size: 10px; font-weight:normal; text-align:center;">'+(index)+'</h4>';
 		consultation += '	</div>';
 		consultation += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
-		consultation += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+new_consultation+'</h4>';
+		consultation += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+new_consultation+'</h4>';
+		consultation += '	</div>';
+		consultation += '	<div class="FlexDisplay btn-clear" onclick="removePendingConsultation(this,event)">';
+		consultation += '		<div style="margin:auto auto; width:16px height:16px; padding:0px 12px; font-size: 14px;"><i class="mdi mdi-close-circle" /></div>';
 		consultation += '	</div>';
 		consultation += '</div>';
 	
-	$('.ConsultationPendingList').append(consultation);
+	var el = $(consultation);
+	$('.ConsultationPendingList').append(el);
+	
+	el.unbind( "click" );
+	el.click(function(){	
+		selectPendingConsultation($(this), item);
+	});
 }
 
-function selectPendingConsultation(item){
+function selectPendingConsultation(el, item){
 	$(".ConsultationPendingList .CheckBoxBold").each(function(){
 		$(this).removeClass('Checked');
 	});
 
-	$(item).addClass('Checked');
+	el.addClass('Checked');
 	
-	var c = Math.round(Math.random() * 5);	
-	$('.FirstName').val('FirstName '+c);
-	$('.MiddleName').val('MiddleName '+c);
-	$('.LastName').val('LastName '+c);
-	
-	$('.DateOfBirth').val('DateOfBirth '+c);
-	$('.PhoneNumber').val('PhoneNumber '+c);
-	
-	$('.Address').val('Address '+c);
-	$('.EmailAddress').val('EmailAddress '+c);
-	
-	var rand = ["A","F","M","N","O","U"];
-	$('.gender').find("label").each(function(){
-		$(this).removeClass('active');
-	});
-	$('.gender').find("input[type='radio'][value='"+rand[c]+"']").parent().addClass('active');
-	
-	$('.TestsList').html('');	
-	
-	var rows = [];
-	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
-	if(con != null){
-		con.open();
-
-		var query   = "SELECT ";
-			query   += "`ID` ";
-			query   += ",`Name` ";
-			query  += "FROM `tests` "; 
-			query  += "ORDER BY `Name` ";
-		
-		var comm = con.createCommand(query);
-		if(comm != null){
-			var reader = comm.executeReader();
-			if(reader != null){
-				while(reader.read()){
-					var row = JSON.parse(reader.getValues());	
-					if(row != undefined && row != null){ rows.push(row); }
-				}
-				reader.close();
-				
-				/*rows.forEach(function(item, index){
-					showTests(item, index, con);
-				});*/
-				
-				showTests(rows[0], 0, con);
-				showTests(rows[1], 1, con);
-				showTests(rows[2], 2, con);
-				
-				con.close();				
-			}
-			else con.close();
-		}
-		else con.close();
-	}
+	$('.HistoryList').html('');
+	$('.TestsList').html('');
+	$('.PrescriptionsList').html('');
 
 	$("#addTests").addClass( "FlexDisplay" );
 	$("#addTests").unbind( "click" );
 	$("#addTests").click(function(){
-		addTest();
-	});	
+		addTest(item);
+	});
 	
+	fetchData(item.RequestID);
+	fetchTests(item.RequestID, item.ConsultationDateTime);
+}
+
+function fetchData(id){
+	if(id != undefined && id != null){
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+		if(con != null){
+			con.open();
+			
+			var query  = "SELECT ";
+				query += "	 `PatientName`";
+				query += "	,`PatientMiddleName`";
+				query += "	,`PatientLastName`";
+				query += "	,`PatientAge`";
+				query += "	,`HL7SexCode`";
+				query += "	,`PhoneNumber`";
+				query += "	,`Address`";
+				query += "	,`Email`";
+				query += "FROM `Reception` ";
+				query += "WHERE (`RequestID` like @ID)";
+				query += "LIMIT 1 ";
+			
+			var comm = con.createCommand(query);
+			if(comm != null){
+				comm.addParameter("@ID", "String", id);
+				
+				var reader = comm.executeReader();
+				if(reader != null){
+					if(reader.read()){
+						var row = JSON.parse(reader.getValues());	
+						if(row != undefined && row != null){
+							$('.FirstName').val(row.PatientName);
+							$('.MiddleName').val(row.PatientMiddleName);
+							$('.LastName').val(row.PatientLastName);
+							
+							$('.DateOfBirth').val(row.PatientAge);
+							$('.PhoneNumber').val(row.PhoneNumber);
+							
+							$('.Address').val(row.Address);
+							$('.EmailAddress').val(row.Email);
+							
+							$('.gender').removeClass('is-invalid');
+							$('.gender').find("label").each(function(){
+								$(this).removeClass('active');
+								
+								var gender = $(this).find("input").val();
+								if(row.HL7SexCode == gender)$(this).addClass('active');
+							});
+						}
+					}
+					reader.close();
+					con.close();
+				}
+				else con.close();
+			}
+			else con.close();
+		}
+	}
+}
+
+function fetchTests(id, dt){
+	if(id != undefined && id != null){
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+		if(con != null){
+			con.open();
+			
+			var query  = "SELECT ";
+				query += " `OBRSetID` ";
+				query += " ,`LIMSPanelCode` ";
+				query += " ,`LIMSRejectionCode` ";
+				query += " ,`LIMSRejectionDesc` ";
+				query += " ,`LIMSRejectedBy` ";
+				query += "FROM `Request` ";
+				query += "WHERE `RequestID` = @ID ";
+				query += "AND `ConsultationDateTime` = @DT ";
+				
+			var comm = con.createCommand(query);
+			if(comm != null){
+				comm.addParameter("@ID", "String", id);
+				comm.addParameter("@DT", "String", dt);
+				
+				var reader = comm.executeReader();
+				if(reader != null){
+				
+					var conn = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+					if(conn != null){
+						conn.open();
+						while(reader.read()){
+							var row = JSON.parse(reader.getValues());	
+							if(row != undefined && row != null){
+								showTests({ 
+									ID:row.OBRSetID, 
+									Name:row.LIMSPanelCode, 
+									RequestID:id, 
+									ConsultationDateTime:dt,									
+									RejectionCode:row.LIMSRejectionCode,
+									RejectionDescription:row.LIMSRejectionDesc,
+									RejectedBy:row.LIMSRejectedBy
+								}, conn);
+							}
+						}
+						reader.close();						
+						conn.close();
+					}					
+				}
+			}
+			else con.close();
+		}
+	}
 }
 
 function getRejectionCodes(){
@@ -311,6 +380,7 @@ function getRejectionCodes(){
 	codes.push({Reason:'Changes made in Parameters', Code:'CM'});
 	codes.push({Reason:'Clotted anti coagulated sample', Code:'CLOT'});
 	codes.push({Reason:'Clotted detected by Analyzer', Code:'CLOTT'});
+	codes.push({Reason:'See Comment', Code:'COMM'});
 	codes.push({Reason:'Contaminated Specimen', Code:'CONT'});
 	codes.push({Reason:'Dry Specimen', Code:'DRY'});
 	codes.push({Reason:'Duplicate Test Order', Code:'DUP'});
@@ -370,6 +440,9 @@ function rejectTest(item){
 	if(!$(item).parents(".TestingItem").hasClass('Rejected')){
 		var id = $(item).parents(".TestingItem").data("id");
 		var name = $(item).parents(".TestingItem").data("name");
+		
+		var requestID = $(item).parents(".TestingItem").data("requestid");
+		var consultationDateTime = $(item).parents(".TestingItem").data("consultationdatetime");
 		
 		var content = '';
 				content += '<div class="bar-container" style="margin:0px;">';
@@ -449,14 +522,59 @@ function rejectTest(item){
 			
 			$(rej_dlg.el).find(".yesButton").unbind( "click" );
 			$(rej_dlg.el).find(".yesButton").click(function() {
+				var code = $(rej_dlg.el).find(".rejectionCodes").val();
 				var description = $(rej_dlg.el).find(".select-dropdown.rejectionCodes").find(".current").text();
-				var code = $(rej_dlg.el).find(".comment-input").val();
+				var comment = $(rej_dlg.el).find(".comment-input").val();
 				
-				if(description != "..."){	
+				if(!isEmpty(code) && description != "..." && ((code == 'COMM' && !isEmpty(comment)) || code != 'COMM')){	
 					//reject in database then display
+					
+					var desc = description.replace(code+' - ', '');
+					
+					if(code == 'COMM'){
+						description = code+' - '+comment;
+						desc = comment;
+					}
+					
+					var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+					if(con != null){
+						con.open();
+						
+						var dt = new Date();
+						var dateTimeStamp = `${dt.getFullYear().toString().padStart(4, '0')}-${(dt.getMonth()+1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')}`;
+						dateTimeStamp += ` ${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}:${dt.getSeconds().toString().padStart(2, '0')}`;
+						var rejectedBy = 'Sys';
+						
+						var query = "UPDATE `Request` SET";
+							query += "	`DateTimeStamp`=@DateTimeStamp";
+							query += "	,`Versionstamp`=@Versionstamp";
+							query += "	,`LIMSRejectedBy`=@RejectedBy";
+							query += "	,`LIMSRejectionCode`=@RejectionCode";
+							query += "	,`LIMSRejectionDesc`=@RejectionDescription";
+							query += " WHERE `RequestID`=@RequestID";
+							query += " AND `ConsultationDateTime`=@ConsultationDateTime";
+							query += " AND `OBRSetID`=@ID";
+							query += " AND `LIMSRejectionCode`=''";
+							
+						var comm = con.createCommand(query);
+						if(comm != null){
+							comm.addParameter("@DateTimeStamp", "String", dateTimeStamp);
+							comm.addParameter("@Versionstamp", "String", getVersion().toString());
+							comm.addParameter("@RequestID", "String", requestID);
+							comm.addParameter("@ID", "Int32", id);
+							comm.addParameter("@ConsultationDateTime", "String", consultationDateTime);
+							comm.addParameter("@RejectedBy", "String", rejectedBy);
+							comm.addParameter("@RejectionCode", "String", code);
+							comm.addParameter("@RejectionDescription", "String", desc);
+							comm.executeNonQuery();
+							con.close();
+						}
+						else con.close();
+					}
 							
 					$(item).parents(".TestingItem").addClass('Rejected');
 					//$(item).remove();
+					
 					$(item).attr("tooltip",description);
 					$(item).html('<div style="margin:auto auto; width:14px height:14px; padding:0px 14px; font-size:14px;"><i class="mdi mdi-information" /></div>');
 					
@@ -475,7 +593,7 @@ function rejectTest(item){
 	}
 }
 
-function showTests(item, index, con){
+function showTests(item, con){
 	var testID = item.ID;
 	
 	var query   = "SELECT ";
@@ -597,11 +715,9 @@ function showTests(item, index, con){
 						if(messurement != undefined && messurement != null){
 							messurement.SubMessurements.push(sub);
 						}
-					});
+					});					
 					
-					//if rejected display accordingly
-					
-					var tests  = '<div data-id="'+item.ID+'" data-name="'+item.Name+'" class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox Divider-Bottom TestingItem" style="width:100%; margin:0px 0px 0px 0px;">';
+					var tests  = '<div data-rejectioncode="'+item.RejectionCode+'" data-rejectiondescription="'+item.RejectionDescription+'" data-rejectedby="'+item.RejectedBy+'" data-id="'+item.ID+'" data-name="'+item.Name+'" data-requestid="'+item.RequestID+'" data-consultationdatetime="'+item.ConsultationDateTime+'" class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox Divider-Bottom TestingItem '+(!isEmpty(item.RejectionCode) ? 'Rejected' : '')+'" style="width:100%; margin:0px 0px 0px 0px;">';
 							tests += '	<div class="FlexDisplay FlexRow Title" style="min-height:32px;max-height:32px;margin:0px 0px 0px 0px;" >';
 							tests += '		<div style="font-size:14px; margin:0px 0px 0px 12px;">';
 							tests += '			<i class="mdi mdi-flask" style="height:100%; color:white;" />';
@@ -609,7 +725,7 @@ function showTests(item, index, con){
 							tests += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
 							tests += '			<h4 class="feature-title mt-0" style="margin:8px 0px 8px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+item.Name+'</h4>';
 							tests += '		</div>';
-							tests += '		<div onclick="rejectTest(this)" tooltip="reject" flow="left" class="FlexDisplay btn-clear">';
+							tests += '		<div onclick="rejectTest(this)" tooltip="'+(!isEmpty(item.RejectionCode) ? item.RejectionCode +' - '+item.RejectionDescription : 'reject')+'" flow="left" class="FlexDisplay btn-clear">';
 							tests += '			<div style="margin:auto auto; width:14px height:14px; padding:0px 14px; font-size:14px;"><i class="mdi mdi-minus-circle" /></div>';
 							tests += '		</div>';
 							tests += '	</div>';
@@ -822,6 +938,7 @@ function getTests(id){
 		var query  = "select  ";
 			query  += "	`te`.`ID` ";
 			query  += "	,`te`.`Name` ";
+			query  += "	,`te`.`Description` ";
 			query  += "	,`te`.`LabSection` ";
 			query  += "	,IFNULL(`te`.`CostToPatient`,0) `CostToPatient` ";
 			query  += "from `compatible_specimens` `co` ";
@@ -907,7 +1024,7 @@ $(".search").click(function(){
 				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
 				content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
 				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-account-badge-horizontal-outline" />';	
+				content += '					<i class="mdi mdi-badge-account-outline" />';	
 				content += '				</div>';	
 				content += '				<input type="text" placeholder="Name or ID" class="name-id" style="padding:0px 0px 0px 8px;"/>';	
 				content += '				<div class="icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
@@ -1004,7 +1121,7 @@ function hideNavigationDropMenu(){
 	$(".save").attr('id', '');
 }
 
-function addTest(){
+function addTest(item){
 	var content = '';
 			content += '<div class="bar-container" style="margin:0px;">';
 			content += '	<div class="bar-progress"></div>';
@@ -1064,17 +1181,96 @@ function addTest(){
 			var id = $(dlg.el).find("select.tests").val();
 			var test = tests.filter(function(v){ return v.ID == id;}).shift();
 			if(test != undefined && test != null){
-				//addTest(true, test);
 				
-				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+				test.RequestID = item.RequestID;
+				test.ConsultationDateTime = item.ConsultationDateTime;				
+				test.RejectionCode = '';
+				test.RejectionDescription = '';
+				test.RejectedBy = '';
+				
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
 				if(con != null){
 					con.open();
-					showTests(test, 0, con);
+					
+					var requestID = test.RequestID;
+					var consultationDateTime = test.ConsultationDateTime;
+					
+					var id = test.ID;
+					var name = test.Name;
+					var description = test.Description;
+					var labsection = test.LabSection;
+					var price = parseFloat(test.CostToPatient);
+					
+					var dt = new Date();
+					var dateTimeStamp = `${dt.getFullYear().toString().padStart(4, '0')}-${(dt.getMonth()+1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')}`;
+					dateTimeStamp += ` ${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}:${dt.getSeconds().toString().padStart(2, '0')}`;
+					var consultedBy = 'Sys';
+					
+					var query = "INSERT INTO `Request`(";
+						query += "	`DateTimeStamp`";
+						query += "	,`Versionstamp`";
+						query += "	,`RequestID`";
+						query += "	,`ConsultationDateTime`";
+						query += "	,`OBRSetID`";
+						query += "	,`LIMSPanelCode`";
+						if(!isEmpty(description))query += "	,`LIMSPanelDesc`";
+						query += "	,`RegisteredDateTime`";
+						query += "	,`CostUnits`";
+						query += "	,`HL7SectionCode`";
+						query += "	,`LIMSRejectionCode`";
+						query += "	,`LIMSRejectionDesc`";
+						query += "	,`LIMSRejectedBy`";
+						query += ") VALUES (";
+						query += "	 @DateTimeStamp";
+						query += "	,@Versionstamp";
+						query += "	,@RequestID";
+						query += "	,@ConsultationDateTime";
+						query += "	,@OBRSetID";
+						query += "	,@LIMSPanelCode";
+						if(!isEmpty(description))query += "	,@LIMSPanelDesc";
+						query += "	,@RegisteredDateTime";
+						query += "	,@CostUnits";
+						query += "	,@HL7SectionCode"
+						query += "	,@LIMSRejectionCode";
+						query += "	,@LIMSRejectionDesc";
+						query += "	,@LIMSRejectedBy";
+						query += ")";
+						
+					var comm = con.createCommand(query);
+					if(comm != null){
+						comm.addParameter("@DateTimeStamp", "String", dateTimeStamp);
+						comm.addParameter("@Versionstamp", "String", getVersion().toString());
+						comm.addParameter("@RequestID", "String", requestID);
+						comm.addParameter("@ConsultationDateTime", "String", consultationDateTime);
+						comm.addParameter("@OBRSetID", "Int32", id);
+						comm.addParameter("@LIMSPanelCode", "String", name);
+						if(!isEmpty(description))comm.addParameter("@LIMSPanelDesc", "String", description);
+						comm.addParameter("@RegisteredDateTime", "String", dateTimeStamp);
+						comm.addParameter("@CostUnits", "Double", price);
+						comm.addParameter("@HL7SectionCode", "String", labsection);
+						comm.addParameter("@LIMSRejectionCode", "String", null);
+						comm.addParameter("@LIMSRejectionDesc", "String", null);
+						comm.addParameter("@LIMSRejectedBy", "String", null);
+						var affectedRows = comm.executeNonQuery();
+						if(affectedRows.Data > 0){
+							var conn = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+							if(conn != null){
+								conn.open();
+								showTests(test, conn);
+								conn.close();
+							}							
+							dlg.toggle();
+							dlg = null;
+						}
+						else console.log('Already exists');
+					}
+					
 					con.close();
 				}
 				
-				dlg.toggle();
-				dlg = null;
+				
+				
+				
 			}
 		}
 	});
@@ -1128,6 +1324,40 @@ function addTest(){
 			$(dlg.el).find("select.tests").html('<option selected="">...</option>');
 		}
 	});
+}
+
+function getConsultations(){
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+	if(con != null){
+		con.open();
+		
+		var query  = "SELECT ";
+			query += "	`RequestID`";
+			query += "	,`ConsultationDateTime`";
+			query += "	,`ConsultedBy`";
+			query += "FROM `Consultation` ";
+			//query += "WHERE (`RequestID` like @ID)";
+			//query += "LIMIT 1 ";
+			
+		var comm = con.createCommand(query);
+		if(comm != null){
+			//comm.addParameter("@ID", "String", id);
+			
+			var reader = comm.executeReader();
+			if(reader != null){
+				if(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null){
+						 addPendingConsultation(row);
+					}
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
 }
 
 $("#addTests").unbind( "click" );
@@ -1188,9 +1418,7 @@ $('.save .submenu .root .nav-button').each(function (index, value) {
 	});
 });
 
-for(var x=0;x<Math.round(Math.random() * 30);x++){
-	addPendingConsultation();
-}
+getConsultations();
 
 hideNavigationDropMenu();
 closeLoadingPage();

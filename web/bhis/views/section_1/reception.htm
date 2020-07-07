@@ -44,8 +44,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="FlexDisplay Flex ContentPage  inner-section FadeIn"  style="width:100%; height:1px;">
-		<div class="FlexDisplay FlexBoxSizing-BorderBox" style="width:100%; height:100%; overflow: hidden; position:relative;">
+	<div class="FlexDisplay Flex ContentPage inner-section FadeIn"  style="width:100%; height:1px;">
+		<div class="FlexDisplay FlexBoxSizing-BorderBox FormArea" style="width:100%; height:100%; overflow: hidden; position:relative;">
 			<div class="FlexDisplay FlexBoxSizing-BorderBox" style="min-width:272px; max-width:272px;  height:100%; overflow: hidden; position:relative;">
 				<div class="FlexBoxSizing-BorderBox active" style="padding:16px 0px 16px 16px; height:100%; min-width:256px; max-width:256px;">
 					<div class="page-container Flex FlexColumn Overflow-Hidden inner-container Round Shadow" style="position:relative;  height:calc(100% - 0px); width:100%;">
@@ -302,11 +302,11 @@
 												<i class="mdi mdi-contrast" />
 											</div>
 											<select class="SpecimenCondition">
-												<option selected="">Choose...</option>
-												<option>Good</option>
-												<option>Suitable</option>
-												<option>Unsuitable</option>
-												<option>Unacceptable</option>
+												<option value="Choose..." selected="">Choose...</option>
+												<option value="Good">Good</option>
+												<option value="Suitable">Suitable</option>
+												<option value="Unsuitable">Unsuitable</option>
+												<option value="Unacceptable">Unacceptable</option>
 											</select>
 										</div>
 									</div>
@@ -316,11 +316,11 @@
 												<i class="mdi mdi-clock-fast" />
 											</div>
 											<select class="SpecimenPriority">
-												<option selected="">Choose...</option>
-												<option>Routine</option>
-												<option>Stat</option>
-												<option>Urgent</option>
-												<option>Xferred</option>
+												<option value="Choose..." selected="">Choose...</option>
+												<option value="Routine">Routine</option>
+												<option value="Stat">Stat</option>
+												<option value="Urgent">Urgent</option>
+												<option value="Xferred">Xferred</option>
 											</select>
 										</div>
 									</div>
@@ -828,8 +828,6 @@ function createPagerClickEventEx(dlg, id, host, callback){
 }
 
 function clear(){
-	
-	
 	$(".ReferenceNumber").val('');
 	$(".PatientNumber").val('');
 	$(".NationalID").val('');
@@ -865,6 +863,142 @@ function clear(){
 	$(".SpecimenPriority").parent().removeClass("is-invalid");
 	$(".datepicker-range-dob").parent().removeClass("is-invalid");
 	
+	$(".FormArea").removeClass('Locked');
+}
+
+function getRequestID(){
+	var index = '00001';
+	
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+	if(con != null){
+		con.open();
+		
+		var query = "SELECT ";
+			query += "	SUBSTR('00000' || (CAST(SUBSTR(`RequestID`, 14,5) as INTEGER)+1), -5, 5) `Index` ";
+			query += "FROM `Reception` ";
+			query += "ORDER BY CAST(SUBSTR(`RequestID`, 14,5) as INTEGER) desc ";
+			query += "LIMIT 1 ";
+			
+		var comm = con.createCommand(query);
+		if(comm != null){
+			var reader = comm.executeReader();
+			if(reader != null){
+				if(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null){
+						index = row.Index;
+					}
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+	
+	var dt = new Date();
+	var requestID = `${currentFacility.FacilityNumber}${dt.getFullYear().toString().substr(-2).padStart(2, '0')}${(dt.getMonth()+1).toString().padStart(2, '0')}-`;
+	
+	return requestID + index;
+}
+
+function fetchData(id){
+	if(id != undefined && id != null){
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+		if(con != null){
+			con.open();
+			
+			var query  = "SELECT ";
+				query += "	 `DateTimeStamp`";
+				query += "	,`Versionstamp`";
+				query += "	,`RequestID`";
+				query += "	,`ReferringRequestID`";
+				query += "	,`NationalID`";
+				query += "	,`PatientID`";
+				query += "	,`PatientName`";
+				query += "	,`PatientMiddleName`";
+				query += "	,`PatientLastName`";
+				query += "	,`PatientAge`";
+				query += "	,`HL7SexCode`";
+				query += "	,`PhoneNumber`";
+				query += "	,`Address`";
+				query += "	,`Email`";
+				query += "	,`SpecimenDateTime`";
+				query += "	,`SpecimenCollectedBy`";
+				query += "	,`RegisteredDateTime`";
+				query += "	,`RequestingFacilityCode`";
+				query += "	,`TestingFacilityCode`";
+				query += "	,`RegisteredBy`";
+				query += "	,`RequestTypeCode`";
+				query += "	,`SpecimenCondition`";
+				query += "	,`InsuranceCardNumber`";
+				query += "	,`InsuranceAuthorizationNumber`";
+				query += "	,`InsurancePreliminaryDiagnosisCode`";
+				query += "	,`InsuranceFinalDiagnosisCode`";
+				query += "FROM `Reception` ";
+				query += "WHERE (`RequestID` like @ID)";
+				query += "LIMIT 1 ";
+				
+			var comm = con.createCommand(query);
+			if(comm != null){
+				comm.addParameter("@ID", "String", id);
+				
+				var reader = comm.executeReader();
+				if(reader != null){
+					if(reader.read()){
+						var row = JSON.parse(reader.getValues());	
+						if(row != undefined && row != null){
+							 
+							$(".FormArea").addClass('Locked');
+							
+							$(".ReferenceNumber").val(row.ReferringRequestID);
+							$(".PatientNumber").val(row.PatientID);
+							$(".NationalID").val(row.NationalID);
+							$(".FirstName").val(row.PatientName);
+							$(".MiddleName").val(row.PatientMiddleName);
+							$(".LastName").val(row.PatientLastName);
+							
+							$('.gender').removeClass('is-invalid');
+							$('.gender').find("label").each(function(){
+								$(this).removeClass('active');
+								
+								var gender = $(this).find("input").val();
+								if(row.HL7SexCode == gender)$(this).addClass('active');
+							}); 
+							
+							$(".datepicker-range-dob").val(row.PatientAge);
+							$("#phone_number").val(row.PhoneNumber);
+							$(".Address").val(row.Address);
+							$("#email_address").val(row.Email);
+
+							reset_custom_dropdown(".SpecimenCondition", row.SpecimenCondition);
+							reset_custom_dropdown(".SpecimenPriority", row.RequestTypeCode);
+							
+							$(".datepicker-range-specimen-collected").val(row.SpecimenDateTime);
+							$(".SpecimenCollectedBy").val(row.SpecimenCollectedBy);
+							
+							$(".InsuranceCardNumber").val(row.InsuranceCardNumber);
+							$(".InsuranceAuthorizationNumber").val(row.InsuranceAuthorizationNumber);
+							$(".InsurancePreliminanaryDiagnosisCode").val(row.InsurancePreliminaryDiagnosisCode);
+							$(".InsuranceFinalDiagnosisCode").val(row.InsuranceFinalDiagnosisCode);
+							
+							
+							$(".FirstName").parent().removeClass("is-invalid");
+							$(".LastName").parent().removeClass("is-invalid");
+							$(".SpecimenCondition").parent().removeClass("is-invalid");
+							$(".SpecimenPriority").parent().removeClass("is-invalid");
+							$(".datepicker-range-dob").parent().removeClass("is-invalid");
+						}
+					}
+					reader.close();
+					con.close();				
+				}
+				else con.close();
+			}
+			else con.close();
+		}
+	}
 }
 
 $("#facility_search_button").click(function(){
@@ -1045,7 +1179,7 @@ $(".search").click(function(){
 				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
 				content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
 				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-account-badge-horizontal-outline" />';	
+				content += '					<i class="mdi mdi-badge-account-outline" />';	
 				content += '				</div>';	
 				content += '				<input type="text" placeholder="Name or ID" class="name-id" style="padding:0px 0px 0px 8px;"/>';	
 				content += '				<div class="icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
@@ -1100,6 +1234,13 @@ $(".search").click(function(){
 				//console.log(result);
 				//console.log(result.content);
 				//console.log(result.image);
+				
+				
+				var val = $(".name-id").val();
+				fetchData(val); //107980-52007-00001
+				
+				search_dlg.toggle();
+				search_dlg = null;
 			});		
 		})
 		.catch(function (e) {
@@ -1161,12 +1302,10 @@ $(".save").click(function(){
 	   (SpecimenPriority != undefined && SpecimenPriority != null && SpecimenPriority != "Choose...") &&
 	   (DateOfBirth != undefined && DateOfBirth != null && DateOfBirth.trim().length > 0)
 	   ){
-			//100019-92006-00001
 			var dt = new Date();
 			var dateTimeStamp = `${dt.getFullYear().toString().padStart(4, '0')}-${(dt.getMonth()+1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')}`;
 			dateTimeStamp += ` ${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}:${dt.getSeconds().toString().padStart(2, '0')}`;
-			var requestID = `${currentFacility.FacilityNumber}${dt.getFullYear().toString().substr(-2).padStart(2, '0')}${(dt.getMonth()+1).toString().padStart(2, '0')}-`;
-			requestID += '00001';
+			var requestID = getRequestID();
 			var registeredBy = 'Sys';
 				
 				

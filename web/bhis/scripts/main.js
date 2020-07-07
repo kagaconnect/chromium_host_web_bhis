@@ -224,7 +224,7 @@ function reset_custom_dropdown(id,value) {
 	var select = $(id);
 	
     $(".select-dropdown"+id).remove();
-	select.val('Choose...').trigger("change");
+	select.val(value).trigger("change");
 	
 	
 	
@@ -534,7 +534,24 @@ function SqlLiteConnection(host, user, pass){
 function isEmpty(value){
 	if(value == undefined || value == null) return true;
 	
-	return value != undefined && value != null && value.trim() == 0;
+	return value != undefined && value != null && value.trim().length == 0;
+}
+
+function splitWords(words, sentence, sentences, len){
+	var word = words.shift();
+	if(word != undefined && word != null){
+		if((sentence + word).length < len)sentence += word+' ';
+		else {
+			sentences.push(sentence);
+			sentence = word+' ';
+		}
+		return splitWords(words, sentence, sentences, len);
+	}
+	
+	sentence = sentence.trim();
+	sentences.push(sentence);
+	
+	return sentences;
 }
 
 init();

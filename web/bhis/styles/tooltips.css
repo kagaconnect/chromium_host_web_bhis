@@ -37,6 +37,7 @@
     */
   min-width: 3em;
   max-width: 25em;
+  
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -60,6 +61,7 @@
 [tooltip='']::after {
   display: none !important;
 }
+
 
 /* FLOW: UP */
 [tooltip]:not([flow])::before,
@@ -273,4 +275,52 @@
 [tooltip][flow^="down-right"]:hover::after {
   -webkit-animation: tooltips-right-vert 300ms ease-out forwards;
           animation: tooltips-right-vert 300ms ease-out forwards;
+}
+
+
+
+
+[tooltip][wrap^="none"]::before {
+  
+}
+[tooltip][wrap^="none"]::after {
+	white-space: normal;
+}
+
+[tooltip][wrap^="pre"]::after {
+	white-space: pre;
+}
+
+[tooltip][resize^="128"]::after {
+	text-align: left;
+	min-width: 128px;
+	max-width: 128px;
+}
+
+[tooltip][recolor^="red"]::after {
+	background: #c4183c;
+}
+
+/* FLOW: UP */
+[tooltip]:not([flow])::before,
+[tooltip][flow^="up"][recolor^="red"]::before,
+[tooltip][flow^="up-left"][recolor^="red"]::before,
+[tooltip][flow^="up-right"][recolor^="red"]::before {
+  border-top-color: #c4183c;
+}
+/* FLOW: DOWN */
+[tooltip][flow^="down"][recolor^="red"]::before ,
+[tooltip][flow^="down-left"][recolor^="red"]::before ,
+[tooltip][flow^="down-right"][recolor^="red"]::before {
+  border-bottom-color: #c4183c;
+}
+
+/* FLOW: LEFT */
+[tooltip][flow^="left"][recolor^="red"]::before {
+  border-left-color: #c4183c;
+}
+
+/* FLOW: RIGHT */
+[tooltip][flow^="right"][recolor^="red"]::before{
+  border-right-color: #c4183c;
 }

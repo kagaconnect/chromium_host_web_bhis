@@ -3424,7 +3424,7 @@ select {
 .btn-group-toggle>.btn-group>.btn input[type=radio]{
     position:absolute;
     clip:rect(0,0,0,0);
-    pointer-events:none
+    pointer-events:none;
 }
 
 
@@ -3440,7 +3440,10 @@ select {
 	box-shadow: 0 0.313rem 0.719rem rgba(0, 123, 255, 0.1), 0 0.156rem 0.125rem rgba(0, 0, 0, 0.06);
 }
 
-
+.Locked {
+	opacity:0.6;
+	pointer-events:none;
+}
 
 /*.form-control:focus-within .select-dropdown .list{
     border: 1px solid #007bff; 
