@@ -327,18 +327,19 @@ function fetchTests(id, dt){
 			con.open();
 			
 			var query  = "SELECT ";
-				query += " `OBRSetID` ";
+				query += " `ID` ";
+				query += " ,`OBRSetID` ";
 				query += " ,`LIMSPanelCode` ";
 				query += " ,`LIMSRejectionCode` ";
 				query += " ,`LIMSRejectionDesc` ";
 				query += " ,`LIMSRejectedBy` ";
 				query += "FROM `Request` ";
-				query += "WHERE `RequestID` = @ID ";
+				query += "WHERE `RequestID` = @RequestID ";
 				query += "AND `ConsultationDateTime` = @DT ";
 				
 			var comm = con.createCommand(query);
 			if(comm != null){
-				comm.addParameter("@ID", "String", id);
+				comm.addParameter("@RequestID", "String", id);
 				comm.addParameter("@DT", "String", dt);
 				
 				var reader = comm.executeReader();
@@ -351,6 +352,7 @@ function fetchTests(id, dt){
 							var row = JSON.parse(reader.getValues());	
 							if(row != undefined && row != null){
 								showTests({ 
+									Index:row.ID, 
 									ID:row.OBRSetID, 
 									Name:row.LIMSPanelCode, 
 									RequestID:id, 
@@ -597,6 +599,7 @@ function rejectTest(item){
 }
 
 function showTests(item, con){
+	var pk = item.Index;
 	var testID = item.ID;
 	
 	var query   = "SELECT ";
@@ -738,8 +741,20 @@ function showTests(item, con){
 					
 					var testEl = $(test);
 					
+					var requestID = $(".ConsultationPendingList .CheckBoxBold.Checked").data('id');	
+					var ts = Results[requestID].filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID && v.OBXSubID == pk; });
+						
+					//console.log(ts);
+					
+					
 					messurements.forEach(function(messurement, index){
 							if(messurement.Type == "Alphanumeric Values"){
+								var value = null;
+								var t = ts.filter(function(v){ return v.LIMSObservationDesc == messurement.Name; }).shift();
+								if(t != undefined && t != null && !isEmpty(t.LIMSRptResult)){
+									value=t.LIMSRptResult;
+								}
+								
 								var paramters  = '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
 									paramters += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
 									paramters += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
@@ -752,11 +767,11 @@ function showTests(item, con){
 									paramters += '					<i class="mdi '+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? "mdi-information" : "mdi-progress-alert" )+'" />';
 									paramters += '				</div>';
 									paramters += '				<select class="ResultDropDown">';
-									paramters += '					<option selected="">Choose...</option>';
+									paramters += '					<option '+(value == null ? 'selected=""' : '')+'>Choose...</option>';
 									messurement.Information.forEach(function(information){
-										paramters += '<option>'+information.From+'</option>';
+										paramters += '<option '+(value != null && value == information.From ? 'selected=""' : '')+'>'+information.From+'</option>';
 										if(information.To != undefined && information.To != null)
-											paramters += '<option>'+information.To+'</option>';
+											paramters += '<option '+(value != null && value == information.To ? 'selected=""' : '')+'>'+information.To+'</option>';
 									});
 									paramters += '				</select>';
 									paramters += '			</div>';
@@ -770,17 +785,23 @@ function showTests(item, con){
 								paramtersEl.find(".ResultDropDown").on('change', function (e) {
 									//var optionSelected = $("option:selected", this);
 									if(isEmpty(item.RejectionCode)){
-										updateResult(testID, currentTest.Name, messurement.Name, 'LIMSRptResult', this.value);
-										updateResult(testID, currentTest.Name, messurement.Name, 'LIMSRptUnits', messurement.UnitDefault);
+										updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptResult', this.value);
+										updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptUnits', messurement.UnitDefault);
 										
-										updateResult(testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
-										updateResult(testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
+										updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
+										updateResult(pk, testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
 									}
 								});
 							}
 							else if(messurement.Type == "Numeric Range"){
 								var information = messurement.Information.filter(function(i){ return i.Gender.toLowerCase() == "male"; }).shift();
 								if(information != undefined && information != null){
+									var value = null;
+									var t = ts.filter(function(v){ return v.LIMSObservationDesc == messurement.Name; }).shift();
+									if(t != undefined && t != null && !isEmpty(t.LIMSRptResult)){
+										value=t.LIMSRptResult;
+									}
+									
 									var paramters  = '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
 										paramters += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
 										paramters += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
@@ -792,7 +813,7 @@ function showTests(item, con){
 										paramters += '				<div class="icon" tooltip="('+information.From+'-'+information.To+')'+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
 										paramters += '					<i class="mdi mdi-information" />';
 										paramters += '				</div>';
-										paramters += '				<input class="ResultInput" type="text" placeholder="'+messurement.Name+'"/>';
+										paramters += '				<input value="'+(value != null ? value : '')+'" class="ResultInput" type="text" placeholder="'+messurement.Name+'"/>';
 										paramters += '			</div>';
 										paramters += '		</div>';
 										paramters += '	</div>';
@@ -803,16 +824,22 @@ function showTests(item, con){
 									paramtersEl.find(".ResultInput").unbind( "change" );
 									paramtersEl.find(".ResultInput").on('change', function (e) {
 										if(isEmpty(item.RejectionCode)){
-											updateResult(testID, currentTest.Name, messurement.Name, 'LIMSRptResult', this.value);
-											updateResult(testID, currentTest.Name, messurement.Name, 'LIMSRptUnits', messurement.UnitDefault);
+											updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptResult', this.value);
+											updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptUnits', messurement.UnitDefault);
 											
-											updateResult(testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
-											updateResult(testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
+											updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
+											updateResult(pk, testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
 										}
 									});
 								}
 							}
 							else if(messurement.Type == "Autocomplete"){
+								var value = null;
+								var t = ts.filter(function(v){ return v.LIMSObservationDesc == messurement.Name; }).shift();
+								if(t != undefined && t != null && !isEmpty(t.LIMSRptResult)){
+									value=t.LIMSRptResult;
+								}
+								
 								var paramters  = '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
 									paramters += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
 									paramters += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
@@ -825,9 +852,9 @@ function showTests(item, con){
 									paramters += '					<i class="mdi '+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? "mdi-information" : "mdi-progress-alert" )+'" />';
 									paramters += '				</div>';
 									paramters += '				<select class="ResultDropDown">';
-									paramters += '					<option selected="">Choose...</option>';
+									paramters += '					<option '+(value == null ? 'selected=""' : '')+'>Choose...</option>';
 									messurement.Information.forEach(function(information){
-										paramters += '<option>'+information.Value+'</option>';
+										paramters += '<option '+(value != null && value == information.Value ? 'selected=""' : '')+'>'+information.Value+'</option>';
 									});
 									paramters += '				</select>';
 									paramters += '			</div>';
@@ -840,17 +867,23 @@ function showTests(item, con){
 								paramtersEl.find(".ResultDropDown").unbind( "change" );
 								paramtersEl.find(".ResultDropDown").on('change', function (e) {
 									if(isEmpty(item.RejectionCode)){
-										updateResult(testID, currentTest.Name, messurement.Name, 'LIMSRptResult', this.value);
-										updateResult(testID, currentTest.Name, messurement.Name, 'LIMSRptUnits', messurement.UnitDefault);
+										updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptResult', this.value);
+										updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptUnits', messurement.UnitDefault);
 										
-										updateResult(testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
-										updateResult(testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
+										updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
+										updateResult(pk, testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
 									}
 								});
 							}
 							else if(messurement.Type == "Free Text"){
 								var information = messurement.Information.filter(function(i){ return i.Gender.toLowerCase() == "male"; }).shift();
 								if(information != undefined && information != null){
+									var value = null;
+									var t = ts.filter(function(v){ return v.LIMSObservationDesc == messurement.Name; }).shift();
+									if(t != undefined && t != null && !isEmpty(t.LIMSRptResult)){
+										value=t.LIMSRptResult;
+									}
+									
 									var paramters  = '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
 										paramters += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
 										paramters += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
@@ -862,7 +895,7 @@ function showTests(item, con){
 										paramters += '				<div class="icon" tooltip="('+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
 										paramters += '					<i class="mdi '+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? "mdi-information" : "mdi-progress-alert" )+'" />';
 										paramters += '				</div>';
-										paramters += '				<input class="ResultInput" type="text" placeholder="'+messurement.Name+'"/>';
+										paramters += '				<input value="'+(value != null ? value : '')+'" class="ResultInput" type="text" placeholder="'+messurement.Name+'"/>';
 										paramters += '			</div>';
 										paramters += '		</div>';
 										paramters += '	</div>';
@@ -873,16 +906,23 @@ function showTests(item, con){
 									paramtersEl.find(".ResultInput").unbind( "change" );
 									paramtersEl.find(".ResultInput").on('change', function (e) {
 										if(isEmpty(item.RejectionCode)){
-											updateResult(testID, currentTest.Name, messurement.Name, 'LIMSRptResult', this.value);
-											updateResult(testID, currentTest.Name, messurement.Name, 'LIMSRptUnits', messurement.UnitDefault);
+											updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptResult', this.value);
+											updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptUnits', messurement.UnitDefault);
 											
-											updateResult(testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
-											updateResult(testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
+											updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
+											updateResult(pk, testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
 										}
 									});
 								}
 							}
 					});
+					
+					var iValue = null;
+					var rValue = null;
+					var _t = ts.filter(function(v){ return v.LIMSObservationDesc == 'Interpretation'; }).shift();
+					if(_t != undefined && _t != null && !isEmpty(_t.LIMSRptResult)){ iValue=_t.LIMSRptResult; }
+					_t = ts.filter(function(v){ return v.LIMSObservationDesc == 'Remarks'; }).shift();
+					if(_t != undefined && _t != null && !isEmpty(_t.LIMSRptResult)){ rValue=_t.LIMSRptResult; }
 					
 					var result = '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
 						result += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
@@ -895,7 +935,7 @@ function showTests(item, con){
 						result += '				<div class="icon">';
 						result += '					<i class="mdi mdi-flask" />';
 						result += '				</div>';
-						result += '				<input class="ResultInterpretationInput" type="text" placeholder="Interpretation"/>';
+						result += '				<input value="'+(iValue != null ? iValue : '')+'" class="ResultInterpretationInput" type="text" placeholder="Interpretation"/>';
 						result += '			</div>';
 						result += '		</div>';
 						result += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
@@ -903,7 +943,7 @@ function showTests(item, con){
 						result += '				<div class="icon">';
 						result += '					<i class="mdi mdi-flask" />';
 						result += '				</div>';
-						result += '				<input class="ResultRemarksInput" type="text" placeholder="Remarks (Optional)"/>';
+						result += '				<input value="'+(rValue != null ? rValue : '')+'" class="ResultRemarksInput" type="text" placeholder="Remarks (Optional)"/>';
 						result += '			</div>';
 						result += '		</div>';
 						result += '	</div>';
@@ -912,20 +952,29 @@ function showTests(item, con){
 					resultEl.find(".ResultInterpretationInput").unbind( "change" );
 					resultEl.find(".ResultInterpretationInput").on('change', function (e) {
 						if(isEmpty(item.RejectionCode)){
-							updateResult(testID, currentTest.Name, 'Interpretation', 'LIMSRptResult', this.value);
-							updateResult(testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
-							updateResult(testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
+							updateResult(pk, testID, currentTest.Name, 'Interpretation', 'LIMSRptResult', this.value);
+							updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
+							updateResult(pk, testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
 						}
 					});
 					
 					resultEl.find(".ResultRemarksInput").unbind( "change" );
 					resultEl.find(".ResultRemarksInput").on('change', function (e) {
 						if(isEmpty(item.RejectionCode)){
-							updateResult(testID, currentTest.Name, 'Remarks', 'LIMSRptResult', this.value);
-							updateResult(testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
-							updateResult(testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
+							updateResult(pk, testID, currentTest.Name, 'Remarks', 'LIMSRptResult', this.value);
+							updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
+							updateResult(pk, testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
 						}
 					});
+					
+					
+					var recValue = null;
+					var byValue = null;
+					var _t = ts.filter(function(v){ return !isEmpty(v.AnalysisDateTime); }).shift();
+					if(_t != undefined && _t != null){ recValue=_t.AnalysisDateTime; }
+					_t = ts.filter(function(v){ return !isEmpty(v.TestedBy); }).shift();
+					if(_t != undefined && _t != null){ byValue=_t.TestedBy; }
+					
 					
 					var received  = '	<div class="FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
 						received += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
@@ -938,7 +987,7 @@ function showTests(item, con){
 						received += '				<div class="icon">';
 						received += '					<i class="mdi mdi-calendar-outline" />';
 						received += '				</div>';
-						received += '				<input type="text" placeholder="dd/mm/yyyy hh:mm" class="datepicker-range-received-in-lab" style="padding:0px 0px 0px 8px;"/>';
+						received += '				<input value="'+(recValue != null ? recValue : '')+'" type="text" placeholder="dd/mm/yyyy hh:mm" class="datepicker-range-received-in-lab" style="padding:0px 0px 0px 8px;"/>';
 						received += '			</div>';
 						received += '		</div>';
 						received += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
@@ -946,7 +995,7 @@ function showTests(item, con){
 						received += '				<div class="icon">';
 						received += '					<i class="mdi mdi-doctor" />';
 						received += '				</div>';
-						received += '				<input class="ResultedBy" type="text" placeholder="By"/>';
+						received += '				<input value="'+(byValue != null ? byValue : '')+'" class="ResultedBy" type="text" placeholder="By"/>';
 						received += '			</div>';
 						received += '		</div>';
 						received += '	</div>';
@@ -955,7 +1004,7 @@ function showTests(item, con){
 					
 					var received_in_lab_datepicker = InitDatePicker(receivedEl.find(".datepicker-range-received-in-lab"), {
 						language: 'en',
-						dateFormat: 'dd/mm/yyyy',
+						dateFormat: 'yyyy-mm-dd',
 						timepicker: true, 
 						timeFormat: 'hh:ii', 
 						position: "top left",
@@ -965,14 +1014,14 @@ function showTests(item, con){
 							if(animationCompleted)inst.update('maxDate', new Date());
 						},
 						onSelect:function(formattedDate, date, inst){
-							if(isEmpty(item.RejectionCode))updateResult(testID, currentTest.Name, '', 'AnalysisDateTime', formattedDate);
+							if(isEmpty(item.RejectionCode))updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', formattedDate);
 						}
 					});
 					received_in_lab_datepicker.selectDate(new Date());
 					
 					receivedEl.find(".ResultedBy").unbind( "change" );
 					receivedEl.find(".ResultedBy").on('change', function (e) {
-						if(isEmpty(item.RejectionCode))updateResult(testID, currentTest.Name, '', 'TestedBy', this.value);
+						if(isEmpty(item.RejectionCode))updateResult(pk, testID, currentTest.Name, '', 'TestedBy', this.value);
 					});
 					
 					var spacer  = '	<div class="FlexDisplay FlexRow" style="min-height:8px;max-height:8px;" >';
@@ -1001,12 +1050,11 @@ function showTests(item, con){
 	
 }
 
-function updateResult(testID, code, description, key, value){
-//console.log(currentTest);
+function updateResult(pk, testID, code, description, key, value){
 	if(!isEmpty(value)){
 		var requestID = $(".ConsultationPendingList .CheckBoxBold.Checked").data('id');		
 		if(!isEmpty(description)){
-			var t = Results[requestID].filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID && v.LIMSObservationDesc == description; }).shift();
+			var t = Results[requestID].filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID && v.OBXSubID == pk && v.LIMSObservationDesc == description; }).shift();
 			if(t == undefined && t == null){
 				t = {
 					//DateTimeStamp
@@ -1014,6 +1062,7 @@ function updateResult(testID, code, description, key, value){
 					RequestID:requestID,
 					OBRSetID:testID,
 					OBXSetID:1,
+					OBXSubID:pk,
 					LIMSObservationCode:code,
 					LIMSObservationDesc:description,
 					LIMSRptResult:(!isEmpty(key) && key.toLowerCase() == 'limsrptresult' ? value : null),
@@ -1023,7 +1072,7 @@ function updateResult(testID, code, description, key, value){
 				};
 				Results[requestID].push(t);
 				
-				t.OBXSetID = Results[requestID].filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID }).length;
+				t.OBXSetID = Results[requestID].filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID && v.OBXSubID == pk }).length;
 			}
 			else {
 				t.Versionstamp = getVersion().toString();
@@ -1034,15 +1083,13 @@ function updateResult(testID, code, description, key, value){
 			}
 		}
 		else{
-			var ts = Results[requestID].filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID });
+			var ts = Results[requestID].filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID && v.OBXSubID == pk });
 			ts.forEach(function(t){
 				t.Versionstamp = getVersion().toString();
 				t.LIMSRptResult = (!isEmpty(key) && key.toLowerCase() == 'limsrptresult' ? value : t.LIMSRptResult);
 				t.LIMSRptUnits = (!isEmpty(key) && key.toLowerCase() == 'limsrptunits' ? value : t.LIMSRptUnits);
 				t.AnalysisDateTime = (!isEmpty(key) && key.toLowerCase() == 'analysisdatetime' ? value : t.AnalysisDateTime);
-				t.AuthorisedDateTime = (!isEmpty(key) && key.toLowerCase() == 'authoriseddatetime' ? value : t.AuthorisedDateTime);
 				t.TestedBy = (!isEmpty(key) && key.toLowerCase() == 'testedby' ? value : t.TestedBy);
-				t.AuthorisedBy = (!isEmpty(key) && key.toLowerCase() == 'authorisedby' ? value : t.AuthorisedBy);
 			});
 		}
 	}
@@ -1411,6 +1458,21 @@ function addTest(item){
 						comm.addParameter("@LIMSRejectedBy", "String", null);
 						var affectedRows = comm.executeNonQuery();
 						if(affectedRows.Data > 0){
+							
+							var comm = con.createCommand("SELECT last_insert_rowid() `ID`");
+							if(comm != null){
+								var reader = comm.executeReader();
+								if(reader != null){
+									if(reader.read()){
+										var row = JSON.parse(reader.getValues());	
+										if(row != undefined && row != null){
+											test.Index = row.ID;
+										}
+									}
+									reader.close();
+								}
+							}
+						
 							var conn = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 							if(conn != null){
 								conn.open();
@@ -1544,7 +1606,113 @@ $(".save").click(function(){
 	$(".clear .submenu").hide();
 	$(".clear").attr('id', '');
 	
-	console.log(Results);
+
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+		if(con != null){
+			con.open();
+			
+			Object.keys(Results).forEach(function(key){
+				groupBy(Results[key], 'OBXSubID').forEach(function(tests){
+					var query  = "DELETE FROM `Result` ";
+						query += "WHERE RequestID = @RequestID ";
+						query += "AND OBRSetID = @OBRSetID ";
+						query += "AND OBXSubID = @OBXSubID ";
+						
+					var comm = con.createCommand(query);
+					if(comm != null){
+						var first = tests[0];
+						comm.addParameter("@RequestID", "String", first.RequestID);
+						comm.addParameter("@OBRSetID", "Int32", first.OBRSetID);
+						comm.addParameter("@OBXSubID", "Int32", first.OBXSubID);
+						
+						var affectedRows = comm.executeNonQuery();
+						if(affectedRows.Data > 0){						
+							tests.forEach(function(test){
+								if(!isEmpty(test.LIMSRptResult)){								
+									var query = "INSERT INTO `Result`(";
+										query += "	`DateTimeStamp` ";
+										query += "	,`Versionstamp` ";
+										query += "	,`RequestID` ";
+										query += "	,`OBRSetID` ";
+										query += "	,`OBXSetID` ";
+										query += "	,`LIMSObservationCode` ";
+										query += "	,`LIMSObservationDesc` ";
+										query += "	,`LIMSRptResult` ";
+										if(!isEmpty(test.LIMSRptUnits))query += "	,`LIMSRptUnits` ";
+										query += "	,`AnalysisDateTime` ";
+										if(!isEmpty(test.TestedBy))query += "	,`TestedBy` ";
+										query += ") VALUES (";
+										query += "	 @DateTimeStamp` ";
+										query += "	,@Versionstamp` ";
+										query += "	,@RequestID` ";
+										query += "	,@OBRSetID` ";
+										query += "	,@OBXSetID` ";
+										query += "	,@LIMSObservationCode` ";
+										query += "	,@LIMSObservationDesc` ";
+										query += "	,@LIMSRptResult` ";
+										if(!isEmpty(test.LIMSRptUnits))query += "	,@LIMSRptUnits` ";
+										query += "	,@AnalysisDateTime` ";
+										if(!isEmpty(test.TestedBy))query += "	,@TestedBy` ";
+										query += ")";
+										
+									var comm = con.createCommand(query);
+									if(comm != null){
+										var dt = new Date();
+										var dateTimeStamp = `${dt.getFullYear().toString().padStart(4, '0')}-${(dt.getMonth()+1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')}`;
+										dateTimeStamp += ` ${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}:${dt.getSeconds().toString().padStart(2, '0')}`;
+				
+										comm.addParameter("@DateTimeStamp", "String", dateTimeStamp);
+										comm.addParameter("@Versionstamp", "String", test.Versionstamp);
+										comm.addParameter("@RequestID", "String", test.RequestID);
+										comm.addParameter("@OBRSetID", "Int32", test.OBRSetID);
+										comm.addParameter("@OBXSetID", "Int32", test.OBXSetID);
+										comm.addParameter("@OBXSubID", "Int32", test.OBXSubID);
+										comm.addParameter("@LIMSObservationCode", "String", test.LIMSObservationCode);
+										comm.addParameter("@LIMSObservationDesc", "String", test.LIMSObservationDesc);
+										comm.addParameter("@LIMSRptResult", "String", test.LIMSRptResult);
+										if(!isEmpty(test.LIMSRptUnits))comm.addParameter("@LIMSRptUnits", "String", test.LIMSRptUnits);
+										comm.addParameter("@AnalysisDateTime", "String", test.AnalysisDateTime);
+										if(!isEmpty(test.TestedBy))comm.addParameter("@TestedBy", "String", test.TestedBy);
+										
+										var affectedRows = comm.executeNonQuery();
+										if(affectedRows.Data > 0){
+										
+										}
+									}
+								}
+							});
+						}
+						
+					}
+					
+					
+				});
+			
+			
+			/*var ids = array.reduce((result, currentValue) => {
+				// If an array already present for key, push it to the array. Else create an array and push the object
+				(result[currentValue[key]] = result[currentValue[key]] || []).push(
+				  currentValue
+				);
+				// Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+				return result;
+			  }, {});
+			
+				console.log(ids);*/
+				
+			//console.log(Results[key]);
+				/*Results[key].forEach(function(item){
+					
+					
+					
+					
+					console.log(item);
+				});*/
+			});
+			con.close();
+		}
+	
+	
 });
 
 $(".search").mouseup(function(){

@@ -240,6 +240,17 @@ function reset_custom_dropdown(id,value) {
   
 }
 
+function groupBy(array, key){
+  // Return the end result
+  return array.reduce((result, currentValue) => {
+	// If an array already present for key, push it to the array. Else create an array and push the object
+	(result[currentValue[key]] = result[currentValue[key]] || []).push(
+	  currentValue
+	);
+	// Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+	return result;
+  }, []).filter(function(m){ return m.length>0;}); // empty object is the initial value for result object
+}
 
 function create_custom_dropdowns() {
   $('select').each(function(i, select) {
