@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <g id="account-plus" transform="translate(-222 -343)">
+    <rect id="bg" width="16" height="16" transform="translate(222 343)" fill="none"/>
+    <path id="img" d="M9.909,10.364c-1.7,0-5.091.846-5.091,2.545v1.273H15V12.909c0-1.7-3.392-2.545-5.091-2.545M4.182,7.818V5.909H2.909V7.818H1V9.091H2.909V11H4.182V9.091H6.091V7.818M9.909,9.091A2.545,2.545,0,1,0,7.364,6.545,2.545,2.545,0,0,0,9.909,9.091Z" transform="translate(222 342.091)" fill="#fff"/>
+  </g>
+</svg>

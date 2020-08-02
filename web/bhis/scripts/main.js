@@ -210,7 +210,7 @@ function preparePager(id, column, table, callback){
 		var pages = '<div id="Page_'+c+'" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager Divider-Left '+(pagerList.includes(c) ? '' : 'Disabled')+'" style="height:32px;">';
 			pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">'+c+'</span>';
 			pages += '</div>';
-		$("#pagingBox").append(pages);
+		$(id).append(pages);
 		
 		if(pagerList.includes(c)){
 			createPagerClickEvent(c, id, callback);
