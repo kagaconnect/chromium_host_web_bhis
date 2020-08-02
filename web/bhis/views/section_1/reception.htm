@@ -72,8 +72,8 @@
 			</div>
 			<div class="animated-sub-page FlexColumn FlexBoxSizing-BorderBox scroll scroll2" data-path="section-1"   style="width:100%; height:calc(100% - 0px); overflow-x:hidden; display: block;">
 				
-				<div class="FlexDisplay FlexBoxSizing-BorderBox FormArea" style="width:100%; height:100%; overflow: hidden; position:relative;">
-					<div class="FlexDisplay FlexBoxSizing-BorderBox" style="min-width:272px; max-width:272px;  height:100%; overflow: hidden; position:relative;">
+				<div class="FlexDisplay FlexBoxSizing-BorderBox" style="width:100%; height:100%; overflow: hidden; position:relative;">
+					<div class="FlexDisplay FlexBoxSizing-BorderBox FormArea" style="min-width:272px; max-width:272px;  height:100%; overflow: hidden; position:relative;">
 						<div class="FlexBoxSizing-BorderBox active" style="padding:16px 0px 16px 16px; height:100%; min-width:256px; max-width:256px;">
 							<div class="page-container Flex FlexColumn Overflow-Hidden inner-container Round Shadow" style="position:relative;  height:calc(100% - 0px); width:100%;">
 								<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%; height:calc(100% - 0px);  z-index:2;">
@@ -160,7 +160,7 @@
 							</div>
 							<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 32px); z-index:2; position:relative;">						
 								<div class="FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="width:100%; height:100%; overflow-y:auto; overflow-x:hidden; display: block;">						
-									<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%; margin:0px 0px 16px 0px;">
+									<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox FormArea" style="width:100%; margin:0px 0px 16px 0px;">
 										<div class="FlexDisplay FlexRow Divider-Bottom" style="background:#182538;min-height:32px;max-height:32px;margin:0px 0px 2px 0px;" >
 											<div style="font-size:14px; margin:0px 0px 0px 12px;">
 												<i class="mdi mdi-card-account-details-outline" style="height:100%; color:white;" />
@@ -328,7 +328,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="FlexDisplay FlexColumn Flex FlexBoxSizing-BorderBox Divider-Top" style="width:100%; margin:8px 0px 8px 0px;">
+									<div class="FlexDisplay FlexColumn Flex FlexBoxSizing-BorderBox Divider-Top FormArea" style="width:100%; margin:8px 0px 8px 0px;">
 										<div class="FlexDisplay FlexRow Divider-Bottom" style="background:#182538;min-height:32px;max-height:32px;margin:0px 0px 2px 0px;" >
 											<div style="font-size:14px; margin:0px 0px 0px 12px;">
 												<i class="mdi mdi-flask" style="height:100%; color:white;" />
@@ -433,7 +433,7 @@
 										
 										
 									</div>
-									<div class="FlexDisplay FlexColumn Flex FlexBoxSizing-BorderBox Divider-Top" style="width:100%; margin:8px 0px 8px 0px;">
+									<div class="FlexDisplay FlexColumn Flex FlexBoxSizing-BorderBox Divider-Top FormArea" style="width:100%; margin:8px 0px 8px 0px;">
 										<div class="FlexDisplay FlexRow Divider-Bottom" style="background:#182538;min-height:32px;max-height:32px;margin:0px 0px 2px 0px;" >
 											<div style="font-size:14px; margin:0px 0px 0px 12px;">
 												<i class="mdi mdi-card-account-details-star-outline" style="height:100%; color:white;" />
@@ -612,6 +612,7 @@ function preparePagerExtension(id, column, table, callback){
 	$(id).html('');
 	
 	var pagerList = [];
+	
 	/*var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 	if(con != null){
 		con.open();
@@ -1303,47 +1304,69 @@ $(".search").click(function(){
 				content += '	<div class="bar-progress"></div>';
 				content += '</div>';
 				
-				if (cameras.length > 0){
-					content += '<div class="FlexDisplay FlexColumn" style="width:100%; min-height:320px;  margin:8px 0px 4px 0px;" >';
-					content += '	<div class="FlexDisplay Flex FlexRow Divider-Bottom"  style="width:100%; position:relative; padding:2px 8px;">';
-					content += '		<video class="camera_preview" style="background:black; object-fit: cover; min-width:305px; max-width:305px; min-height:270px; max-height:270px"></video>';
-					content += '		<div class="preloader-scan">';
-					content += '			<div class="diode">';
-					content += '				<div class="laser"></div>';
-					content += '			</div>';
-					content += '		</div>';
-					content += '	</div>';
+				content += '<div class="FlexDisplay FlexRow">';
+					if (cameras.length > 0){
+						content += '<div class="FlexDisplay FlexColumn" style="min-width:320px; max-width:320px; min-height:320px;  margin:8px 0px 4px 0px;" >';
+						content += '	<div class="FlexDisplay Flex FlexRow Divider-Bottom"  style="width:100%; position:relative; padding:2px 8px;">';
+						content += '		<video class="camera_preview" style="background:black; object-fit: cover; min-width:305px; max-width:305px; min-height:270px; max-height:270px"></video>';
+						content += '		<div class="preloader-scan">';
+						content += '			<div class="diode">';
+						content += '				<div class="laser"></div>';
+						content += '			</div>';
+						content += '		</div>';
+						content += '	</div>';
 
-					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+						content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:2px 8px;">';						
+						content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+						content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';
+						content += '				<div class="icon">';
+						content += '					<i class="mdi mdi-camera" />';
+						content += '				</div>';
+						content += '				<select class="cameras" onchange="camera_selected(this)">';
+						cameras.forEach(function(element, index){
+							if(index == 0)content += '					<option value="'+element.id+'" selected="">'+element.name+'</option>';
+							else 		  content += '					<option value="'+element.id+'">'+element.name+'</option>';
+						});
+						content += '				</select>';
+						content += '			</div>';
+						content += '		</div>';
+						content += '	</div>';
+					}
+					
+					content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:8px; margin-bottom:8px; padding:2px 8px;">';						
 					content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-					content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';
-					content += '				<div class="icon">';
-					content += '					<i class="mdi mdi-camera" />';
+					content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+					content += '				<div class="icon" style="padding-top:0px;">';	
+					content += '					<i class="mdi mdi-badge-account-outline" />';	
+					content += '				</div>';	
+					content += '				<input type="text" placeholder="Request ID" class="name-id" style="padding:0px 0px 0px 8px;"/>';	
+					content += '				<div class="icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+					content += '					<i class="mdi mdi-magnify-scan" />';
 					content += '				</div>';
-					content += '				<select class="cameras" onchange="camera_selected(this)">';
-					cameras.forEach(function(element, index){
-						if(index == 0)content += '					<option value="'+element.id+'" selected="">'+element.name+'</option>';
-						else 		  content += '					<option value="'+element.id+'">'+element.name+'</option>';
-					});
-					content += '				</select>';
 					content += '			</div>';
 					content += '		</div>';
 					content += '	</div>';
-				}
-				
-				content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:8px; margin-bottom:8px; padding:2px 8px;">';						
-				content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
-				content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-				content += '				<div class="icon" style="padding-top:0px;">';	
-				content += '					<i class="mdi mdi-badge-account-outline" />';	
-				content += '				</div>';	
-				content += '				<input type="text" placeholder="Name or ID" class="name-id" style="padding:0px 0px 0px 8px;"/>';	
-				content += '				<div class="icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
-				content += '					<i class="mdi mdi-magnify-scan" />';
-				content += '				</div>';
-				content += '			</div>';
-				content += '		</div>';
-				content += '	</div>';
+					content += '</div>';
+					
+					var consultationsFor = 'Fredrick L. Mwasekaga';
+					content += '<div class="FlexDisplay FlexColumn Divider-Left" style="width:100%; min-height:320px;">';
+					content += '	<div class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold" style="min-height:32px;">';
+					content += '		<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
+					content += '			<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Consultations : '+consultationsFor+'</h4>';
+					content += '		</div>';
+					content += '	</div>';
+					
+					var consultation = '107980-52007-00001 : 2020-07-06 07:29:04';	
+					content += '	<div data-id="107980-52007-00001" class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold ConsultationItem" style="min-height:32px;">';
+					content += '		<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
+					content += '			<h4 class="consultationindex feature-title mt-0" style="width:100%; margin:2px 0px 0px 0px; font-size: 10px; font-weight:normal; text-align:center;">1</h4>';
+					content += '		</div>';
+					content += '		<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
+					content += '			<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+consultation+'</h4>';
+					content += '		</div>';
+					content += '	</div>';
+					
+					content += '</div>';
 				content += '</div>';
 			
 			
@@ -1357,7 +1380,7 @@ $(".search").click(function(){
 					$(".search").removeClass("Disabled");
 					return false; 
 				}
-			},"320px");	
+			},"720px","720px","720px");	
 			
 			if (cameras.length > 0){
 				scanner = new Instascan.Scanner({
@@ -1383,6 +1406,21 @@ $(".search").click(function(){
 				create_custom_dropdowns();
 				scanner.start(cameras[0]);
 			}
+			
+			$(search_dlg.el).find(".ConsultationItem").each(function(i){
+				$(this).unbind( "click" );
+				$(this).click(function() {
+					var requestID = $(this).data('id');
+					if(!isEmpty(requestID)){
+						fetchData(requestID);
+						
+						search_dlg.toggle();
+						search_dlg = null;
+					}
+				});	
+				
+				
+			});
 
 			$(search_dlg.el).find(".scan").unbind( "click" );
 			$(search_dlg.el).find(".scan").click(function() {
