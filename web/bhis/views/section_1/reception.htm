@@ -25,7 +25,9 @@
 												<div id="patient_search_button" class="icon btn-color Divider-Left"  style="border-radius: 0 4px 4px 0;">
 													<i class="mdi mdi-account-search" />
 												</div>
-												
+												<div id="register_new_button" class="icon btn-color Divider-Left"  style="border-radius: 0 4px 4px 0;">
+													<i class="mdi mdi-account-plus" />
+												</div>
 											</div>
 										</div>
 									</div>
@@ -50,7 +52,7 @@
 								</div>
 							</div>
 							<div class="FlexDisplay FlexRow info">
-								<div onclick="proceedTo(this,1)" class="FlexDisplay icon" tooltip='Edit' flow='up-right' style="margin-left:8px;">
+								<div onclick="loadPatientDetails(this)" class="FlexDisplay icon" tooltip='Edit' flow='up-right' style="margin-left:8px;">
 									<i class="mdi mdi-account-edit" />
 								</div>
 								<div class="FlexDisplay Flex"  style="height:100%;">
@@ -558,6 +560,10 @@ $('input[type=radio][name=gender_options]').change(function() {
 	$(this).parents(".btn-group-toggle").removeClass('is-invalid');
 });
 
+function loadPatientDetails(item){
+	clear();
+	proceedTo(this,1);
+}
 
 function proceedTo(item, index){
 		var navigateFrom = $('.animated-sub-page.active');
@@ -1155,6 +1161,19 @@ function fetchData(id){
 		}
 	}
 }
+
+$("#patient_search_button").unbind( "click" );
+$("#patient_search_button").click(function(){
+	var patient_search_text = $("#patient_search_text").val();
+	
+});
+
+$("#register_new_button").unbind( "click" );
+$("#register_new_button").click(function(){
+	clear();
+	proceedTo(this,1);
+});
+ 
 
 $("#facility_search_button").unbind( "click" );
 $("#facility_search_button").click(function(){
