@@ -148,24 +148,24 @@ function isObjectSet(obj) {
     return true;
 }
 
-function createPagerClickEvent(id, host, callback){
-	$('#Page_'+id).removeClass('Disabled');						
-	$('#Page_'+id).off("click");
-	$('#Page_'+id).click(function(){
+function createPagerClickEvent(id, host, callback, prefix){
+	$('#'+(!isEmpty(prefix) ? prefix : '')+'Page_'+id).removeClass('Disabled');						
+	$('#'+(!isEmpty(prefix) ? prefix : '')+'Page_'+id).off("click");
+	$('#'+(!isEmpty(prefix) ? prefix : '')+'Page_'+id).click(function(){
 		if(!$(this).hasClass('Disabled')){
 			$(host).find('.Pager').each(function(){
 				$(this).removeClass('Selected');
 			});
 			$(this).addClass('Selected');
 			
-			var _id = $(this).attr('id').replace('Page_','');	
+			var _id = $(this).attr('id').replace((!isEmpty(prefix) ? prefix : '')+'Page_','');	
 			if(callback != undefined && callback != null)callback(_id);
 		}
 	});
 }
 
 
-function preparePager(id, column, table, callback){
+function preparePager(id, column, table, callback, prefix){
 	$(id).html('');
 	
 	var pagerList = [];
@@ -202,7 +202,7 @@ function preparePager(id, column, table, callback){
 	$(id).html(pages);
 	
 	if(pagerList.includes('0_9')){
-		createPagerClickEvent('0_9', id, callback);
+		createPagerClickEvent('0_9', id, callback, prefix);
 	}
 
 	for(x=65;x<65+26;x++){
@@ -213,7 +213,7 @@ function preparePager(id, column, table, callback){
 		$(id).append(pages);
 		
 		if(pagerList.includes(c)){
-			createPagerClickEvent(c, id, callback);
+			createPagerClickEvent(c, id, callback, prefix);
 		}
 	}
 		

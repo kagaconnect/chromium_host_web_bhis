@@ -41,34 +41,8 @@
 				</div>
 
 				<div class="FlexDisplay Flex FlexGrow" style="height:calc(100% - 96px);">
-					<div class="scroll scroll2" style="position:relative; height:calc(100% - 0px);  width:100%; padding:0px 8px 0px 8px;">
-				
-						<div class="FlexDisplay FlexColumn Overflow-Hidden info-card">
-							<div class="FlexDisplay FlexRow pic" style="height:calc(100% - 0px);">	
-								<div class="FlexDisplay FlexColumn credentials">
-									<div style="display:block; font-size:13px; height:18px; line-height:1.2; margin:4px 8px 0px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-										Fredrick L. Mwasekaga
-									</div>
-								</div>
-							</div>
-							<div class="FlexDisplay FlexRow info">
-								<div onclick="loadPatientDetails(this)" class="FlexDisplay icon" tooltip='Edit' flow='up-right' style="margin-left:8px;">
-									<i class="mdi mdi-account-edit" />
-								</div>
-								<div class="FlexDisplay Flex"  style="height:100%;">
-								</div>
-								<div class="FlexDisplay icon" tooltip='Visits: 100 ' flow='up-left'>
-									<i class="mdi mdi-hospital-building" />
-								</div>
-								<div class="FlexDisplay icon" tooltip='Gender: Male' flow='up-left'>
-									<i class="mdi mdi-gender-male-female" />
-								</div>
-								<div class="FlexDisplay icon" tooltip='DOB: 1985-12-01' flow='up-left'>
-									<i class="mdi mdi-calendar" />
-								</div>
-							</div>	
-						</div>
-				
+					<div class="scroll scroll2 PatientsList" style="position:relative; height:calc(100% - 0px);  width:100%; padding:0px 8px 0px 8px;">
+
 					</div>
 				</div>
 			</div>
@@ -162,7 +136,7 @@
 							</div>
 							<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 32px); z-index:2; position:relative;">						
 								<div class="FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="width:100%; height:100%; overflow-y:auto; overflow-x:hidden; display: block;">						
-									<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox FormArea" style="width:100%; margin:0px 0px 16px 0px;">
+									<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox FormArea Patient" style="width:100%; margin:0px 0px 16px 0px;">
 										<div class="FlexDisplay FlexRow Divider-Bottom" style="background:#182538;min-height:32px;max-height:32px;margin:0px 0px 2px 0px;" >
 											<div style="font-size:14px; margin:0px 0px 0px 12px;">
 												<i class="mdi mdi-card-account-details-outline" style="height:100%; color:white;" />
@@ -172,7 +146,7 @@
 											</div>
 										</div>
 										
-										<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 8px 0px;" >
+										<div class="FlexDisplay FlexRow ByPass" style="min-height:16px;max-height:16px;margin:8px 0px 8px 0px;" >
 											<div class="FlexDisplay Flex" style="min-width:130px;">
 												<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Reference Number</h4>
 											</div>
@@ -184,7 +158,7 @@
 											</div>
 										</div>
 										<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">						
-											<div class="FlexDisplay Flex" style="min-width:130px;">
+											<div class="FlexDisplay Flex ByPass" style="min-width:130px;">
 												<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px;">
 													<div class="icon">
 														<i class="mdi mdi-arrow-decision-outline" />
@@ -200,7 +174,7 @@
 													<input class="PatientNumber" type="text" placeholder="Patient Number"/>
 												</div>
 											</div>
-											<div class="FlexDisplay Flex" style="min-width:130px;">
+											<div class="FlexDisplay Flex ByPass" style="min-width:130px;">
 												<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 0px 0px 4px;">
 													<div class="icon">
 														<i class="mdi mdi-badge-account-outline" />
@@ -248,7 +222,7 @@
 											</div>
 										</div>
 										
-										<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+										<div class="FlexDisplay FlexRow ByPass" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
 											<div class="FlexDisplay Flex" style="min-width:130px;">
 												<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Gender</h4>
 											</div>
@@ -293,7 +267,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="FlexDisplay Flex" style="min-width:130px;">
+											<div class="FlexDisplay Flex ByPass" style="min-width:130px;">
 												<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
 													<div class="icon">
 														<i class="mdi mdi-cellphone-basic" />
@@ -303,7 +277,7 @@
 											</div>
 										</div>
 										
-										<div class="FlexDisplay FlexRow" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
+										<div class="FlexDisplay FlexRow ByPass" style="min-height:16px;max-height:16px;margin:8px 0px 0px 0px;" >
 											<div class="FlexDisplay Flex FlexGrow-2" style="min-width:260px;">
 												<h4 class="feature-title mt-0" style="margin:0px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">Address</h4>
 											</div>
@@ -311,7 +285,7 @@
 												<h4 class="feature-title mt-0" style="margin:0px 0px 0px 4px; font-size: 12px; font-weight:normal; line-height:16px;">Email</h4>
 											</div>
 										</div>
-										<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; padding:0px 8px;">
+										<div class="FlexDisplay FlexRow ByPass"  style="width:100%; height:32px; padding:0px 8px;">
 											<div class="FlexDisplay Flex FlexGrow-2" style="min-width:260px;">
 												<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
 													<div class="icon">
@@ -519,6 +493,7 @@ var mapMarkers = null;
 var transitioning = false;
 var currentFacility = null;
 var referenceFacility = null;
+var currentPatient = null;
 
 $("#backBtn").unbind( "click" );
 $('#backBtn').click(function(){ 
@@ -561,8 +536,11 @@ $('input[type=radio][name=gender_options]').change(function() {
 });
 
 function loadPatientDetails(item){
+	currentPatient = $(item).parents('.info-card').data('id');
 	clear();
 	proceedTo(this,1);
+	
+	fetchPatientInfo(currentPatient);
 }
 
 function proceedTo(item, index){
@@ -612,14 +590,13 @@ function proceedTo(item, index){
 			}
 		}, 500);
 	}
-	
 
 function preparePagerExtension(id, column, table, callback){
 	$(id).html('');
 	
 	var pagerList = [];
 	
-	/*var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
 	if(con != null){
 		con.open();
 
@@ -644,16 +621,16 @@ function preparePagerExtension(id, column, table, callback){
 			else con.close();
 		}
 		else con.close();
-	}*/
+	}
 
 	var pages  = '<div id="Patient_Page_0_9" class="Animation-3ms FlexDisplay Flex FlexGrow FlexRow Button NonStandard Pager '+(pagerList.includes('0_9') ? '' : 'Disabled')+'" style="height:32px;">';
 		pages += '	<span class="text" style="text-align:center; display:inline-block; width:100%; font-size:11px; margin:2px 0px 0px 0px;">0-9</span>';
 		pages += '</div>';
 	$(id).html(pages);
 	
-	//if(pagerList.includes('0_9')){
-	//	createPagerClickEvent('0_9', id, callback);
-	//}
+	if(pagerList.includes('0_9')){
+		createPagerClickEvent('0_9', id, callback, 'Patient_');
+	}
 
 	for(x=65;x<65+26;x++){
 		var c = String.fromCharCode(x);
@@ -662,16 +639,113 @@ function preparePagerExtension(id, column, table, callback){
 			pages += '</div>';
 		$(id).append(pages);
 		
-		//if(pagerList.includes(c)){
-		//	createPagerClickEvent(c, id, callback);
-		//}
-	}
-		
+		if(pagerList.includes(c)){
+			createPagerClickEvent(c, id, callback, 'Patient_');
+		}
+	}		
 	return pagerList;
 }
 
-var patients_pagerList = preparePagerExtension("#patientsPagingBox", "FacilityName", "facilities", null);
+function populatePatientData(id){
+	$('.PatientsList').html('');
+	
+	var patient_search_text = $("#patient_search_text").val();
+	
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+	if(con != null){
+		con.open();
 
+		var query  = 'SELECT ';
+			query += '  "rec"."PatientID" ';
+			query += ' , "rec"."PatientName" ';
+			query += ' , "rec"."PatientMiddleName" ';
+			query += ' , "rec"."PatientLastName" ';
+			query += ' ,(SELECT PatientAge FROM Reception WHERE PatientID = "rec"."PatientID" order by "DateTimeStamp" desc LIMIT 1) as "Age" ';
+			query += ' ,(SELECT HL7SexCode FROM Reception WHERE PatientID = "rec"."PatientID" order by "DateTimeStamp" desc LIMIT 1) as "Gender" ';
+			query += ' ,(SELECT COUNT(RequestID) FROM Consultation WHERE RequestID = "rec"."RequestID" order by "DateTimeStamp" desc LIMIT 1) as "Visits" ';
+			query += 'FROM Reception "rec" ';
+			query += 'WHERE (case when (substr("rec"."PatientName" ,1,1) GLOB \'*[^0-9]*\') = 0 then \'0_9\' ';
+			query += '	  		  else upper(substr("rec"."PatientName" ,1,1)) ';
+			query += '	      end) = @ID ';
+			
+			if(!isEmpty(patient_search_text) && patient_search_text.trim().length > 0){
+				query += 'AND ("rec"."PatientName" like @Search ';
+				query += 'OR "rec"."PatientMiddleName" like @Search ';
+				query += 'OR "rec"."PatientLastName" like @Search ';
+				query += 'OR "rec"."PatientID" like @Search ';
+				query += 'OR "rec"."RequestID" like @Search ';
+				query += 'OR "rec"."PhoneNumber" like @Search) ';
+			}
+			
+			query += 'GROUP BY  ';
+			query += '  "rec"."PatientID" ';
+			query += ' , "rec"."PatientName" ';
+			query += ' , "rec"."PatientMiddleName" ';
+			query += ' , "rec"."PatientLastName" ';
+		
+		var comm = con.createCommand(query);
+		if(comm != null){
+			comm.addParameter("@ID", "String", id);
+			if(!isEmpty(patient_search_text) && patient_search_text.trim().length > 0)comm.addParameter("@Search", "String", '%'+patient_search_text+'%');
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null){
+					
+						var gender = row.Gender;
+						if(gender == 'A') gender = 'Ambiguous';
+						else if(gender == 'F') gender = 'Female';
+						else if(gender == 'M') gender = 'Male';
+						else if(gender == 'N') gender = 'Not applicable';
+						else if(gender == 'O') gender = 'Other';
+						else if(gender == 'U') gender = 'Unknown';
+					
+						var patientCard  = '<div data-id="'+row.PatientID+'" class="FlexDisplay FlexColumn Overflow-Hidden info-card"> ';
+							patientCard += '	<div class="FlexDisplay FlexRow pic" style="height:calc(100% - 0px);">	 ';
+							patientCard += '		<div class="FlexDisplay FlexColumn credentials"> ';
+							patientCard += '			<div style="display:block; font-size:13px; height:18px; line-height:1.2; margin:4px 8px 0px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> ';
+							patientCard += '				'+row.PatientName+' '+(!isEmpty(row.PatientMiddleName) ? row.PatientMiddleName[0].toUpperCase()+". " : '')+row.PatientLastName;
+							patientCard += '			</div> ';
+							patientCard += '		</div> ';
+							patientCard += '	</div> ';
+							patientCard += '	<div class="FlexDisplay FlexRow info"> ';
+							patientCard += '		<div onclick="loadPatientDetails(this)" class="FlexDisplay icon" tooltip="Edit" flow="up-right" style="margin-left:8px;"> ';
+							patientCard += '			<i class="mdi mdi-account-edit" /> ';
+							patientCard += '		</div> ';
+							patientCard += '		<div class="FlexDisplay Flex"  style="height:100%;"> ';
+							patientCard += '		</div> ';
+							patientCard += '		<div class="FlexDisplay icon" tooltip="Visits: '+row.Visits+'" flow="up-left"> ';
+							patientCard += '			<i class="mdi mdi-hospital-building" /> ';
+							patientCard += '		</div> ';
+							patientCard += '		<div class="FlexDisplay icon" tooltip="Gender: '+gender+'" flow="up-left"> ';
+							patientCard += '			<i class="mdi mdi-gender-male-female" /> ';
+							patientCard += '		</div> ';
+							patientCard += '		<div class="FlexDisplay icon" tooltip="DOB: '+row.Age+'" flow="up-left"> ';
+							patientCard += '			<i class="mdi mdi-calendar" /> ';
+							patientCard += '		</div>';
+							patientCard += '	</div>	';
+							patientCard += '</div>';
+					
+						$('.PatientsList').append(patientCard);
+					}
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+	
+}
+
+var patients_pagerList = preparePagerExtension("#patientsPagingBox", "PatientName", "Reception", populatePatientData);
+if(patients_pagerList.length > 0){
+	var fisrtID = patients_pagerList.shift();
+	$('#Patient_Page_'+fisrtID).addClass('Selected');
+	populatePatientData(fisrtID);
+}
 
 function fetchFacility(){
 	var loadedMap = false;
@@ -990,22 +1064,24 @@ function createPagerClickEventEx(dlg, id, host, callback){
 
 function clear(){
 	$(".ReferenceNumber").val('');
-	$(".PatientNumber").val('');
-	$(".NationalID").val('');
-	$(".FirstName").val('');
-	$(".MiddleName").val('');
-	$(".LastName").val('');
+	if(currentPatient == null){
+		$(".PatientNumber").val('');
+		$(".NationalID").val('');
+		$(".FirstName").val('');
+		$(".MiddleName").val('');
+		$(".LastName").val('');
+		
+		$('.gender').removeClass('is-invalid');
+		$('.gender').find("label").each(function(){
+			$(this).removeClass('active');
+		});
+		
+		$(".datepicker-range-dob").val('');
+		$("#phone_number").val('');
+		$(".Address").val('');
+		$("#email_address").val('');
+	}
 	
-	$('.gender').removeClass('is-invalid');
-	$('.gender').find("label").each(function(){
-		$(this).removeClass('active');
-	}); 
-	
-	$(".datepicker-range-dob").val('');
-	$("#phone_number").val('');
-	$(".Address").val('');
-	$("#email_address").val('');
-
 	reset_custom_dropdown(".SpecimenCondition", 'Choose...');
 	reset_custom_dropdown(".SpecimenPriority", 'Choose...');
 	
@@ -1025,6 +1101,7 @@ function clear(){
 	$(".datepicker-range-dob").parent().removeClass("is-invalid");
 	
 	$(".FormArea").removeClass('Locked');
+	$(".FormArea").removeClass('Fixed');
 }
 
 function getRequestID(){
@@ -1062,6 +1139,75 @@ function getRequestID(){
 	var requestID = `${currentFacility.FacilityNumber}${dt.getFullYear().toString().substr(-2).padStart(2, '0')}${(dt.getMonth()+1).toString().padStart(2, '0')}-`;
 	
 	return requestID + index;
+}
+
+function fetchPatientInfo(id){
+	if(id != undefined && id != null){
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+		if(con != null){
+			con.open();
+			
+			var query  = "SELECT ";
+				query += "	 `NationalID`";
+				query += "	,`PatientID`";
+				query += "	,`PatientName`";
+				query += "	,`PatientMiddleName`";
+				query += "	,`PatientLastName`";
+				query += "	,`PatientAge`";
+				query += "	,`HL7SexCode`";
+				query += "	,`PhoneNumber`";
+				query += "	,`Address`";
+				query += "	,`Email`";
+				query += "FROM `Reception` ";
+				query += "WHERE (`PatientID` like @ID) ";
+				query += "ORDER BY `DateTimeStamp` desc ";
+				query += "LIMIT 1 ";
+				
+			var comm = con.createCommand(query);
+			if(comm != null){
+				comm.addParameter("@ID", "String", id.toString());
+				
+				var reader = comm.executeReader();
+				if(reader != null){
+					if(reader.read()){
+						var row = JSON.parse(reader.getValues());	
+						if(row != undefined && row != null){
+							$(".FormArea.Patient").addClass('Fixed');
+							
+							$(".PatientNumber").val(row.PatientID);
+							$(".NationalID").val(row.NationalID);
+							$(".FirstName").val(row.PatientName);
+							$(".MiddleName").val(row.PatientMiddleName);
+							$(".LastName").val(row.PatientLastName);
+							
+							$('.gender').removeClass('is-invalid');
+							$('.gender').find("label").each(function(){
+								$(this).removeClass('active');
+								
+								var gender = $(this).find("input").val();
+								if(row.HL7SexCode == gender)$(this).addClass('active');
+							}); 
+							
+							$(".datepicker-range-dob").val(row.PatientAge);
+							$("#phone_number").val(row.PhoneNumber);
+							$(".Address").val(row.Address);
+							$("#email_address").val(row.Email);
+
+							$(".FirstName").parent().removeClass("is-invalid");
+							$(".LastName").parent().removeClass("is-invalid");
+							$(".SpecimenCondition").parent().removeClass("is-invalid");
+							$(".SpecimenPriority").parent().removeClass("is-invalid");
+							$(".datepicker-range-dob").parent().removeClass("is-invalid");
+						}
+					}
+					reader.close();
+					con.close();				
+				}
+				else con.close();
+			}
+			else con.close();
+		}
+	}
 }
 
 function fetchData(id){
@@ -1165,11 +1311,87 @@ function fetchData(id){
 $("#patient_search_button").unbind( "click" );
 $("#patient_search_button").click(function(){
 	var patient_search_text = $("#patient_search_text").val();
+	var patients = [];
+	
+	$('.PatientsList').html('');
+	
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+	if(con != null){
+		con.open();
+
+		var query  = 'SELECT ';
+			query += '  "rec"."PatientID" ';
+			query += ' , "rec"."PatientName" ';
+			query += ' , "rec"."PatientMiddleName" ';
+			query += ' , "rec"."PatientLastName" ';
+			query += ' ,(SELECT PatientAge FROM Reception WHERE PatientID = "rec"."PatientID" order by "DateTimeStamp" desc LIMIT 1) as "Age" ';
+			query += ' ,(SELECT HL7SexCode FROM Reception WHERE PatientID = "rec"."PatientID" order by "DateTimeStamp" desc LIMIT 1) as "Gender" ';
+			query += ' ,(SELECT COUNT(RequestID) FROM Consultation WHERE RequestID = "rec"."RequestID" order by "DateTimeStamp" desc LIMIT 1) as "Visits" ';
+			query += 'FROM Reception "rec" ';
+			query += 'WHERE "rec"."PatientName" like @Search ';
+			query += 'OR "rec"."PatientMiddleName" like @Search ';
+			query += 'OR "rec"."PatientLastName" like @Search ';
+			query += 'OR "rec"."PatientID" like @Search ';
+			query += 'OR "rec"."RequestID" like @Search ';
+			query += 'OR "rec"."PhoneNumber" like @Search ';
+			query += 'GROUP BY  ';
+			query += '  "rec"."PatientID" ';
+			query += ' , "rec"."PatientName" ';
+			query += ' , "rec"."PatientMiddleName" ';
+			query += ' , "rec"."PatientLastName" ';
+		
+		var comm = con.createCommand(query);
+		if(comm != null){
+			comm.addParameter("@Search", "String", '%'+patient_search_text+'%');
+			var reader = comm.executeReader();
+			if(reader != null){
+				while(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null)patients.push(row);
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+		
+	var pagerList = patients
+					.map(function(p){ return p.PatientName[0]; })
+					.reduce( function (acc, item) {
+						if(!acc.includes(item))acc.push(item);
+						return acc; 
+					},[]);
+	pagerList.sort();
+	
+	$('#patientsPagingBox').find('.Selected').removeClass('Selected');
+	
+	if(pagerList.includes('0_9')){
+		 $('#Patient_Page_0_9').removeClass('Disabled');
+		 createPagerClickEvent('0_9', "#patientsPagingBox", populatePatientData, 'Patient_');
+	}
+	else $('#Patient_Page_0_9').addClass('Disabled');
+	
+	for(x=65;x<65+26;x++){
+		var c = String.fromCharCode(x);
+		if(pagerList.includes(c)) $('#Patient_Page_'+c).removeClass('Disabled');
+		else $('#Patient_Page_'+c).addClass('Disabled');
+		
+		if(pagerList.includes(c)){
+			createPagerClickEvent(c, "#patientsPagingBox", populatePatientData, 'Patient_');
+		}
+	}
+	
+	var fisrtID = pagerList.shift();
+	$('#Patient_Page_'+fisrtID).addClass('Selected');
+	populatePatientData(fisrtID);
 	
 });
 
 $("#register_new_button").unbind( "click" );
 $("#register_new_button").click(function(){
+	currentPatient = null;
 	clear();
 	proceedTo(this,1);
 });
@@ -1367,26 +1589,90 @@ $(".search").click(function(){
 					content += '	</div>';
 					content += '</div>';
 					
-					var consultationsFor = 'Fredrick L. Mwasekaga';
 					content += '<div class="FlexDisplay FlexColumn Divider-Left" style="width:100%; min-height:320px;">';
-					content += '	<div class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold" style="min-height:32px;">';
-					content += '		<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
-					content += '			<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Consultations : '+consultationsFor+'</h4>';
-					content += '		</div>';
-					content += '	</div>';
 					
-					var consultation = '107980-52007-00001 : 2020-07-06 07:29:04';	
-					content += '	<div data-id="107980-52007-00001" class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold ConsultationItem" style="min-height:32px;">';
-					content += '		<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
-					content += '			<h4 class="consultationindex feature-title mt-0" style="width:100%; margin:2px 0px 0px 0px; font-size: 10px; font-weight:normal; text-align:center;">1</h4>';
-					content += '		</div>';
-					content += '		<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
-					content += '			<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+consultation+'</h4>';
-					content += '		</div>';
-					content += '	</div>';
+					if(currentPatient != null){
+						var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+						if(con != null){
+							con.open();
+							
+							var query  = "SELECT ";
+							query += "	 `DateTimeStamp`";
+							//query += "	,`Versionstamp`";
+							query += "	,`RequestID`";
+							//query += "	,`ReferringRequestID`";
+							//query += "	,`NationalID`";
+							//query += "	,`PatientID`";
+							query += "	,`PatientName`";
+							query += "	,`PatientMiddleName`";
+							query += "	,`PatientLastName`";
+							//query += "	,`PatientAge`";
+							//query += "	,`HL7SexCode`";
+							//query += "	,`PhoneNumber`";
+							//query += "	,`Address`";
+							//query += "	,`Email`";
+							//query += "	,`SpecimenDateTime`";
+							//query += "	,`SpecimenCollectedBy`";
+							//query += "	,`RegisteredDateTime`";
+							//query += "	,`RequestingFacilityCode`";
+							//query += "	,`TestingFacilityCode`";
+							//query += "	,`RegisteredBy`";
+							//query += "	,`RequestTypeCode`";
+							//query += "	,`SpecimenCondition`";
+							//query += "	,`InsuranceCardNumber`";
+							//query += "	,`InsuranceAuthorizationNumber`";
+							//query += "	,`InsurancePreliminaryDiagnosisCode`";
+							//query += "	,`InsuranceFinalDiagnosisCode`";
+							query += "FROM `Reception` ";
+							query += "WHERE (`PatientID` like @ID) ";
+							query += "ORDER BY `DateTimeStamp` desc ";
+								
+							var comm = con.createCommand(query);
+							if(comm != null){
+								comm.addParameter("@ID", "String", currentPatient.toString());
+								
+								var reader = comm.executeReader();
+								if(reader != null){
+									var l = 0; 
+									while(reader.read()){
+										var row = JSON.parse(reader.getValues());	
+										if(row != undefined && row != null){
+										
+											if(l == 0){
+												var consultationsFor = row.PatientName+' '+(!isEmpty(row.PatientMiddleName) ? row.PatientMiddleName[0].toUpperCase()+". " : '')+row.PatientLastName;
+					
+												content += '	<div class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold" style="min-height:32px;">';
+												content += '		<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
+												content += '			<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Consultations : '+consultationsFor+'</h4>';
+												content += '		</div>';
+												content += '	</div>';
+												l++;
+											}
+											
+											var consultation = row.RequestID+' : '+row.DateTimeStamp;	
+											content += '	<div data-id="'+row.RequestID+'" class="FlexDisplay FlexRow Divider-Bottom CheckBoxBold ConsultationItem" style="min-height:32px;">';
+											content += '		<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
+											content += '			<h4 class="consultationindex feature-title mt-0" style="width:100%; margin:2px 0px 0px 0px; font-size: 10px; font-weight:normal; text-align:center;">1</h4>';
+											content += '		</div>';
+											content += '		<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
+											content += '			<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+consultation+'</h4>';
+											content += '		</div>';
+											content += '	</div>';
+											
+										}
+									}
+									reader.close();
+									con.close();				
+								}
+								else con.close();
+							}
+							else con.close();
+						}
+					}
 					
 					content += '</div>';
 				content += '</div>';
+				
 			
 			
 			var search_dlg = ShowDialog('<i class="mdi mdi-account-group"></i>', "Search", content,{

@@ -3445,6 +3445,21 @@ select {
 	pointer-events:none;
 }
 
+.Fixed{
+	opacity:0.6;
+	pointer-events:none;
+}
+
+.Fixed .ByPass{
+	opacity:1;
+	pointer-events:auto;
+}
+
+.Locked .ButtonArea {
+	opacity:0.6;
+	pointer-events:none;
+}
+
 /*.form-control:focus-within .select-dropdown .list{
     border: 1px solid #007bff; 
 }
