@@ -111,7 +111,7 @@
 								<div class="FlexDisplay FlexGrow" style="height:100%;"></div>
 								
 								
-								<div onclick="proceedTo(this,0)" class="FlexDisplay btn-clear" tooltip="search" flow="down">
+								<div onclick="loadPatientsList()" class="FlexDisplay btn-clear" tooltip="search" flow="down">
 									<div style="margin:auto auto; width:16px height:16px; padding:0px 16px 0px 8px;">
 										<i class="mdi mdi-account-search" />
 									</div>
@@ -166,7 +166,7 @@
 													<input class="ReferenceNumber" type="text" placeholder="Reference Number"/>
 												</div>
 											</div>
-											<div class="FlexDisplay Flex" style="min-width:130px;">
+											<div class="FlexDisplay Flex ReadOnly" style="min-width:130px;">
 												<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 4px;">
 													<div class="icon">
 														<i class="mdi mdi-badge-account-outline" />
@@ -534,6 +534,11 @@ $('input[type=radio][name=gender_options]').change(function() {
 	
 	$(this).parents(".btn-group-toggle").removeClass('is-invalid');
 });
+
+function loadPatientsList(){
+	searchForPatients(false);
+	proceedTo(this,0);
+}
 
 function loadPatientDetails(item){
 	currentPatient = $(item).parents('.info-card').data('id');
@@ -1093,7 +1098,7 @@ function clear(){
 	$(".InsurancePreliminanaryDiagnosisCode").val('');
 	$(".InsuranceFinalDiagnosisCode").val('');
 	
-	
+	$(".PatientNumber").parent().removeClass("is-invalid");
 	$(".FirstName").parent().removeClass("is-invalid");
 	$(".LastName").parent().removeClass("is-invalid");
 	$(".SpecimenCondition").parent().removeClass("is-invalid");
@@ -1308,8 +1313,7 @@ function fetchData(id){
 	}
 }
 
-$("#patient_search_button").unbind( "click" );
-$("#patient_search_button").click(function(){
+function searchForPatients(refreshAfter){
 	var patient_search_text = $("#patient_search_text").val();
 	var patients = [];
 	
@@ -1365,7 +1369,15 @@ $("#patient_search_button").click(function(){
 					},[]);
 	pagerList.sort();
 	
-	$('#patientsPagingBox').find('.Selected').removeClass('Selected');
+	if(!refreshAfter){
+		var _id = $('#patientsPagingBox').find('.Selected').attr('id').replace('Patient_Page_','');
+	
+		if(!isEmpty(_id)){
+			populatePatientData(_id);
+		}
+		else $('#patientsPagingBox').find('.Selected').removeClass('Selected');
+	}
+	else $('#patientsPagingBox').find('.Selected').removeClass('Selected');
 	
 	if(pagerList.includes('0_9')){
 		 $('#Patient_Page_0_9').removeClass('Disabled');
@@ -1383,10 +1395,16 @@ $("#patient_search_button").click(function(){
 		}
 	}
 	
-	var fisrtID = pagerList.shift();
-	$('#Patient_Page_'+fisrtID).addClass('Selected');
-	populatePatientData(fisrtID);
-	
+	if(refreshAfter){
+		var fisrtID = pagerList.shift();
+		$('#Patient_Page_'+fisrtID).addClass('Selected');
+		populatePatientData(fisrtID);
+	}
+}
+
+$("#patient_search_button").unbind( "click" );
+$("#patient_search_button").click(function(){
+	searchForPatients(true);
 });
 
 $("#register_new_button").unbind( "click" );
@@ -1768,7 +1786,8 @@ $(".save").click(function(){
 	$(".clear").attr('id', '');
 	
 	var ReferenceNumber = $(".ReferenceNumber").val();
-	var PatientNumber = $(".PatientNumber").val();
+	
+	
 	var NationalID = $(".NationalID").val();
 	var FirstName = $(".FirstName").val();
 	var MiddleName = $(".MiddleName").val();
@@ -1801,114 +1820,151 @@ $(".save").click(function(){
 	   (SpecimenPriority != undefined && SpecimenPriority != null && SpecimenPriority != "Choose...") &&
 	   (DateOfBirth != undefined && DateOfBirth != null && DateOfBirth.trim().length > 0)
 	   ){
-			var dt = new Date();
-			var dateTimeStamp = `${dt.getFullYear().toString().padStart(4, '0')}-${(dt.getMonth()+1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')}`;
-			dateTimeStamp += ` ${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}:${dt.getSeconds().toString().padStart(2, '0')}`;
-			var requestID = getRequestID();
-			var registeredBy = 'Sys';
-				
-				
-			var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
-			if(con != null){
-				con.open();
-				
-				var query = "INSERT INTO `Reception`(";
-					query += "	`DateTimeStamp`";
-					query += "	,`Versionstamp`";
-					query += "	,`RequestID`";
-					if(!isEmpty(ReferenceNumber))query += "	,`ReferringRequestID`";
-					if(!isEmpty(NationalID))query += "	,`NationalID`";
-					if(!isEmpty(PatientNumber))query += "	,`PatientID`";
-					query += "	,`PatientName`";
-					if(!isEmpty(MiddleName))query += "	,`PatientMiddleName`";
-					query += "	,`PatientLastName`";
-					query += "	,`PatientAge`";
-					query += "	,`HL7SexCode`";
-					if(!isEmpty(PhoneNumber))query += "	,`PhoneNumber`";
-					if(!isEmpty(Address))query += "	,`Address`";
-					if(!isEmpty(EmailAddress))query += "	,`Email`";
-					if(!isEmpty(SpecimenCollectedDate))query += "	,`SpecimenDateTime`";
-					if(!isEmpty(SpecimenCollectedBy))query += "	,`SpecimenCollectedBy`";
-					query += "	,`RegisteredDateTime`";
-					query += "	,`RequestingFacilityCode`";
-					query += "	,`TestingFacilityCode`";
-					query += "	,`RegisteredBy`";
-					query += "	,`RequestTypeCode`";
-					query += "	,`SpecimenCondition`";
-					if(!isEmpty(InsuranceCardNumber))query += "	,`InsuranceCardNumber`";
-					if(!isEmpty(InsuranceAuthorizationNumber))query += "	,`InsuranceAuthorizationNumber`";
-					if(!isEmpty(InsurancePreliminanaryDiagnosisCode))query += "	,`InsurancePreliminaryDiagnosisCode`";
-					if(!isEmpty(InsuranceFinalDiagnosisCode))query += "	,`InsuranceFinalDiagnosisCode`";
-					query += ") VALUES (";
-					query += "	@DateTimeStamp";
-					query += "	,@Versionstamp";
-					query += "	,@RequestID";
-					if(!isEmpty(ReferenceNumber))query += "	,@ReferringRequestID";
-					if(!isEmpty(NationalID))query += "	,@NationalID";
-					if(!isEmpty(PatientNumber))query += "	,@PatientID";
-					query += "	,@PatientName";
-					if(!isEmpty(MiddleName))query += "	,@PatientMiddleName";
-					query += "	,@PatientLastName";
-					query += "	,@PatientAge";
-					query += "	,@HL7SexCode";
-					if(!isEmpty(PhoneNumber))query += "	,@PhoneNumber";
-					if(!isEmpty(Address))query += "	,@Address";
-					if(!isEmpty(EmailAddress))query += "	,@Email";
-					if(!isEmpty(SpecimenCollectedDate))query += "	,@SpecimenDateTime";
-					if(!isEmpty(SpecimenCollectedBy))query += "	,@SpecimenCollectedBy";
-					query += "	,@RegisteredDateTime";
-					query += "	,@RequestingFacilityCode";
-					query += "	,@TestingFacilityCode";
-					query += "	,@RegisteredBy";
-					query += "	,@RequestTypeCode";
-					query += "	,@SpecimenCondition";
-					if(!isEmpty(InsuranceCardNumber))query += "	,@InsuranceCardNumber";
-					if(!isEmpty(InsuranceAuthorizationNumber))query += "	,@InsuranceAuthorizationNumber";
-					if(!isEmpty(InsurancePreliminanaryDiagnosisCode))query += "	,@InsurancePreliminaryDiagnosisCode";
-					if(!isEmpty(InsuranceFinalDiagnosisCode))query += "	,@InsuranceFinalDiagnosisCode";
-					query += ")";
+			var PatientNumber = $(".PatientNumber").val();
+			if(currentPatient == null){
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+				if(con != null){
+					con.open();
+
+					var query   = 'SELECT IFNULL(( ';
+						query  += '  SELECT ';
+						query  += '  	substr(PatientID,0,7) || substr(\'0000\'||(CAST(REPLACE(PatientID,substr(strftime(\'%Y%m%d\',\'now\'),-6),\'\') as INTEGER)+1), -4, 4) ';
+						query  += '  FROM Reception ';
+						query  += '  WHERE substr(PatientID,0,7) = substr(strftime(\'%Y%m%d\',\'now\'),-6) ';
+						query  += '  ORDER BY DateTimeStamp DESC ';
+						query  += '  LIMIT 1 ';
+						query  += '), substr(strftime(\'%Y%m%d\',\'now\'),-6) || \'0001\')  as PatientID ';
 					
-				var comm = con.createCommand(query);
-				if(comm != null){
-					comm.addParameter("@DateTimeStamp", "String", dateTimeStamp);
-					comm.addParameter("@Versionstamp", "String", getVersion().toString());
-					comm.addParameter("@RequestID", "String", requestID);
-					if(!isEmpty(ReferenceNumber))comm.addParameter("@ReferringRequestID", "String", ReferenceNumber);
-					if(!isEmpty(NationalID))comm.addParameter("@NationalID", "String", NationalID);
-					if(!isEmpty(PatientNumber))comm.addParameter("@PatientID", "String", PatientNumber);
-					comm.addParameter("@PatientName", "String", FirstName);
-					if(!isEmpty(MiddleName))comm.addParameter("@PatientMiddleName", "String", MiddleName);
-					comm.addParameter("@PatientLastName", "String", LastName);
-					comm.addParameter("@PatientAge", "String", DateOfBirth);
-					comm.addParameter("@HL7SexCode", "String", Gender);
-					if(!isEmpty(PhoneNumber))comm.addParameter("@PhoneNumber", "String", PhoneNumber);
-					if(!isEmpty(Address))comm.addParameter("@Address", "String", Address);
-					if(!isEmpty(EmailAddress))comm.addParameter("@Email", "String", EmailAddress);
-					if(!isEmpty(SpecimenCollectedDate))comm.addParameter("@SpecimenDateTime", "String", SpecimenCollectedDate);
-					if(!isEmpty(SpecimenCollectedBy))comm.addParameter("@SpecimenCollectedBy", "String", SpecimenCollectedBy);
-					comm.addParameter("@RegisteredDateTime", "String", dateTimeStamp);
-					comm.addParameter("@RequestingFacilityCode", "String", (referenceFacility != undefined && referenceFacility != null ? referenceFacility.FacilityNumber : currentFacility.FacilityNumber));
-					comm.addParameter("@TestingFacilityCode", "String", currentFacility.FacilityNumber);
-					comm.addParameter("@RegisteredBy", "String", registeredBy);
-					comm.addParameter("@RequestTypeCode", "String", SpecimenPriority);
-					comm.addParameter("@SpecimenCondition", "String", SpecimenCondition);
-					if(!isEmpty(InsuranceCardNumber))comm.addParameter("@InsuranceCardNumber", "String", InsuranceCardNumber);
-					if(!isEmpty(InsuranceAuthorizationNumber))comm.addParameter("@InsuranceAuthorizationNumber", "String", InsuranceAuthorizationNumber);
-					if(!isEmpty(InsurancePreliminanaryDiagnosisCode))comm.addParameter("@InsurancePreliminaryDiagnosisCode", "String", InsurancePreliminanaryDiagnosisCode);
-					if(!isEmpty(InsuranceFinalDiagnosisCode))comm.addParameter("@InsuranceFinalDiagnosisCode", "String", InsuranceFinalDiagnosisCode);
-				
-					comm.executeNonQuery();
+					var comm = con.createCommand(query);
+					if(comm != null){
+						var reader = comm.executeReader();
+						if(reader != null){
+							if(reader.read()){
+								var row = JSON.parse(reader.getValues());	
+								if(row != undefined && row != null)PatientNumber = row.PatientID;
+							}
+							reader.close();
+							con.close();				
+						}
+						else con.close();
+					}
+					else con.close();
 				}
-				
-				con.close();
 			}
 			
-			
-			
-			
+			if(PatientNumber != undefined && PatientNumber != null){
+				var dt = new Date();
+				var dateTimeStamp = `${dt.getFullYear().toString().padStart(4, '0')}-${(dt.getMonth()+1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')}`;
+				dateTimeStamp += ` ${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}:${dt.getSeconds().toString().padStart(2, '0')}`;
+				var requestID = getRequestID();
+				var registeredBy = 'Sys';
+				
+				$(".PatientNumber").val(PatientNumber);
+					
+					
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+				if(con != null){
+					con.open();
+					
+					var query = "INSERT INTO `Reception`(";
+						query += "	`DateTimeStamp`";
+						query += "	,`Versionstamp`";
+						query += "	,`RequestID`";
+						if(!isEmpty(ReferenceNumber))query += "	,`ReferringRequestID`";
+						if(!isEmpty(NationalID))query += "	,`NationalID`";
+						if(!isEmpty(PatientNumber))query += "	,`PatientID`";
+						query += "	,`PatientName`";
+						if(!isEmpty(MiddleName))query += "	,`PatientMiddleName`";
+						query += "	,`PatientLastName`";
+						query += "	,`PatientAge`";
+						query += "	,`HL7SexCode`";
+						if(!isEmpty(PhoneNumber))query += "	,`PhoneNumber`";
+						if(!isEmpty(Address))query += "	,`Address`";
+						if(!isEmpty(EmailAddress))query += "	,`Email`";
+						if(!isEmpty(SpecimenCollectedDate))query += "	,`SpecimenDateTime`";
+						if(!isEmpty(SpecimenCollectedBy))query += "	,`SpecimenCollectedBy`";
+						query += "	,`RegisteredDateTime`";
+						query += "	,`RequestingFacilityCode`";
+						query += "	,`TestingFacilityCode`";
+						query += "	,`RegisteredBy`";
+						query += "	,`RequestTypeCode`";
+						query += "	,`SpecimenCondition`";
+						if(!isEmpty(InsuranceCardNumber))query += "	,`InsuranceCardNumber`";
+						if(!isEmpty(InsuranceAuthorizationNumber))query += "	,`InsuranceAuthorizationNumber`";
+						if(!isEmpty(InsurancePreliminanaryDiagnosisCode))query += "	,`InsurancePreliminaryDiagnosisCode`";
+						if(!isEmpty(InsuranceFinalDiagnosisCode))query += "	,`InsuranceFinalDiagnosisCode`";
+						query += ") VALUES (";
+						query += "	@DateTimeStamp";
+						query += "	,@Versionstamp";
+						query += "	,@RequestID";
+						if(!isEmpty(ReferenceNumber))query += "	,@ReferringRequestID";
+						if(!isEmpty(NationalID))query += "	,@NationalID";
+						if(!isEmpty(PatientNumber))query += "	,@PatientID";
+						query += "	,@PatientName";
+						if(!isEmpty(MiddleName))query += "	,@PatientMiddleName";
+						query += "	,@PatientLastName";
+						query += "	,@PatientAge";
+						query += "	,@HL7SexCode";
+						if(!isEmpty(PhoneNumber))query += "	,@PhoneNumber";
+						if(!isEmpty(Address))query += "	,@Address";
+						if(!isEmpty(EmailAddress))query += "	,@Email";
+						if(!isEmpty(SpecimenCollectedDate))query += "	,@SpecimenDateTime";
+						if(!isEmpty(SpecimenCollectedBy))query += "	,@SpecimenCollectedBy";
+						query += "	,@RegisteredDateTime";
+						query += "	,@RequestingFacilityCode";
+						query += "	,@TestingFacilityCode";
+						query += "	,@RegisteredBy";
+						query += "	,@RequestTypeCode";
+						query += "	,@SpecimenCondition";
+						if(!isEmpty(InsuranceCardNumber))query += "	,@InsuranceCardNumber";
+						if(!isEmpty(InsuranceAuthorizationNumber))query += "	,@InsuranceAuthorizationNumber";
+						if(!isEmpty(InsurancePreliminanaryDiagnosisCode))query += "	,@InsurancePreliminaryDiagnosisCode";
+						if(!isEmpty(InsuranceFinalDiagnosisCode))query += "	,@InsuranceFinalDiagnosisCode";
+						query += ")";
+						
+					var comm = con.createCommand(query);
+					if(comm != null){
+						comm.addParameter("@DateTimeStamp", "String", dateTimeStamp);
+						comm.addParameter("@Versionstamp", "String", getVersion().toString());
+						comm.addParameter("@RequestID", "String", requestID);
+						if(!isEmpty(ReferenceNumber))comm.addParameter("@ReferringRequestID", "String", ReferenceNumber);
+						if(!isEmpty(NationalID))comm.addParameter("@NationalID", "String", NationalID);
+						if(!isEmpty(PatientNumber))comm.addParameter("@PatientID", "String", PatientNumber);
+						comm.addParameter("@PatientName", "String", FirstName);
+						if(!isEmpty(MiddleName))comm.addParameter("@PatientMiddleName", "String", MiddleName);
+						comm.addParameter("@PatientLastName", "String", LastName);
+						comm.addParameter("@PatientAge", "String", DateOfBirth);
+						comm.addParameter("@HL7SexCode", "String", Gender);
+						if(!isEmpty(PhoneNumber))comm.addParameter("@PhoneNumber", "String", PhoneNumber);
+						if(!isEmpty(Address))comm.addParameter("@Address", "String", Address);
+						if(!isEmpty(EmailAddress))comm.addParameter("@Email", "String", EmailAddress);
+						if(!isEmpty(SpecimenCollectedDate))comm.addParameter("@SpecimenDateTime", "String", SpecimenCollectedDate);
+						if(!isEmpty(SpecimenCollectedBy))comm.addParameter("@SpecimenCollectedBy", "String", SpecimenCollectedBy);
+						comm.addParameter("@RegisteredDateTime", "String", dateTimeStamp);
+						comm.addParameter("@RequestingFacilityCode", "String", (referenceFacility != undefined && referenceFacility != null ? referenceFacility.FacilityNumber : currentFacility.FacilityNumber));
+						comm.addParameter("@TestingFacilityCode", "String", currentFacility.FacilityNumber);
+						comm.addParameter("@RegisteredBy", "String", registeredBy);
+						comm.addParameter("@RequestTypeCode", "String", SpecimenPriority);
+						comm.addParameter("@SpecimenCondition", "String", SpecimenCondition);
+						if(!isEmpty(InsuranceCardNumber))comm.addParameter("@InsuranceCardNumber", "String", InsuranceCardNumber);
+						if(!isEmpty(InsuranceAuthorizationNumber))comm.addParameter("@InsuranceAuthorizationNumber", "String", InsuranceAuthorizationNumber);
+						if(!isEmpty(InsurancePreliminanaryDiagnosisCode))comm.addParameter("@InsurancePreliminaryDiagnosisCode", "String", InsurancePreliminanaryDiagnosisCode);
+						if(!isEmpty(InsuranceFinalDiagnosisCode))comm.addParameter("@InsuranceFinalDiagnosisCode", "String", InsuranceFinalDiagnosisCode);
+					
+						comm.executeNonQuery();
+					}
+					
+					con.close();
+				}
+			}
+			else {
+				if(PatientNumber != undefined && PatientNumber != null && PatientNumber.trim().length == 0){
+					$(".PatientNumber").parent().addClass("is-invalid");
+					$('.PatientNumber').focus(function(){ $(this).parent().removeClass("is-invalid"); });
+				}
+			}
 	}
 	else{
-	
 		if(FirstName != undefined && FirstName != null && FirstName.trim().length == 0){
 			$(".FirstName").parent().addClass("is-invalid");
 			$('.FirstName').focus(function(){ $(this).parent().removeClass("is-invalid"); });

@@ -3450,6 +3450,10 @@ select {
 	pointer-events:none;
 }
 
+.ReadOnly{
+	pointer-events:none;
+}
+
 .Fixed .ByPass{
 	opacity:1;
 	pointer-events:auto;
