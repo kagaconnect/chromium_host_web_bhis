@@ -33,13 +33,16 @@
 		</div>
 	</div>
 	<div class="FlexDisplay Flex ContentPage  inner-section FadeIn"  style="width:100%; height:1px;">		
-		<div class="FlexDisplay FlexColumn FlexGrow FlexBoxSizing-BorderBox" style="height:100%; overflow: hidden; position:relative;">
+		<div class="FlexDisplay FlexColumn FlexGrow FlexBoxSizing-BorderBox" style="height:100%; position:relative;">
 			<div class="FlexDisplay" style="margin:16px 16px 0px 16px; height:218px;">
 				<div class="page-container FlexDisplay Flex FlexRow Overflow-Hidden inner-container Round Shadow" style="position:relative; height:calc(100% - 0px);  width:100%;">
 					<div class="FlexDisplay FlexColumn Divider-Right" style="height:calc(100% - 0px); max-width:412px;min-width:412px;">
 						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
 							<div class="FlexDisplay Flex">
 								<h4 class="feature-title mt-0" style="margin:8px 0px 0px 12px; font-size: 12px; font-weight:normal; line-height:16px;">CONSULTATION</h4>
+							</div>
+							<div class="FlexDisplay btn-clear Divider-Left" onclick="filterConsultation(this,event)">
+								<div style="margin:auto auto; width:16px height:16px; padding:0px 12px; font-size: 14px;"><i class="mdi mdi-calendar-search" /></div>
 							</div>
 						</div>
 						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;  height:calc(100% - 12px); z-index:2;">
@@ -182,7 +185,7 @@
 					</div>			
 				</div>
 			</div>
-			<div class="FlexDisplay Flex FlexGrow" style="margin:16px 16px 16px 16px; height:calc(100% - 256px);"> <!-- height:calc(50% - 0px);-->
+			<div class="FlexDisplay Flex FlexGrow" style="margin:16px 16px 16px 16px; height:calc(100% - 256px);"> <!-- height:calc(50% - 0px); overflow: hidden; -->
 				<div class="page-container FlexDisplay Flex FlexRow inner-container Round Shadow" style="position:relative; height:calc(100% - 0px);  width:100%;">
 					<div class="FlexDisplay FlexColumn Divider-Right" style="height:calc(100% - 0px); width:200px;">
 						<div class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; max-height:32px;" >
@@ -204,9 +207,9 @@
 							<div tooltip="add test" flow="left" id="addTests" class="FlexHidden btn-clear">
 								<div style="margin:auto auto; width:14px height:14px; padding:0px 14px; font-size:14px;"><i class="mdi mdi-flask-plus-outline" /></div>
 							</div>
-						</div>
+						</div> <!--overflow-y:auto;  overflow-x: hidden !important; -->
 						<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox Divider-Bottom" style="width:100%;  min-height:calc(50% - 32px); max-height:calc(50% - 32px); z-index:2;">
-							<div class="TestsList FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="overflow-y:auto;  overflow-x: hidden !important;">
+							<div class="TestsList FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2" style="">
 								
 							</div>
 						</div>
@@ -325,6 +328,10 @@ $('#backBtn').click(function(){
 	loadSubPage(System.IO.Path.Combine(System.Environment.get_CurrentDirectory(),page), true);
 });
 
+function filterConsultation(item,event){
+
+}
+
 function removePendingConsultation(item,event){
 	event.stopPropagation();
 	
@@ -440,7 +447,8 @@ function selectHistoryList(el, item){
 			}
 			
 			var query  = "SELECT ";
-				query += " `OBRSetID` ";
+				query += " `ID` ";
+				query += " ,`OBRSetID` ";
 				query += " ,`LIMSPanelCode` ";
 				query += " ,`LIMSPanelDesc` ";
 				query += " ,`WorkUnits` ";
@@ -465,6 +473,7 @@ function selectHistoryList(el, item){
 						var row = JSON.parse(reader.getValues());	
 						if(row != undefined && row != null){
 							addTest(false, {
+								PK:row.ID,
 								ID:row.OBRSetID,
 								Name:row.LIMSPanelCode,
 								Description:row.LIMSPanelDesc,
@@ -585,8 +594,8 @@ function addTest(canDelete, item){
 	if(index.length == 0)index = 1;
 	else index = parseInt($('.testindex').last().text())+1;
 	
-	var tp = parseFloat(item.CostToPatient).toFixed(2);
 	var isRejected = item.hasOwnProperty('RejectionCode') && !isEmpty(item.RejectionCode);
+	/*var tp = parseFloat(item.CostToPatient).toFixed(2);
 	if(isRejected){
 		var sentences = splitWords(item.RejectionDescription.split(' '), "", [], 20);		
 		tp = item.RejectionCode+'&#13;&#10;';
@@ -594,12 +603,12 @@ function addTest(canDelete, item){
 		tp += sentences.join('&#13;&#10;')+'&#13;&#10;';
 		tp += '--------------------------&#13;&#10;';
 		tp += item.RejectedBy;
-	}
+	}*/
 	 
 	var test  = '<div data-rejectioncode="'+item.RejectionCode+'" data-rejectiondescription="'+item.RejectionDescription+'" data-rejectedby="'+item.RejectedBy+'" data-id="'+item.ID+'" data-name="'+item.Name+'" data-description="'+item.Description+'" data-labsection="'+item.LabSection+'" data-price="'+parseFloat(item.CostToPatient).toFixed(2)+'" class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; ">';
-		test += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
-		test += '		<div tooltip="'+tp+'" flow="right" '+(isRejected ? 'wrap="pre" resize="128" recolor="red"' : '')+' class="FlexDisplay" style="width:100%; height:100%; padding:2px 0px 0px 2px;;"><span style="text-align:center; display:inline-block; width:100%; '+(isRejected ? 'color:#c4183c;' : '')+'"><i class="mdi mdi-information"></i></span></div>';
-		test += '	</div>';
+		test += '	<div class="FlexDisplay FlexRow Divider-Right TestButton" style="min-height:32px; min-width:40px; max-width:40px; cursor:pointer;">';
+		test += '		<div  class="FlexDisplay" style="width:100%; height:100%; padding:2px 0px 0px 2px;;"><span style="text-align:center; display:inline-block; width:100%; '+(isRejected ? 'color:#c4183c;' : '')+'"><i class="mdi mdi-information"></i></span></div>';
+		test += '	</div>'; //tooltip="'+tp+'" flow="right" '+(isRejected ? 'wrap="pre" resize="128" recolor="red"' : '')+'
 		test += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
 		test += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+item.Name+' - '+item.LabSection+'</h4>';
 		test += '	</div>';
@@ -610,7 +619,490 @@ function addTest(canDelete, item){
 		}
 		test += '</div>';
 	
-	$('.TestsList').append(test);
+	var t = $(test);
+	$('.TestsList').append(t);
+	
+	
+	t.find('.TestButton').unbind( "click" );
+	t.find('.TestButton').click(function(){
+		var pk = item.PK;
+		var testID = item.ID;
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+		if(con != null){
+			con.open();
+			
+			var query   = "SELECT ";
+				query  += "`ID` ";
+				query  += ",`ParentID` ";
+				query  += ",`Type` ";
+				query  += ",`Name` ";
+				query  += ",IFNULL(`UnitDefault`,'') as `UnitDefault` ";
+				query  += "FROM `measurements` "; 
+				query  += "WHERE `TestID` = @TestID ";
+			
+			var comm = con.createCommand(query);
+			if(comm != null){
+				comm.addParameter("@TestID", "Int32", testID);
+				var reader = comm.executeReader();
+				if(reader != null){
+					var messurements = [];
+					
+					while(reader.read()){
+						var row = JSON.parse(reader.getValues());	
+						if(row != undefined && row != null){
+							row.Information = [];
+							row.SubMessurements = [];
+							//row.Index = pk;
+							messurements.push(row);
+						}
+					}
+					reader.close();
+					
+					var query   = "SELECT ";
+						query  += "`Index` ";
+						query  += ",`TestID` ";
+						query  += ",`MeasurementID` ";
+						query  += ",`Setting` ";
+						query  += ",IFNULL(`Value`,'') as `Value` ";
+						query  += "FROM `measurement_options` "; 
+						query  += "WHERE `TestID` = @TestID ";
+						query  += "ORDER BY `Index`";
+						
+					var comm = con.createCommand(query);
+					if(comm != null){
+						comm.addParameter("@TestID", "Int32", testID);
+						var reader = comm.executeReader();
+						if(reader != null){
+							
+							while(reader.read()){
+								var row = JSON.parse(reader.getValues());	
+								if(row != undefined && row != null){
+									var messurement = messurements.filter(function(v){ return v.ID == row.MeasurementID; }).shift();
+									if(messurement != undefined && messurement != null)messurement.Information.push(row);
+								}
+							}
+							reader.close();
+						}
+					}
+					
+					messurements.forEach(function(messurement){
+						messurement.Information = messurement.Information.reduce(function(obj, { Index, Setting, Value }, index) {
+							if(obj[Index-1] == undefined || obj[Index-1] == null)obj[Index-1]=[];									
+							obj[Index-1].push({Setting, Value });
+							return obj;
+						}, []);
+						
+						if(messurement.Type == "Autocomplete"){
+							if(messurement.Information.length > 0){
+								messurement.Information = messurement.Information.shift();
+							}
+						}
+						else{
+							messurement.Information = messurement.Information.map(function(info) {
+								return info.reduce(function(obj, { Setting, Value }, index) {
+									obj[Setting] = Value;
+									return obj;
+								}, {});
+							});
+						}
+					});
+					
+					
+					var subs = messurements.filter(function(v){ return v.ParentID != undefined && v.ParentID != null; });
+					messurements = messurements.filter(function(v){ return v.ParentID == undefined || v.ParentID == null; });
+
+					subs.forEach(function(sub){
+						var messurement = messurements.filter(function(v){ return v.ID == sub.ParentID; }).shift();
+						if(messurement != undefined && messurement != null){
+							messurement.SubMessurements.push(sub);
+						}
+					});					
+					con.close();
+					
+					var requestID = $(".ConsultationPendingList .CheckBoxBold.Checked").data('id');	
+					var Results = [];
+					
+					var _con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+					if(_con != null){
+						_con.open();
+						
+						var query = "SELECT ";
+							query += "	`ID`";
+							query += "	,`DateTimeStamp`";
+							query += "	,`Versionstamp`";
+							query += "	,`RequestID`";
+							query += "	,`OBRSetID`";
+							query += "	,`OBXSetID`";
+							query += "	,`OBXSubID`";
+							query += "	,`LIMSObservationCode`";
+							query += "	,`LIMSObservationDesc`";
+							query += "	,`LIMSRptResult`";
+							query += "	,`LIMSRptUnits`";
+							query += "	,`AnalysisDateTime`";
+							query += "	,`TestedBy` ";
+							query += "FROM `Result` ";
+							query += "WHERE `RequestID` = @RequestID ";
+							query += "AND `OBRSetID` = @OBRSetID ";
+							query += "AND `OBXSubID` = @OBXSubID ";
+						var _comm = _con.createCommand(query);
+						if(_comm != null){
+							_comm.addParameter("@RequestID", "String", requestID);
+							_comm.addParameter("@OBRSetID", "Int32", testID);
+							_comm.addParameter("@OBXSubID", "Int32", pk);
+							var _reader = _comm.executeReader();
+							if(_reader != null){
+								while(_reader.read()){
+									var row = JSON.parse(_reader.getValues());	
+									if(row != undefined && row != null){
+										Results.push(row);
+									}
+								}
+								_reader.close();
+							}
+						}						
+						_con.close();
+					}
+					
+					//if(messurements.length > 0){
+						var content = '';
+							content += '<div class="bar-container" style="margin:0px;">';
+							content += '	<div class="bar-progress"></div>';
+							content += '</div>';
+							
+							content += '<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox" style="width:100%;">';	
+							content += '	<div class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox scroll scroll2 TestList" style="overflow-y:auto; max-height:256px;">';	
+							content += '	</div>';	
+							content += '</div>';
+
+
+						var test_dlg = ShowDialog('<i class="mdi mdi-flask-outline"></i>', "Test", content,{
+							onCloseDialog : function() {
+								test_dlg = null;
+								return false; 
+							}
+						},"720px","720px");
+						
+						var testList = $(test_dlg.el).find('.TestList');
+						
+						var test  = '<div data-rejectioncode="'+item.RejectionCode+'" data-rejectiondescription="'+item.RejectionDescription+'" data-rejectedby="'+item.RejectedBy+'" data-id="'+item.ID+'" data-name="'+item.Name+'" data-requestid="'+item.RequestID+'" data-consultationdatetime="'+item.ConsultationDateTime+'" class="FlexDisplay FlexColumn FlexBoxSizing-BorderBox TestingItem '+(!isEmpty(item.RejectionCode) ? 'Rejected' : '')+'" style="width:100%; margin:0px 0px 0px 0px;">';
+							test += '	<div class="FlexDisplay FlexRow Title" style="min-height:32px;max-height:32px;margin:0px 0px 0px 0px;" >';
+							test += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+							test += '			<h4 class="feature-title mt-0" style="margin:8px 0px 8px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+item.Name+'</h4>';
+							test += '		</div>';
+							test += '		<div tooltip="'+(!isEmpty(item.RejectionCode) ? item.RejectionCode +' - '+item.RejectionDescription : 'Costs: TSH'+parseFloat(item.CostToPatient).toFixed(2))+'" flow="left" class="FlexDisplay btn-clear">';
+							test += '			<div style="margin:auto auto; width:14px height:14px; padding:0px 14px; font-size:14px;"><i class="mdi mdi-information" /></div>';
+							test += '		</div>';
+							test += '	</div>';
+							test += '</div>';	
+						
+						var testEl = $(test);
+						
+						
+						
+						
+						var ts = Results.filter(function(v){ return v.RequestID == requestID && v.OBRSetID == testID && v.OBXSubID == pk; });
+						
+						messurements.forEach(function(messurement, index){
+								if(messurement.Type == "Alphanumeric Values"){
+									var value = null;
+									var t = ts.filter(function(v){ return v.LIMSObservationDesc == messurement.Name; }).shift();
+									if(t != undefined && t != null && !isEmpty(t.LIMSRptResult)){
+										value=t.LIMSRptResult;
+									}
+									
+									var paramters  = '	<div class="Locked FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+										paramters += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
+										paramters += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
+										paramters += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+messurement.Name+'</h4>';
+										paramters += '			</div>';
+										paramters += '		</div>';
+										paramters += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+										paramters += '			<div class="FlexDisplay Flex FlexRow form-control">';
+										paramters += '				<div class="icon" tooltip="'+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
+										paramters += '					<i class="mdi '+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? "mdi-information" : "mdi-progress-alert" )+'" />';
+										paramters += '				</div>';
+										paramters += '				<select class="ResultDropDown">';
+										paramters += '					<option '+(value == null ? 'selected=""' : '')+'>Choose...</option>';
+										messurement.Information.forEach(function(information){
+											paramters += '<option '+(value != null && value == information.From ? 'selected=""' : '')+'>'+information.From+'</option>';
+											if(information.To != undefined && information.To != null)
+												paramters += '<option '+(value != null && value == information.To ? 'selected=""' : '')+'>'+information.To+'</option>';
+										});
+										paramters += '				</select>';
+										paramters += '			</div>';
+										paramters += '		</div>';
+										paramters += '	</div>';
+									
+									var paramtersEl = $(paramters);
+									testEl.append(paramtersEl);
+									
+									paramtersEl.find(".ResultDropDown").unbind( "change" );
+									paramtersEl.find(".ResultDropDown").on('change', function (e) {
+										//var optionSelected = $("option:selected", this);
+										if(isEmpty(item.RejectionCode)){
+											updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptResult', this.value);
+											updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptUnits', messurement.UnitDefault);
+											
+											updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
+											updateResult(pk, testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
+										}
+									});
+								}
+								else if(messurement.Type == "Numeric Range"){
+									var information = messurement.Information.filter(function(i){ return i.Gender.toLowerCase() == "male"; }).shift();
+									if(information != undefined && information != null){
+										var value = null;
+										var t = ts.filter(function(v){ return v.LIMSObservationDesc == messurement.Name; }).shift();
+										if(t != undefined && t != null && !isEmpty(t.LIMSRptResult)){
+											value=t.LIMSRptResult;
+										}
+										
+										var paramters  = '	<div class="Locked FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+											paramters += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
+											paramters += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
+											paramters += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+item.Name+'</h4>';
+											paramters += '			</div>';
+											paramters += '		</div>';
+											paramters += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+											paramters += '			<div class="FlexDisplay Flex FlexRow form-control">';
+											paramters += '				<div class="icon" tooltip="('+information.From+'-'+information.To+')'+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
+											paramters += '					<i class="mdi mdi-information" />';
+											paramters += '				</div>';
+											paramters += '				<input value="'+(value != null ? value : '')+'" class="ResultInput" type="text" placeholder="'+messurement.Name+'"/>';
+											paramters += '			</div>';
+											paramters += '		</div>';
+											paramters += '	</div>';
+										
+										var paramtersEl = $(paramters);
+										testEl.append(paramtersEl);
+										
+										paramtersEl.find(".ResultInput").unbind( "change" );
+										paramtersEl.find(".ResultInput").on('change', function (e) {
+											if(isEmpty(item.RejectionCode)){
+												updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptResult', this.value);
+												updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptUnits', messurement.UnitDefault);
+												
+												updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
+												updateResult(pk, testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
+											}
+										});
+									}
+								}
+								else if(messurement.Type == "Autocomplete"){
+									var value = null;
+									var t = ts.filter(function(v){ return v.LIMSObservationDesc == messurement.Name; }).shift();
+									if(t != undefined && t != null && !isEmpty(t.LIMSRptResult)){
+										value=t.LIMSRptResult;
+									}
+									
+									var paramters  = '	<div class="Locked FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+										paramters += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
+										paramters += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
+										paramters += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+messurement.Name+'</h4>';
+										paramters += '			</div>';
+										paramters += '		</div>';
+										paramters += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+										paramters += '			<div class="FlexDisplay Flex FlexRow form-control">';
+										paramters += '				<div class="icon" tooltip="'+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
+										paramters += '					<i class="mdi '+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? "mdi-information" : "mdi-progress-alert" )+'" />';
+										paramters += '				</div>';
+										paramters += '				<select class="ResultDropDown">';
+										paramters += '					<option '+(value == null ? 'selected=""' : '')+'>Choose...</option>';
+										messurement.Information.forEach(function(information){
+											paramters += '<option '+(value != null && value == information.Value ? 'selected=""' : '')+'>'+information.Value+'</option>';
+										});
+										paramters += '				</select>';
+										paramters += '			</div>';
+										paramters += '		</div>';
+										paramters += '	</div>';
+										
+									var paramtersEl = $(paramters);
+									testEl.append(paramtersEl);
+									
+									paramtersEl.find(".ResultDropDown").unbind( "change" );
+									paramtersEl.find(".ResultDropDown").on('change', function (e) {
+										if(isEmpty(item.RejectionCode)){
+											updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptResult', this.value);
+											updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptUnits', messurement.UnitDefault);
+											
+											updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
+											updateResult(pk, testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
+										}
+									});
+								}
+								else if(messurement.Type == "Free Text"){
+									var information = messurement.Information.filter(function(i){ return i.Gender.toLowerCase() == "male"; }).shift();
+									if(information != undefined && information != null){
+										var value = null;
+										var t = ts.filter(function(v){ return v.LIMSObservationDesc == messurement.Name; }).shift();
+										if(t != undefined && t != null && !isEmpty(t.LIMSRptResult)){
+											value=t.LIMSRptResult;
+										}
+										
+										var paramters  = '	<div class="Locked FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+											paramters += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
+											paramters += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
+											paramters += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">'+item.Name+'</h4>';
+											paramters += '			</div>';
+											paramters += '		</div>';
+											paramters += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+											paramters += '			<div class="FlexDisplay Flex FlexRow form-control">';
+											paramters += '				<div class="icon" tooltip="('+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? " "+messurement.UnitDefault.trim() : "" )+'" flow="left">';
+											paramters += '					<i class="mdi '+(messurement.UnitDefault != undefined && messurement.UnitDefault != null && messurement.UnitDefault.trim() != "" ? "mdi-information" : "mdi-progress-alert" )+'" />';
+											paramters += '				</div>';
+											paramters += '				<input value="'+(value != null ? value : '')+'" class="ResultInput" type="text" placeholder="'+messurement.Name+'"/>';
+											paramters += '			</div>';
+											paramters += '		</div>';
+											paramters += '	</div>';
+											
+										var paramtersEl = $(paramters);
+										testEl.append(paramtersEl);
+										
+										paramtersEl.find(".ResultInput").unbind( "change" );
+										paramtersEl.find(".ResultInput").on('change', function (e) {
+											if(isEmpty(item.RejectionCode)){
+												updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptResult', this.value);
+												updateResult(pk, testID, currentTest.Name, messurement.Name, 'LIMSRptUnits', messurement.UnitDefault);
+												
+												updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
+												updateResult(pk, testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
+											}
+										});
+									}
+								}
+						});
+						
+						var iValue = null;
+						var rValue = null;
+						var _t = ts.filter(function(v){ return v.LIMSObservationDesc == 'Interpretation'; }).shift();
+						if(_t != undefined && _t != null && !isEmpty(_t.LIMSRptResult)){ iValue=_t.LIMSRptResult; }
+						_t = ts.filter(function(v){ return v.LIMSObservationDesc == 'Remarks'; }).shift();
+						if(_t != undefined && _t != null && !isEmpty(_t.LIMSRptResult)){ rValue=_t.LIMSRptResult; }
+						
+						var result = '	<div class="Locked FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+							result += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
+							result += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
+							result += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Result:</h4>';
+							result += '			</div>';
+							result += '		</div>';
+							result += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+							result += '			<div class="FlexDisplay Flex FlexRow form-control">';
+							result += '				<div class="icon">';
+							result += '					<i class="mdi mdi-flask" />';
+							result += '				</div>';
+							result += '				<input value="'+(iValue != null ? iValue : '')+'" class="ResultInterpretationInput" type="text" placeholder="Interpretation"/>';
+							result += '			</div>';
+							result += '		</div>';
+							result += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+							result += '			<div class="FlexDisplay Flex FlexRow form-control">';
+							result += '				<div class="icon">';
+							result += '					<i class="mdi mdi-flask" />';
+							result += '				</div>';
+							result += '				<input value="'+(rValue != null ? rValue : '')+'" class="ResultRemarksInput" type="text" placeholder="Remarks (Optional)"/>';
+							result += '			</div>';
+							result += '		</div>';
+							result += '	</div>';
+						var resultEl = $(result);
+						
+						resultEl.find(".ResultInterpretationInput").unbind( "change" );
+						resultEl.find(".ResultInterpretationInput").on('change', function (e) {
+							if(isEmpty(item.RejectionCode)){
+								updateResult(pk, testID, currentTest.Name, 'Interpretation', 'LIMSRptResult', this.value);
+								updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
+								updateResult(pk, testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
+							}
+						});
+						
+						resultEl.find(".ResultRemarksInput").unbind( "change" );
+						resultEl.find(".ResultRemarksInput").on('change', function (e) {
+							if(isEmpty(item.RejectionCode)){
+								updateResult(pk, testID, currentTest.Name, 'Remarks', 'LIMSRptResult', this.value);
+								updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', receivedEl.find(".datepicker-range-received-in-lab").val());
+								updateResult(pk, testID, currentTest.Name, '', 'TestedBy', receivedEl.find(".ResultedBy").val());
+							}
+						});
+						
+						
+						var recValue = null;
+						var byValue = null;
+						var _t = ts.filter(function(v){ return !isEmpty(v.AnalysisDateTime); }).shift();
+						if(_t != undefined && _t != null){ recValue=_t.AnalysisDateTime; }
+						_t = ts.filter(function(v){ return !isEmpty(v.TestedBy); }).shift();
+						if(_t != undefined && _t != null){ byValue=_t.TestedBy; }
+						
+						
+						var received  = '	<div class="Locked FlexDisplay FlexRow Testing" style="min-height:44px;max-height:44px;margin:0px 8px 0px 0px;" >';
+							received += '		<div class="FlexDisplay Divider-Right" style="margin:0px 0px 0px 0px;">';
+							received += '			<div class="FlexDisplay" style="min-width:256px;max-width:256px;min-height:16px;max-height:16px;margin:16px 0px 0px 0px;">';
+							received += '				<h4 class="feature-title mt-0" style="margin:0px 0px 0px 10px; font-size: 12px; font-weight:normal; line-height:16px;">Received In Lab:</h4>';
+							received += '			</div>';
+							received += '		</div>';
+							received += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+							received += '			<div class="FlexDisplay Flex FlexRow form-control">';
+							received += '				<div class="icon">';
+							received += '					<i class="mdi mdi-calendar-outline" />';
+							received += '				</div>';
+							received += '				<input value="'+(recValue != null ? recValue : '')+'" type="text" placeholder="dd/mm/yyyy hh:mm" class="datepicker-range-received-in-lab" style="padding:0px 0px 0px 8px;"/>';
+							received += '			</div>';
+							received += '		</div>';
+							received += '		<div class="FlexDisplay Flex" style="min-width:150px; margin:8px 0px 4px 8px;">';
+							received += '			<div class="FlexDisplay Flex FlexRow form-control">';
+							received += '				<div class="icon">';
+							received += '					<i class="mdi mdi-doctor" />';
+							received += '				</div>';
+							received += '				<input value="'+(byValue != null ? byValue : '')+'" class="ResultedBy" type="text" placeholder="By"/>';
+							received += '			</div>';
+							received += '		</div>';
+							received += '	</div>';
+						var receivedEl = $(received);
+						
+						
+						var received_in_lab_datepicker = InitDatePicker(receivedEl.find(".datepicker-range-received-in-lab"), {
+							language: 'en',
+							dateFormat: 'yyyy-mm-dd',
+							timepicker: true, 
+							timeFormat: 'hh:ii', 
+							position: "top left",
+							maxDate:new Date(),
+							////startDate:new Date(),
+							//onShow:function(inst, animationCompleted){
+							//	if(animationCompleted)inst.update('maxDate', new Date());
+							//},
+							//onSelect:function(formattedDate, date, inst){
+							//	if(isEmpty(item.RejectionCode))updateResult(pk, testID, currentTest.Name, '', 'AnalysisDateTime', formattedDate);
+							//}
+						});
+						//received_in_lab_datepicker.selectDate(new Date());
+						
+						receivedEl.find(".ResultedBy").unbind( "change" );
+						//receivedEl.find(".ResultedBy").on('change', function (e) {
+						//	if(isEmpty(item.RejectionCode))updateResult(pk, testID, currentTest.Name, '', 'TestedBy', this.value);
+						//});
+						
+						var spacer  = '	<div class="FlexDisplay FlexRow Spacer" style="min-height:8px;max-height:8px;" >';
+							spacer += '		<div class="FlexDisplay Divider-Right" style="min-width:257px;max-width:257px;"></div>';
+							spacer += '	</div>';
+						var spacerEl = $(spacer);
+						
+						testEl.append(resultEl);
+						testEl.append(receivedEl);
+						testEl.append(spacerEl);
+						
+						testList.append(testEl);
+						
+						create_custom_dropdowns();
+						
+						var resultDropDowns = testList.find(".select-dropdown.ResultDropDown .list");//.find(".list");
+						if(resultDropDowns != undefined && resultDropDowns != null){
+							resultDropDowns.addClass("scroll scroll2");
+							resultDropDowns.css({"overflow-y": "auto", "max-height": "200px"});
+						}
+					//}
+				}
+			}	
+			else con.close();
+		}
+	});
 	
 	updateTestCost();
 }
@@ -713,6 +1205,7 @@ function getTests(id){
 				while(reader.read()){
 					var row = JSON.parse(reader.getValues());	
 					if(row != undefined && row != null){
+						row.PK = -1;
 						tests.push(row);
 					}
 				}
@@ -845,6 +1338,7 @@ function getConsultations(){
 			//query += "	,`InsuranceFinalDiagnosisCode`";
 			query += "FROM `Reception` ";
 			//query += "WHERE (`RequestID` like @ID)";
+			query += "ORDER BY `DateTimeStamp` desc ";
 			//query += "LIMIT 1 ";
 			
 		var comm = con.createCommand(query);
@@ -853,7 +1347,7 @@ function getConsultations(){
 			
 			var reader = comm.executeReader();
 			if(reader != null){
-				if(reader.read()){
+				while(reader.read()){
 					var row = JSON.parse(reader.getValues());	
 					if(row != undefined && row != null){
 						 addPendingConsultation(row);
