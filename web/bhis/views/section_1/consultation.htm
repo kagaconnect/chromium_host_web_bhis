@@ -370,6 +370,11 @@ function selectPendingConsultation(el, item){
 	$('.TestsList').html('');
 	$('.PrescriptionsList').html('');
 	
+	$('.Examination').val('');
+	$('.Treatment').val('');
+	$('.Notes').val('');
+	$('.Remarks').val('');
+	
 	fetchData(item.RequestID);
 		
 	$("#addTests").addClass("FlexDisplay");
@@ -437,8 +442,8 @@ function selectHistoryList(el, item){
 							$(".Remarks").val(row.Remarks);
 						}
 						
-						$("#addTests").removeClass("FlexDisplay");
-						$("#addPrescriptions").removeClass("FlexDisplay");
+						//$("#addTests").removeClass("FlexDisplay");
+						//$("#addPrescriptions").removeClass("FlexDisplay");
 						
 						showingHistory = true;
 					}
@@ -605,15 +610,15 @@ function addTest(canDelete, item){
 		tp += item.RejectedBy;
 	}*/
 	 
-	var test  = '<div data-rejectioncode="'+item.RejectionCode+'" data-rejectiondescription="'+item.RejectionDescription+'" data-rejectedby="'+item.RejectedBy+'" data-id="'+item.ID+'" data-name="'+item.Name+'" data-description="'+item.Description+'" data-labsection="'+item.LabSection+'" data-price="'+parseFloat(item.CostToPatient).toFixed(2)+'" class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; ">';
+	var test  = '<div data-primarykey="'+item.PK+'" data-rejectioncode="'+item.RejectionCode+'" data-rejectiondescription="'+item.RejectionDescription+'" data-rejectedby="'+item.RejectedBy+'" data-id="'+item.ID+'" data-name="'+item.Name+'" data-description="'+item.Description+'" data-labsection="'+item.LabSection+'" data-price="'+parseFloat(item.CostToPatient).toFixed(2)+'" class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px; ">';
 		test += '	<div class="FlexDisplay FlexRow Divider-Right TestButton" style="min-height:32px; min-width:40px; max-width:40px; cursor:pointer;">';
-		test += '		<div  class="FlexDisplay" style="width:100%; height:100%; padding:2px 0px 0px 2px;;"><span style="text-align:center; display:inline-block; width:100%; '+(isRejected ? 'color:#c4183c;' : '')+'"><i class="mdi mdi-information"></i></span></div>';
+		test += '		<div  class="FlexDisplay" style="width:100%; height:100%; padding:2px 0px 0px 2px;;"><span style="text-align:center; display:inline-block; width:100%; '+(isRejected ? 'color:#e6496a;' : '')+'"><i class="mdi mdi-flask-outline"></i></span></div>';
 		test += '	</div>'; //tooltip="'+tp+'" flow="right" '+(isRejected ? 'wrap="pre" resize="128" recolor="red"' : '')+'
 		test += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
 		test += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+item.Name+' - '+item.LabSection+'</h4>';
 		test += '	</div>';
 		if(canDelete){
-			test += '	<div class="FlexDisplay btn-clear" onclick="removeTest(this)">';
+			test += '	<div class="FlexHidden FlexDisplay btn-clear RemoveButton" onclick="removeTest(this)">';
 			test += '		<div style="margin:auto auto; width:16px height:16px; padding:0px 12px; font-size: 14px;"><i class="mdi mdi-close-circle" /></div>';
 			test += '	</div>';
 		}
@@ -1107,26 +1112,414 @@ function addTest(canDelete, item){
 	updateTestCost();
 }
 
-function addPrescription(canDelete, item){
-	var index = $('.prescriptionindex').last().text();
-	if(index.length == 0)index = 1;
-	else index = parseInt($('.prescriptionindex').last().text())+1;
-		
-	var prescription  = '<div data-id="'+item.ID+'" data-price="'+parseFloat(item.CostToPatient).toFixed(2)+'" class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px;">';
-		prescription += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
-		prescription += '		<div tooltip="'+parseFloat(item.CostToPatient).toFixed(2)+'" flow="right" class="FlexDisplay" style="width:100%; height:100%; padding:2px 0px 0px 2px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi mdi-information"></i></span></div>';
-		prescription += '	</div>';
-		prescription += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
-		prescription += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+item.Name+'</h4>';
-		prescription += '	</div>';
-		if(canDelete){
-			prescription += '	<div class="FlexDisplay btn-clear" onclick="removePrescription(this)">';
-			prescription += '		<div style="margin:auto auto; width:16px height:16px; padding:0px 12px; font-size: 14px;"><i class="mdi mdi-close-circle" /></div>';
-			prescription += '	</div>';
-		}
-		prescription += '</div>';
+/*function update_stock(item, id, name, unit){
 	
-	$('.PrescriptionsList').append(prescription);
+}*/
+
+function getUsage(id, lotnumber){
+	var quantity = 0;
+	var used = 0;
+	var available = 0;
+		
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+	if(con != null){
+		con.open();
+		
+			var query   = "SELECT  ";
+				query  += "	SUM(`si`.`QuantitySupplied`) as `Quantity`, ";
+				query  += "	COALESCE((SELECT SUM(`QuantitySignedOut`)  ";
+				query  += "	 FROM `stock_usage`  ";
+				query  += "	 WHERE `StockID` = `si`.`StockID` ";
+				if(lotnumber != undefined && lotnumber != null)query  += "	 AND `LotNumber` = `si`.`LotNumber`";
+				query  += "	 GROUP BY `StockID`),0) as `Used`, ";
+				query  += "	SUM(`si`.`QuantitySupplied`) - COALESCE((SELECT SUM(`QuantitySignedOut`)  ";
+				query  += "	 FROM `stock_usage`  ";
+				query  += "	 WHERE `StockID` = `si`.`StockID` ";
+				if(lotnumber != undefined && lotnumber != null)query  += "	 AND `LotNumber` = `si`.`LotNumber`";
+				query  += "	 GROUP BY `StockID`),0) as `Available` ";				
+				query  += "FROM `stock_items` `si` ";
+				query  += "WHERE `si`.`StockID` = @StockID ";
+				if(lotnumber != undefined && lotnumber != null)query  += "AND `si`.`LotNumber` = @LotNumber ";
+				query  += "GROUP BY `si`.`StockID`; ";
+
+		var comm = con.createCommand(query);
+		if(comm != null){
+			comm.addParameter("@StockID", "Int32", id);
+			if(lotnumber != undefined && lotnumber != null)comm.addParameter("@LotNumber", "String", lotnumber);
+			var reader = comm.executeReader();
+			if(reader != null){
+				if(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null){
+						quantity = parseInt(row.Quantity);
+						available = parseInt(row.Available);
+						used = parseInt(row.Used);
+					}
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+	
+	return {
+		quantity : quantity,
+		used:used,
+		available : available
+	};
+}
+
+
+function addPrescription(canDelete, item){
+	hideNavigationDropMenu();
+	
+	var lotnumber =  null;	
+	var content = '';
+		content += '<div class="bar-container" style="margin:0px;">';
+		content += '	<div class="bar-progress"></div>';
+		content += '</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:178px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '					</div>';	
+		content += '					<select class="drugs" >';
+		content += '						<option selected="" data-key="" data-unit="">Prescription..</option>';
+		var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+		if(con != null){
+			con.open();
+
+			var query  = "SELECT ";
+				query += "	`st`.`ID` ";
+				query += "	, `st`.`Name` ";
+				query += "	, IFNULL(`st`.`Unit`,'') as `Unit` ";
+				query += "FROM `stocks` `st` ";
+				query += "inner join `stock_items` `si` ";
+				query += "on `st`.`ID` = `si`.`StockID` ";
+					
+			var comm = con.createCommand(query);
+			if(comm != null){
+				var reader = comm.executeReader();
+				if(reader != null){
+					while(reader.read()){
+						var row = JSON.parse(reader.getValues());						
+						if(row != undefined && row != null){
+							content += '<option data-key="'+row.ID+'" data-unit="'+row.Unit+'">'+row.Name+'</option>';
+						}
+					}
+					reader.close();
+					con.close();				
+				}
+				else con.close();
+			}
+			else con.close();
+		}
+		content += '					</select>';
+		
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px; ">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '					</div>';	
+		content += '					<input type="text" placeholder="Unit" disabled class="unit-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow Lots"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:178px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-pound-box" />';	
+		content += '					</div>';
+		content += '					<select class="lotnumbers" >'; //onchange="lotnumber_selected(this, '+id+')"
+		content += '						<option selected="">Lot Number..</option>';
+		content += '					</select>';
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-counter" />';	
+		content += '					</div>';
+		content += '					<input type="text" placeholder="Available Quantity" disabled class="available-quantity-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';		
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="down" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-counter" />';	
+		content += '					</div>';	
+		content += '					<input onkeypress="return isNumberKey(event)" type="text" placeholder="Quantity Signed Out" class="quantity-signed-out-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-calendar-today" />';	
+		content += '					</div>';	
+		content += '					<input type="text" placeholder="Date of Usage" class="date-of-usage-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Remarks"  class="remarks-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				<div class="enter-value icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:1px 0px 0px 1px; min-width:32px; max-width:32px;">';
+		content += '					<i class="mdi mdi-playlist-plus" />';
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		
+		content += '</div>';
+		
+		var stock_dlg = ShowDialog('<i class="mdi mdi-clipboard-list-outline"></i>', "Update Stock", content,{
+			onCloseDialog : function() {
+				stock_dlg = null;
+				return false; 
+			}
+		},"480px");	
+		
+		create_custom_dropdowns();
+		
+		var _prescriptions = $(stock_dlg.el).find(".select-dropdown.drugs").find(".list");
+		if(_prescriptions != undefined && _prescriptions != null){
+			_prescriptions.addClass("scroll scroll2");
+			_prescriptions.css({"overflow-y": "auto", "max-height": "200px"});
+		}
+
+		$(stock_dlg.el).find(".drugs").change(function() {
+			var selectedOption = $(this).children("option:selected");
+			var key = selectedOption.data('key');
+			var unit = selectedOption.data('unit');
+			
+			if(key != undefined && key != null && key != ''){				
+				var usage = getUsage(key);
+				var quantity = usage.quantity;
+				var available = usage.available;
+				
+				$(stock_dlg.el).find(".unit-input").val(unit);
+				$(stock_dlg.el).find(".available-quantity-input").val(available);
+				
+				var lot = '';
+				var lotnumber = null;
+				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+				if(con != null){
+					con.open();
+
+					var query  = "SELECT ";
+						query += " `LotNumber` ";
+						query += " ,`CostPerUnit` ";
+						query += "FROM `stock_items` ";
+						query += "WHERE `StockID` = @StockID ";
+							
+					var comm = con.createCommand(query);
+					if(comm != null){
+						comm.addParameter("@StockID", "Int32", key);
+						var reader = comm.executeReader();
+						if(reader != null){
+							var xx = 0;
+							while(reader.read()){
+								var row = JSON.parse(reader.getValues());						
+								if(row != undefined && row != null){
+									if(xx == 0){
+										lot += '<option selected="" data-price="'+row.CostPerUnit+'">'+row.LotNumber+'</option>';
+										lotnumber =  row.LotNumber;
+									}
+									else lot += '<option data-price="'+row.CostPerUnit+'">'+row.LotNumber+'</option>';
+									
+									xx++;
+								}
+							}
+							reader.close();
+							con.close();				
+						}
+						else con.close();
+					}
+					else con.close();
+				}
+				$(stock_dlg.el).find(".select-dropdown.lotnumbers").remove();
+				$(stock_dlg.el).find(".lotnumbers").html(lot);
+				create_custom_dropdowns();
+				
+			}
+			else{
+				$(stock_dlg.el).find(".unit-input").val('');
+				$(stock_dlg.el).find(".available-quantity-input").val('');
+				
+				$(stock_dlg.el).find(".select-dropdown.lotnumbers").remove();
+				$(stock_dlg.el).find(".lotnumbers").html('<option selected="">Lot Number..</option>');
+				create_custom_dropdowns();
+			}
+		});
+		
+		var dateOptions = {language: 'en' ,dateFormat: 'dd/mm/yyyy', position: "top right", maxDate:new Date() };
+		var date_of_usage_datepicker = InitDatePicker($('.date-of-usage-input'), dateOptions);
+		
+		focusEvents($(stock_dlg.el).find(".date-of-usage-input"),
+			function(){
+				$(this).parent().removeClass("is-invalid");
+				$(this).parent().attr("tooltip","");
+			},
+			function(){
+				var val = $(this).val();
+				if(val.trim().length > 0){
+					if (/^\d{2}[.\/-]\d{2}[.\/-]\d{4}$/im.test(val.trim())){
+						$(this).parent().removeClass("is-invalid");
+					}
+					else $(this).parent().addClass("is-invalid");
+				}
+				else $(this).parent().removeClass("is-invalid");
+			}
+		);
+		
+		$(stock_dlg.el).find(".enter-value").unbind( "click" );
+		$(stock_dlg.el).find(".enter-value").click(function() {
+			var _quantity_signed_out = $(stock_dlg.el).find(".quantity-signed-out-input").val().trim();
+			var _date_of_usage = $(stock_dlg.el).find(".date-of-usage-input").val().trim();
+			var _remarks = $(stock_dlg.el).find(".remarks-input").val().trim();	
+			var lotnumber =  $(stock_dlg.el).find(".select-dropdown.lotnumbers .current").text();	
+			
+			if(_quantity_signed_out.length > 0 && _date_of_usage.length > 0 &&
+			   !$(stock_dlg.el).find(".date-of-usage-input").hasClass("is-invalid")){
+			   
+				var selectedOption = $(stock_dlg.el).find(".drugs").children("option:selected");
+				var selectedPrice =  $(stock_dlg.el).find(".lotnumbers").children("option:selected");
+				
+				var key = selectedOption.data('key');
+				var value = selectedOption.val();
+				var costToPatient = selectedPrice.data('price');
+			
+				var usage = getUsage(key, lotnumber);
+				var quantity = usage.quantity;
+				var available = usage.available;
+				
+				if(available - parseInt(_quantity_signed_out) >= 0){
+					/*var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+					if(con != null){
+						con.open();
+
+						var query    = "INSERT INTO `stock_usage` ( ";
+							query   += "	`StockID` ";
+							query   += "	,`LotNumber` ";
+							query   += "	,`QuantitySignedOut` ";
+							query   += "	,`DateOfUsage` ";
+							query   += "	,`Remarks` ";
+							query   += ") ";
+							query   += "VALUES ( ";
+							query   += "	@StockID ";
+							query   += "	,@LotNumber ";
+							query   += "	,@QuantitySignedOut ";
+							query   += "	,@DateOfUsage ";
+							query   += "	,@Remarks ";
+							query   += ")";
+						
+						var comm = con.createCommand(query);
+						if(comm != null){
+							comm.addParameter("@StockID", "Int32", id);
+							comm.addParameter("@LotNumber", "String", lotnumber);
+							comm.addParameter("@QuantitySignedOut", "Int32", _quantity_signed_out);
+							comm.addParameter("@DateOfUsage", "String", _date_of_usage);
+							comm.addParameter("@Remarks", "String", _remarks);
+							comm.executeNonQuery();
+							con.close();
+							
+							loadData();
+							
+							stock_dlg.toggle();
+							stock_dlg = null;			
+						}
+						else con.close();
+					}*/
+					
+					
+					var index = $('.prescriptionindex').last().text();
+					if(index.length == 0)index = 1;
+					else index = parseInt($('.prescriptionindex').last().text())+1;
+						
+					var prescription  = '<div data-id="'+key+'" data-price="'+(parseFloat(costToPatient)*parseInt(_quantity_signed_out)).toFixed(2)+'" class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px;">';
+						prescription += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
+						prescription += '		<div tooltip="'+(parseFloat(costToPatient)*parseInt(_quantity_signed_out)).toFixed(2)+'" flow="right" class="FlexDisplay" style="width:100%; height:100%; padding:2px 0px 0px 2px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi mdi-information"></i></span></div>';
+						prescription += '	</div>';
+						prescription += '	<div class="FlexDisplay Flex FlexRow Divider-Right" style="min-height:32px; min-width:128px;">';
+						prescription += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+value+' : '+_quantity_signed_out+'</h4>';
+						prescription += '	</div>';
+						if(canDelete){
+							prescription += '	<div class="FlexDisplay btn-clear" onclick="removePrescription(this)">';
+							prescription += '		<div style="margin:auto auto; width:16px height:16px; padding:0px 12px; font-size: 14px;"><i class="mdi mdi-close-circle" /></div>';
+							prescription += '	</div>';
+						}
+						prescription += '</div>';
+					
+					$('.PrescriptionsList').append(prescription);
+					
+					stock_dlg.toggle();
+					stock_dlg = null;
+					
+				}
+				else{
+					var item = $(stock_dlg.el).find(".quantity-signed-out-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Only "+available+" remaining");
+						item.focus(function(){
+							$(this).parent().removeClass("is-invalid");
+							$(this).parent().attr("tooltip","");
+						});
+					}
+				}				
+			}
+			else{
+				if( _quantity_signed_out.length == 0){
+					var item = $(stock_dlg.el).find(".quantity-signed-out-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Quantity signed out is required");
+						item.focus(function(){
+							$(this).parent().removeClass("is-invalid");
+							$(this).parent().attr("tooltip","");
+						});
+					}
+				}
+				
+				if( _date_of_usage.length == 0){
+					var item = $(stock_dlg.el).find(".date-of-usage-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Date of usage is required");
+					}
+				}
+			}				
+		});
+	
 }
 
 function clearData(){
@@ -1805,13 +2198,106 @@ $(".save").click(function(){
 						comm.addParameter("@DateTimeStamp", "String", dateTimeStamp);
 						comm.addParameter("@Versionstamp", "String", getVersion().toString());
 						comm.addParameter("@RequestID", "String", requestID);
-						comm.addParameter("@ConsultationDateTime", "String", ConsultationDateTime);
+						comm.addParameter("@ConsultationDateTime", "String", consultationDateTime);
 						comm.addParameter("@ConsultedBy", "String", consultedBy);
 						comm.addParameter("@Examination", "String", examination);
 						comm.addParameter("@Treatment", "String", treatment);
 						comm.addParameter("@Notes", "String", notes);
 						comm.addParameter("@Remarks", "String", remarks);
 						comm.executeNonQuery();
+						
+						
+						$('.TestsList').children().each(function(i){
+							var id = parseInt($(this).data("id"));
+							var pk = parseFloat($(this).data("primarykey"));
+							var name = $(this).data("name");
+							var description = $(this).data("description");
+							var labsection = $(this).data("labsection");
+							var price = parseFloat($(this).data("price"));
+							
+							if(pk == -1){
+								
+								var query = "INSERT INTO `Request`(";
+									query += "	`DateTimeStamp`";
+									query += "	,`Versionstamp`";
+									query += "	,`RequestID`";
+									query += "	,`ConsultationDateTime`";
+									query += "	,`OBRSetID`";
+									query += "	,`LIMSPanelCode`";
+									if(!isEmpty(description))query += "	,`LIMSPanelDesc`";
+									query += "	,`RegisteredDateTime`";
+									query += "	,`CostUnits`";
+									query += "	,`HL7SectionCode`";
+									query += "	,`LIMSRejectionCode`";
+									query += "	,`LIMSRejectionDesc`";
+									query += "	,`LIMSRejectedBy`";
+										//if(!isEmpty(notes))query += "	,`RequestTypeCode`";
+										//if(!isEmpty(notes))query += "	,`ICD10ClinicalInfoCodes`";
+										//if(!isEmpty(notes))query += "	,`ClinicalInfo`";
+										//if(!isEmpty(notes))query += "	,`HL7SpecimenSourceCode`";
+										//if(!isEmpty(notes))query += "	,`LIMSSpecimenSourceCode`";
+										//if(!isEmpty(notes))query += "	,`LIMSSpecimenSourceDesc`";								
+										//if(!isEmpty(notes))query += "	,`WorkUnits`";
+										
+										//if(!isEmpty(notes))query += "	,`Repeated`";
+									query += ") VALUES (";
+									query += "	@DateTimeStamp";
+									query += "	,@Versionstamp";
+									query += "	,@RequestID";
+									query += "	,@ConsultationDateTime";
+									query += "	,@OBRSetID";
+									query += "	,@LIMSPanelCode";
+									if(!isEmpty(description))query += "	,@LIMSPanelDesc";
+									query += "	,@RegisteredDateTime";
+									query += "	,@CostUnits";
+									query += "	,@HL7SectionCode"
+									query += "	,@LIMSRejectionCode";
+									query += "	,@LIMSRejectionDesc";
+									query += "	,@LIMSRejectedBy";
+										//if(!isEmpty(notes))query += "	,@RequestTypeCode";
+										//if(!isEmpty(notes))query += "	,@ICD10ClinicalInfoCodes";
+										//if(!isEmpty(notes))query += "	,@ClinicalInfo";
+										//if(!isEmpty(notes))query += "	,@HL7SpecimenSourceCode";
+										//if(!isEmpty(notes))query += "	,@LIMSSpecimenSourceCode";
+										//if(!isEmpty(notes))query += "	,@LIMSSpecimenSourceDesc";								
+										//if(!isEmpty(notes))query += "	,@WorkUnits";
+										
+										//if(!isEmpty(notes))query += "	,@Repeated";
+									query += ")";
+									
+								var commm = con.createCommand(query);
+								if(commm != null){
+									commm.addParameter("@DateTimeStamp", "String", dateTimeStamp);
+									commm.addParameter("@Versionstamp", "String", getVersion().toString());
+									commm.addParameter("@RequestID", "String", requestID);
+									commm.addParameter("@ConsultationDateTime", "String", consultationDateTime);
+									commm.addParameter("@OBRSetID", "Int32", id);
+									commm.addParameter("@LIMSPanelCode", "String", name);
+									if(!isEmpty(description))commm.addParameter("@LIMSPanelDesc", "String", description);
+									commm.addParameter("@RegisteredDateTime", "String", dateTimeStamp);
+									commm.addParameter("@CostUnits", "Double", price);
+									commm.addParameter("@HL7SectionCode", "String", labsection);
+									commm.addParameter("@LIMSRejectionCode", "String", null);
+									commm.addParameter("@LIMSRejectionDesc", "String", null);
+									commm.addParameter("@LIMSRejectedBy", "String", null);
+									
+									//if(!isEmpty(item))commm.addParameter("@RequestTypeCode", "String", item);
+									//if(!isEmpty(item))commm.addParameter("@ICD10ClinicalInfoCodes", "String", item);
+									//if(!isEmpty(item))commm.addParameter("@ClinicalInfo", "String", item);
+									//if(!isEmpty(item))commm.addParameter("@HL7SpecimenSourceCode", "String", item);
+									//if(!isEmpty(item))commm.addParameter("@LIMSSpecimenSourceCode", "String", item);
+									//if(!isEmpty(item))commm.addParameter("@LIMSSpecimenSourceDesc", "String", item);							
+									//if(!isEmpty(item))commm.addParameter("@WorkUnits", "String", item);
+									
+									//if(!isEmpty(item))commm.addParameter("@Repeated", "String", item);
+									commm.executeNonQuery();
+									
+									$(this).find('.RemoveButton').removeClass('FlexDisplay');
+								}
+							
+							}
+						});
+						
 						con.close();
 					}
 					else con.close();				
