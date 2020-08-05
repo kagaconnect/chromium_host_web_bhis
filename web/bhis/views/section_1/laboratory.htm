@@ -1701,7 +1701,7 @@ function addTest(item){
 						//console.log(dateTimeStamp);
 						//console.log(price);
 						//console.log(labsection);
-						console.log(affectedRows);
+						//console.log(affectedRows);
 						if(affectedRows.Data > 0){							
 							var comm = con.createCommand("SELECT last_insert_rowid() `ID`");
 							if(comm != null){
@@ -1809,7 +1809,7 @@ function getConsultations(){
 			
 			var reader = comm.executeReader();
 			if(reader != null){
-				if(reader.read()){
+				while(reader.read()){
 					var row = JSON.parse(reader.getValues());	
 					if(row != undefined && row != null){
 						 addPendingConsultation(row);

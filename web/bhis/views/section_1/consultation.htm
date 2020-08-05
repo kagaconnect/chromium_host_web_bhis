@@ -549,7 +549,8 @@ function selectHistoryList(el, item){
 													DateOfUsage:_row.DateOfUsage,
 													Remarks:_row.Remarks,
 													Quantity:_row.QuantitySignedOut,
-													CostPerUnit:_row.CostPerUnit
+													CostPerUnit:_row.CostPerUnit,
+													IsNew:false
 												});
 											}
 										}
@@ -1250,7 +1251,7 @@ function addPrescription(canDelete, item){
 	if(index.length == 0)index = 1;
 	else index = parseInt($('.prescriptionindex').last().text())+1;
 	
-	var prescription  = '<div data-id="'+item.ID+'" data-lotnumber="'+item.LotNumber+'" data-date="'+item.DateOfUsage+'" data-remarks="'+item.Remarks+'" data-quantity="'+item.Quantity+'" data-price="'+(parseFloat(item.CostPerUnit)*parseInt(item.Quantity)).toFixed(2)+'" class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px;">';
+	var prescription  = '<div data-isnew="'+item.IsNew+'" data-id="'+item.ID+'" data-lotnumber="'+item.LotNumber+'" data-date="'+item.DateOfUsage+'" data-remarks="'+item.Remarks+'" data-quantity="'+item.Quantity+'" data-price="'+(parseFloat(item.CostPerUnit)*parseInt(item.Quantity)).toFixed(2)+'" class="FlexDisplay FlexRow Divider-Bottom" style="min-height:32px;">';
 		prescription += '	<div class="FlexDisplay FlexRow Divider-Right" style="min-height:32px; min-width:40px; max-width:40px;">';
 		prescription += '		<div tooltip="'+item.CostPerUnit+' ['+(parseFloat(item.CostPerUnit)*parseInt(item.Quantity)).toFixed(2)+']" flow="right" class="FlexDisplay" style="width:100%; height:100%; padding:2px 0px 0px 2px;"><span style="text-align:center; display:inline-block; width:100%;"><i class="mdi mdi-information"></i></span></div>';
 		prescription += '	</div>';
@@ -1258,7 +1259,7 @@ function addPrescription(canDelete, item){
 		prescription += '		<h4 class="feature-title mt-0" style="margin:0px 12px 0px 12px; font-size: 11px; font-weight:normal;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+item.Name+' : '+item.Quantity+'</h4>';
 		prescription += '	</div>';
 		if(canDelete){
-			prescription += '	<div class="FlexDisplay btn-clear" onclick="removePrescription(this)">';
+			prescription += '	<div class="RemoveButton FlexHidden FlexDisplay btn-clear" onclick="removePrescription(this)">';
 			prescription += '		<div style="margin:auto auto; width:16px height:16px; padding:0px 12px; font-size: 14px;"><i class="mdi mdi-close-circle" /></div>';
 			prescription += '	</div>';
 		}
@@ -1910,7 +1911,8 @@ $("#addPrescriptions").click(function(){
 						DateOfUsage:_date_of_usage,
 						Remarks:_remarks,
 						Quantity:parseInt(_quantity_signed_out),
-						CostPerUnit:parseFloat(costToPatient)
+						CostPerUnit:parseFloat(costToPatient),
+						IsNew:true
 					});
 					
 					stock_dlg.toggle();
@@ -2461,8 +2463,99 @@ $(".save").click(function(){
 							
 							}
 						});
-						
 						con.close();
+						
+						var _conn = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+						if(_conn != null){
+							_conn.open();
+
+							$('.PrescriptionsList').children().each(function(){
+								var _isNew = $(this).data("isnew");
+								if(_isNew == true){
+									var _id = $(this).data("id");
+									var _quantity_signed_out = $(this).data("quantity");
+									var _date_of_usage = $(this).data("date");
+									var _remarks = $(this).data("remarks");
+									var _lotnumber =  $(this).data("lotnumber");
+									
+									var query    = "INSERT INTO `stock_usage` ( ";
+										query   += "	`StockID` ";
+										query   += "	,`LotNumber` ";
+										query   += "	,`QuantitySignedOut` ";
+										query   += "	,`DateOfUsage` ";
+										query   += "	,`Remarks` ";
+										query   += ") ";
+										query   += "VALUES ( ";
+										query   += "	@StockID ";
+										query   += "	,@LotNumber ";
+										query   += "	,@QuantitySignedOut ";
+										query   += "	,@DateOfUsage ";
+										query   += "	,@Remarks ";
+										query   += ")";
+									
+									var comm = _conn.createCommand(query);
+									if(comm != null){
+										comm.addParameter("@StockID", "Int32", _id);
+										comm.addParameter("@LotNumber", "String", _lotnumber.toString());
+										comm.addParameter("@QuantitySignedOut", "Int32", _quantity_signed_out);
+										comm.addParameter("@DateOfUsage", "String", _date_of_usage);
+										comm.addParameter("@Remarks", "String", _remarks.toString());
+										var affectedRows = comm.executeNonQuery();
+										if(affectedRows.Data > 0){	
+											var newID = -1;
+											var comm = _conn.createCommand("SELECT last_insert_rowid() `ID`");
+											if(comm != null){
+												var reader = comm.executeReader();
+												if(reader != null){
+													if(reader.read()){
+														var row = JSON.parse(reader.getValues());	
+														if(row != undefined && row != null){
+															newID = row.ID;
+														}
+													}
+													reader.close();
+												}
+											}
+										
+											if(newID > -1){
+												var _connn = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_data.db"),"","");
+												if(_connn != null){
+													_connn.open();
+													var _query    = "INSERT INTO `Prescription` ( ";
+														_query   += "	`StockUsageID` ";
+														_query   += "	,`RequestID` ";
+														_query   += "	,`ConsultationDateTime` ";
+														_query   += ") ";
+														_query   += "VALUES ( ";
+														_query   += "	@StockUsageID ";
+														_query   += "	,@RequestID ";
+														_query   += "	,@ConsultationDateTime ";
+														_query   += ")";
+														
+															console.log(_query);
+															console.log(newID);
+															console.log(requestID);
+															console.log(consultationDateTime);
+													var _comm = _connn.createCommand(_query);
+													if(_comm != null){
+														_comm.addParameter("@StockUsageID", "Int32", newID);
+														_comm.addParameter("@RequestID", "String", requestID);
+														_comm.addParameter("@ConsultationDateTime", "String", consultationDateTime);
+														_comm.executeNonQuery();
+														
+														$(this).find('.RemoveButton').removeClass('FlexDisplay');
+													}										
+													_connn.close();
+												}							
+											}
+										}
+									}
+								}
+							});							
+							_conn.close();
+						}
+						
+						
 					}
 					else con.close();				
 				}
