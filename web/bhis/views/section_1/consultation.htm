@@ -2532,10 +2532,10 @@ $(".save").click(function(){
 														_query   += "	,@ConsultationDateTime ";
 														_query   += ")";
 														
-															console.log(_query);
-															console.log(newID);
-															console.log(requestID);
-															console.log(consultationDateTime);
+															//console.log(_query);
+															//console.log(newID);
+															//console.log(requestID);
+															//console.log(consultationDateTime);
 													var _comm = _connn.createCommand(_query);
 													if(_comm != null){
 														_comm.addParameter("@StockUsageID", "Int32", newID);

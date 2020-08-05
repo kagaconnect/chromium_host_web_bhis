@@ -89,7 +89,7 @@
 											<div class="icon">
 												<i class="mdi mdi-account" />
 											</div>
-											<input readonly class="LasttName" type="text" placeholder="Last Name"/>
+											<input readonly class="LastName" type="text" placeholder="Last Name"/>
 										</div>
 									</div>
 								</div>
@@ -801,7 +801,7 @@ function rejectTest(item){
 							comm.addParameter("@RejectionCode", "String", code);
 							comm.addParameter("@RejectionDescription", "String", desc);
 							var affectedRows = comm.executeNonQuery();
-							console.log(affectedRows);
+							//console.log(affectedRows);
 							if(affectedRows.Data > 0){
 								$(item).parents(".TestingItem").addClass('Rejected');
 								//$(item).remove();
@@ -1800,6 +1800,7 @@ function getConsultations(){
 			query += "	,`ConsultationDateTime`";
 			query += "	,`ConsultedBy`";
 			query += "FROM `Consultation` ";
+			query += "ORDER BY `DateTimeStamp` desc ";
 			//query += "WHERE (`RequestID` like @ID)";
 			//query += "LIMIT 1 ";
 			
