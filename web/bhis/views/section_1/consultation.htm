@@ -1640,9 +1640,9 @@ $("#addPrescriptions").click(function(){
 		content += '<div class="bar-container" style="margin:0px;">';
 		content += '	<div class="bar-progress"></div>';
 		content += '</div>';
-		
+		//max-width:228px;
 		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
-		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style=" height:32px;">';						
 		content += '			<div class="FlexDisplay Flex" style="min-width:178px;">';
 		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
 		content += '					<div class="icon" style="padding-top:4px;">';	
@@ -1658,9 +1658,14 @@ $("#addPrescriptions").click(function(){
 				query += "	`st`.`ID` ";
 				query += "	, `st`.`Name` ";
 				query += "	, IFNULL(`st`.`Unit`,'') as `Unit` ";
+				query += "	, IFNULL(`st`.`StrengthsFormulation`,'') as `StrengthsFormulation` ";
+				query += "	, IFNULL(`st`.`PrescribingLevel`,'') as `PrescribingLevel` ";
+				query += "	, IFNULL(`st`.`CostPerUnitCash`,'0') as `CostPerUnitCash` ";
+				query += "	, IFNULL(`st`.`CostPerUnitOther`,'0') as `CostPerUnitOther` ";
+				query += "	, IFNULL(`st`.`Remarks`,'') as `Remarks` ";
 				query += "FROM `stocks` `st` ";
-				query += "inner join `stock_items` `si` ";
-				query += "on `st`.`ID` = `si`.`StockID` ";
+				//query += "inner join `stock_items` `si` ";
+				//query += "on `st`.`ID` = `si`.`StockID` ";
 					
 			var comm = con.createCommand(query);
 			if(comm != null){
@@ -1669,7 +1674,7 @@ $("#addPrescriptions").click(function(){
 					while(reader.read()){
 						var row = JSON.parse(reader.getValues());						
 						if(row != undefined && row != null){
-							content += '<option data-key="'+row.ID+'" data-unit="'+row.Unit+'">'+row.Name+'</option>';
+							content += '<option data-key="'+row.ID+'" data-unit="'+row.Unit+'" data-strengths-formulation="'+row.StrengthsFormulation+'" data-prescribing-level="'+row.PrescribingLevel+'" data-cost-per-unit-cash="'+row.CostPerUnitCash+'" data-cost-per-unit-other="'+row.CostPerUnitOther+'">'+row.Name+' [ '+row.Unit+' ] : '+row.StrengthsFormulation+'</option>';
 						}
 					}
 					reader.close();
@@ -1684,7 +1689,7 @@ $("#addPrescriptions").click(function(){
 		content += '				</div>';
 		content += '			</div>';
 		content += '		</div>';
-		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px; ">';						
+		/*content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px; ">';						
 		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
 		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
 		content += '					<div class="icon" style="padding-top:4px;">';	
@@ -1693,8 +1698,19 @@ $("#addPrescriptions").click(function(){
 		content += '					<input type="text" placeholder="Unit" disabled class="unit-input" style="padding:0px 0px 0px 8px;"/>';	
 		content += '				</div>';
 		content += '			</div>';
-		content += '		</div>';
+		content += '		</div>';*/
 		content += '	</div>';
+		
+		/*content += '		<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '			<div class="FlexDisplay Flex" style="height:32px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '					</div>';	
+		content += '					<input type="text" placeholder="Description" disabled class="description-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';*/
 		
 		content += '	<div class="FlexDisplay FlexRow Lots"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
 		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
@@ -1703,7 +1719,7 @@ $("#addPrescriptions").click(function(){
 		content += '					<div class="icon" style="padding-top:4px;">';	
 		content += '						<i class="mdi mdi-pound-box" />';	
 		content += '					</div>';
-		content += '					<select class="lotnumbers" >';
+		content += '					<select class="lotnumbers" >'; // onchange="lotnumber_selected(this, '+id+')"
 		content += '						<option selected="">Lot Number..</option>';
 		content += '					</select>';
 		content += '				</div>';
@@ -1761,7 +1777,7 @@ $("#addPrescriptions").click(function(){
 		
 		content += '</div>';
 		
-		var stock_dlg = ShowDialog('<i class="mdi mdi-clipboard-list-outline"></i>', "Update Stock", content,{
+		var stock_dlg = ShowDialog('<i class="mdi mdi-clipboard-list-outline"></i>', "Prescriptions", content,{
 			onCloseDialog : function() {
 				stock_dlg = null;
 				return false; 
@@ -1781,6 +1797,11 @@ $("#addPrescriptions").click(function(){
 			var key = selectedOption.data('key');
 			var unit = selectedOption.data('unit');
 			
+			var strengths_formulation = selectedOption.data('strengths-formulation');
+			var prescribing_level = selectedOption.data('prescribing-level');
+			var cost_per_unit_cash = selectedOption.data('cost-per-unit-cash');
+			var cost_per_unit_other = selectedOption.data('cost-per-unit-other');
+			
 			if(key != undefined && key != null && key != ''){				
 				var usage = getUsage(key);
 				var quantity = usage.quantity;
@@ -1794,18 +1815,18 @@ $("#addPrescriptions").click(function(){
 					}
 				});
 				
-				$(stock_dlg.el).find(".unit-input").val(unit);
+				//$(stock_dlg.el).find(".unit-input").val(unit);
 				$(stock_dlg.el).find(".available-quantity-input").val(available-standBy);
 				
 				var lot = '';
-				var lotnumber = null;
+				var lotnumber = null;				
 				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
 				if(con != null){
 					con.open();
 
 					var query  = "SELECT ";
 						query += " `LotNumber` ";
-						query += " ,`CostPerUnit` ";
+						//query += " ,`CostPerUnit` ";
 						query += "FROM `stock_items` ";
 						query += "WHERE `StockID` = @StockID ";
 							
@@ -1819,10 +1840,10 @@ $("#addPrescriptions").click(function(){
 								var row = JSON.parse(reader.getValues());						
 								if(row != undefined && row != null){
 									if(xx == 0){
-										lot += '<option selected="" data-price="'+row.CostPerUnit+'">'+row.LotNumber+'</option>';
+										lot += '<option selected="">'+row.LotNumber+'</option>'; // data-price="'+row.CostPerUnit+'"
 										lotnumber =  row.LotNumber;
 									}
-									else lot += '<option data-price="'+row.CostPerUnit+'">'+row.LotNumber+'</option>';
+									else lot += '<option>'+row.LotNumber+'</option>'; // data-price="'+row.CostPerUnit+'"
 									
 									xx++;
 								}

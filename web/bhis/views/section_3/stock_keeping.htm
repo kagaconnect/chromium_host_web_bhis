@@ -53,7 +53,7 @@ function hideNavigationDropMenu(){
 	$(".add-item").attr('id', '');
 }
 
-function edit_item(item, id, name, unit, remarks){
+function edit_item(item, id, name, unit, strengths_formulation, prescribing_level, cost_per_unit_cash, cost_per_unit_other, remarks){
 	hideNavigationDropMenu();
 	
 	var content = '';
@@ -79,6 +79,50 @@ function edit_item(item, id, name, unit, remarks){
 		content += '					<i class="mdi mdi-clipboard-text-outline" />';	
 		content += '				</div>';	
 		content += '				<input type="text" placeholder="Unit"  class="unit-input" value="'+unit+'" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Strengths/Formulation" value="'+strengths_formulation+'"  class="strengths-formulation-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Prescribing Level" value="'+prescribing_level+'"  class="prescribing-level-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-cash-register" />';	
+		content += '				</div>';	
+		content += '				<input onkeypress="return isDecimalKey(event)" type="text" value="'+cost_per_unit_cash+'" placeholder="Cost per Unit - Cash"  class="cost-per-unit-cash-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-cash-register" />';	
+		content += '				</div>';	
+		content += '				<input onkeypress="return isDecimalKey(event)" type="text" value="'+cost_per_unit_other+'" placeholder="Cost per Unit - Other"  class="cost-per-unit-other-input" style="padding:0px 0px 0px 8px;"/>';	
 		content += '			</div>';
 		content += '		</div>';
 		content += '	</div>';
@@ -129,6 +173,10 @@ function edit_item(item, id, name, unit, remarks){
 		$(stock_dlg.el).find(".enter-value").click(function() {
 		var _name = $(stock_dlg.el).find(".name-input").val().trim();
 		var _unit = $(stock_dlg.el).find(".unit-input").val().trim();
+		var _strengths_formulation = $(stock_dlg.el).find(".strengths-formulation-input").val().trim();
+		var _prescribing_level = $(stock_dlg.el).find(".prescribing-level-input").val().trim();
+		var _cost_per_unit_cash = $(stock_dlg.el).find(".cost-per-unit-cash-input").val().trim();
+		var _cost_per_unit_other = $(stock_dlg.el).find(".cost-per-unit-other-input").val().trim();
 		var _remarks = $(stock_dlg.el).find(".remarks-input").val().trim();
 		
 		if(_name.length > 0 && _unit.length > 0){
@@ -142,6 +190,10 @@ function edit_item(item, id, name, unit, remarks){
 				var query    = "UPDATE `stocks` SET ";								
 					query   += " `Name` = @Name ";
 					query   += ",`Unit` = @Unit ";
+					if(_strengths_formulation.length > 0)query   += ",`StrengthsFormulation` = @StrengthsFormulation ";
+					if(_prescribing_level.length > 0)query   	 += "	,`PrescribingLevel` = @PrescribingLevel ";
+					if(_cost_per_unit_cash.length > 0)query   	 += "	,`CostPerUnitCash` = @CostPerUnitCash ";
+					if(_cost_per_unit_other.length > 0)query   	 += "	,`CostPerUnitOther` = @CostPerUnitOther ";		
 					query   += ",`Remarks` = @Remarks ";
 					query   += "WHERE `ID` = @ID ";
 				
@@ -150,6 +202,10 @@ function edit_item(item, id, name, unit, remarks){
 					comm.addParameter("@ID", "Int32", id);
 					comm.addParameter("@Name", "String", _name);
 					comm.addParameter("@Unit", "String", _unit);
+					if(_strengths_formulation.length > 0)comm.addParameter("@StrengthsFormulation", "String", _strengths_formulation);
+					if(_prescribing_level.length > 0)comm.addParameter("@PrescribingLevel", "String", _prescribing_level);
+					if(_cost_per_unit_cash.length > 0)comm.addParameter("@CostPerUnitCash", "Double", _cost_per_unit_cash);
+					if(_cost_per_unit_other.length > 0)comm.addParameter("@CostPerUnitOther", "Double", _cost_per_unit_other);
 					comm.addParameter("@Remarks", "String", _remarks);
 					comm.executeNonQuery();
 					con.close();
@@ -1004,7 +1060,7 @@ function add_stock(item, id, name, unit){
 
 }
 
-function add_item(id, name, unit, remarks){
+function add_item(id, name, unit, strengths_formulation, prescribing_level, cost_per_unit_cash, cost_per_unit_other, remarks){
 	var isDefault = "mdi-help-circle";
 
 	var usage = getUsage(id);
@@ -1019,7 +1075,7 @@ function add_item(id, name, unit, remarks){
 		stock += '	<div class="FlexDisplay" style="width:100%; min-height: 32px; max-height: 32px; overflow:hidden; padding:12px 8px 0px 8px; font-size:9px;"><span style="white-space: nowrap; width:100%; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:1; line-height:1;">'+unit+'</span></div>';			
 		stock += '	<div onclick="add_stock(this, '+id+', \''+name+'\', \''+unit+'\')" class="FlexDisplay" tooltip="Add stock" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;"><i class="mdi mdi-folder-plus-outline" style="margin:0px; padding:0px;"></i></div>';
 		if(available > 0)stock += '	<div onclick="update_stock(this, '+id+', \''+name+'\', \''+unit+'\')" class="FlexDisplay" tooltip="Update stock usage" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;"><i class="mdi mdi-plus-minus-box" style="margin:0px; padding:0px;"></i></div>';
-		stock += '	<div onclick="edit_item(this, '+id+', \''+name+'\', \''+unit+'\', \''+remarks+'\')" class="FlexDisplay" tooltip="Edit item" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;"><i class="mdi mdi-square-edit-outline" style="margin:0px; padding:0px;"></i></div>';
+		stock += '	<div onclick="edit_item(this, '+id+', \''+name+'\', \''+unit+'\', \''+strengths_formulation+'\', \''+prescribing_level+'\', \''+cost_per_unit_cash+'\', \''+cost_per_unit_other+'\', \''+remarks+'\')" class="FlexDisplay" tooltip="Edit item" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;"><i class="mdi mdi-square-edit-outline" style="margin:0px; padding:0px;"></i></div>';
 		stock += '	<div onclick="delete_item(this, '+id+', \''+name+'\')" class="FlexDisplay" tooltip="Delete item" flow="left" style="cursor:pointer; min-height: 32px; max-height: 32px; padding:0px 8px 0px 8px; font-size:20px;"><i class="mdi mdi-delete-sweep" style="margin:0px; padding:0px;"></i></div>';
 		stock += '</div>';
 
@@ -1038,6 +1094,10 @@ function loadData(){
 			query += "	`ID` ";
 			query += "	, `Name` ";
 			query += "	, IFNULL(`Unit`,'') as `Unit` ";
+			query += "	, IFNULL(`StrengthsFormulation`,'') as `StrengthsFormulation` ";
+			query += "	, IFNULL(`PrescribingLevel`,'') as `PrescribingLevel` ";
+			query += "	, IFNULL(`CostPerUnitCash`,'0') as `CostPerUnitCash` ";
+			query += "	, IFNULL(`CostPerUnitOther`,'0') as `CostPerUnitOther` ";
 			query += "	, IFNULL(`Remarks`,'') as `Remarks` ";
 			query += "FROM `stocks` ";
 				
@@ -1061,7 +1121,7 @@ function loadData(){
 	
 	for(var x=0; x<rows.length; x++){
 		var row = rows[x];
-		add_item(row.ID, row.Name, row.Unit, row.Remarks);
+		add_item(row.ID, row.Name, row.Unit,row.StrengthsFormulation, row.PrescribingLevel, row.CostPerUnitCash, row.CostPerUnitOther, row.Remarks);
 	}
 }
 
@@ -1139,30 +1199,6 @@ $(".add-item").click(function(){
 		content += '			</div>';
 		content += '		</div>';
 		content += '	</div>';
-		
-		/*content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
-		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px; min-width:210px;">';						
-		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
-		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-		content += '					<div class="icon" style="padding-top:4px;">';	
-		content += '						<i class="mdi mdi-cash-register" />';	
-		content += '					</div>';	
-		content += '					<input onkeypress="return isDecimalKey(event)" type="text" placeholder="Cost per Unit - Cash" class="cost-per-unit-cash-input" style="padding:0px 0px 0px 8px;"/>';	
-		content += '				</div>';
-		content += '			</div>';
-		content += '		</div>';
-		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px; min-width:210px;">';						
-		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
-		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-		content += '					<div class="icon" style="padding-top:4px;">';	
-		content += '						<i class="mdi mdi-cash-register" />';	
-		content += '					</div>';	
-		content += '					<input onkeypress="return isDecimalKey(event)" type="text" placeholder="Cost per Unit - Other" class="cost-per-unit-other-input" style="padding:0px 0px 0px 8px;"/>';	
-		content += '				</div>';
-		content += '			</div>';
-		content += '		</div>';
-		content += '	</div>';*/
-		
 		
 		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
 		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
