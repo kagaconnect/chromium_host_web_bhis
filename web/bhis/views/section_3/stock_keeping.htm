@@ -273,12 +273,56 @@ function lotnumber_selected(item, id){
 	var parent = $(item).parents(".Lots");
 	
 	var available_quantity = parent.find('.available-quantity-input');
-	var lotnumber =  $(item).parent().find(".select-dropdown.lotnumbers .current").text();	
+	var lotnumber =  $(item).parent().find(".select-dropdown.lotnumbers .current").text();
+	
+	//var description_input = $(item).parents(".dialog__body").find('.description-input');
 	
 	if(available_quantity != undefined && available_quantity != null){
 		var usage = getUsage(id, lotnumber);
 		available_quantity.val(usage.available);
 	}
+	
+	//if(description_input != undefined && description_input != null){
+	//	var _description = getDescription(id, lotnumber);
+	//	if(_description != null) description_input.val(_description);
+	//	else description_input.val("");
+	//}
+	
+}
+
+function getDescription(id, lotnumber){
+	var description = null;
+		
+	var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
+	if(con != null){
+		con.open();
+		
+			var query   = "SELECT  ";
+				query  += "	`Description` ";				
+				query  += "FROM `stock_items` `si` ";
+				query  += "WHERE `si`.`StockID` = @StockID ";
+				query  += "AND `si`.`LotNumber` = @LotNumber ";
+
+		var comm = con.createCommand(query);
+		if(comm != null){
+			comm.addParameter("@StockID", "Int32", id);
+			comm.addParameter("@LotNumber", "String", lotnumber);
+			var reader = comm.executeReader();
+			if(reader != null){
+				if(reader.read()){
+					var row = JSON.parse(reader.getValues());	
+					if(row != undefined && row != null)
+						description = row.Description;
+				}
+				reader.close();
+				con.close();				
+			}
+			else con.close();
+		}
+		else con.close();
+	}
+	
+	return description;
 }
 
 function getUsage(id, lotnumber){
@@ -430,7 +474,7 @@ function update_stock(item, id, name, unit){
 		content += '			</div>';
 		content += '		</div>';		
 		content += '	</div>';
-		
+				
 		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
 		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
 		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
@@ -627,6 +671,42 @@ function add_stock(item, id, name, unit){
 		content += '						<i class="mdi mdi-pound-box" />';	
 		content += '					</div>';	
 		content += '					<input type="text" placeholder="Lot Number" class="lot-number-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '					<div class="lot-value-generator icon btn-color Divider-Left scan"  style="border-radius: 0 0px 0px 0; padding:4px 0px 0px 1px; min-width:32px; max-width:32px;">';
+		content += '						<i class="mdi mdi-counter" />';
+		content += '					</div>';
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px; min-width:210px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-counter" />';	
+		content += '					</div>';	
+		content += '					<input onkeypress="return isNumberKey(event)" type="text" placeholder="Quantity Supplied" class="quantity-supplied-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		/*content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px; min-width:210px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '					</div>';	
+		content += '					<input type="text" placeholder="Description" class="description-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';*/	
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-calendar-today" />';	
+		content += '					</div>';	
+		content += '					<input type="text" placeholder="Date received" class="date-received-input" style="padding:0px 0px 0px 8px;"/>';	
 		content += '				</div>';
 		content += '			</div>';
 		content += '		</div>';
@@ -642,7 +722,9 @@ function add_stock(item, id, name, unit){
 		content += '		</div>';		
 		content += '	</div>';
 		
-		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+		
+		
+		/*content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
 		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
 		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
 		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
@@ -657,13 +739,13 @@ function add_stock(item, id, name, unit){
 		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
 		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
 		content += '					<div class="icon" style="padding-top:4px;">';	
-		content += '						<i class="mdi mdi-calendar-today" />';	
+		content += '						<i class="mdi mdi-altimeter" />';	
 		content += '					</div>';	
-		content += '					<input type="text" placeholder="Date received" class="date-received-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '					<input type="text" placeholder="Prescibing Level" class="prescibing-level-input" style="padding:0px 0px 0px 8px;"/>';	
 		content += '				</div>';
 		content += '			</div>';
 		content += '		</div>';
-		content += '	</div>';
+		content += '	</div>';*/
 				
 		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
 		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
@@ -689,16 +771,6 @@ function add_stock(item, id, name, unit){
 		content += '	</div>';
 		
 		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
-		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px; min-width:210px;">';						
-		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
-		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
-		content += '					<div class="icon" style="padding-top:4px;">';	
-		content += '						<i class="mdi mdi-cash-register" />';	
-		content += '					</div>';	
-		content += '					<input onkeypress="return isDecimalKey(event)" type="text" placeholder="Cost per Unit" class="cost-per-unit-input" style="padding:0px 0px 0px 8px;"/>';	
-		content += '				</div>';
-		content += '			</div>';
-		content += '		</div>';
 		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px;">';						
 		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
 		content += '				<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
@@ -713,8 +785,7 @@ function add_stock(item, id, name, unit){
 		content += '			</div>';
 		content += '		</div>';
 		content += '	</div>';
-		
-		
+		//---other
 		content += '</div>';
 		
 		var stock_dlg = ShowDialog('<i class="mdi mdi-clipboard-list-outline"></i>', "Add Stock", content,{
@@ -725,15 +796,7 @@ function add_stock(item, id, name, unit){
 		},"480px");
 		
 		var expiry_date_datepicker = InitDatePicker($(stock_dlg.el).find('.expiry-date-input')		, {language: 'en' ,dateFormat: 'dd/mm/yyyy', position: "left top" });
-		var date_received_datepicker = InitDatePicker($(stock_dlg.el).find('.date-received-input')	, {language: 'en' ,dateFormat: 'dd/mm/yyyy', position: "left top" });
-		
-		$(stock_dlg.el).find(".cost-per-unit-input").on('change keydown paste input', function(){
-			var val = $(this).val().trim();
-			if(val.length > 0){
-				if(/^\d+(\.\d{1,2})?$/im.test(val.trim()))$(this).parent().removeClass("is-invalid");
-				else $(this).parent().addClass("is-invalid");
-			}
-		});
+		var date_received_datepicker = InitDatePicker($(stock_dlg.el).find('.date-received-input')	, {language: 'en' ,dateFormat: 'dd/mm/yyyy', position: "right top" });
 		
 		focusEvents($(stock_dlg.el).find(".expiry-date-input"),
 			function(){
@@ -768,6 +831,18 @@ function add_stock(item, id, name, unit){
 				else $(this).parent().removeClass("is-invalid");
 			}
 		);
+		
+		
+		$(stock_dlg.el).find(".lot-value-generator").unbind( "click" );
+		$(stock_dlg.el).find(".lot-value-generator").click(function() {
+			var _lot_number = $(stock_dlg.el).find(".lot-number-input");
+			
+			var date = new Date();
+			var lotID = date.getFullYear().toString().substr(-2) + pad2(date.getMonth() + 1) + pad2( date.getDate()) + pad2( date.getHours() ) + pad2( date.getMinutes() ) + pad2( date.getSeconds() );
+			
+			_lot_number.val(lotID);
+			_lot_number.prop('disabled', true);
+		});
 
 		$(stock_dlg.el).find(".enter-value").unbind( "click" );
 		$(stock_dlg.el).find(".enter-value").click(function() {
@@ -778,13 +853,12 @@ function add_stock(item, id, name, unit){
 			
 			var _manufacturer = $(stock_dlg.el).find(".manufacturer-input").val().trim();			
 			var _supplier = $(stock_dlg.el).find(".supplier-input").val().trim();
-			var _cost_per_unit = $(stock_dlg.el).find(".cost-per-unit-input").val().trim();
+			
 			var _remarks = $(stock_dlg.el).find(".remarks-input").val().trim();
 						
 			if(_lot_number.length > 0 && _expiry_date.length > 0 && _quantity_supplied.length > 0 && _date_received.length > 0 &&
 				!$(stock_dlg.el).find(".expiry-date-input").hasClass("is-invalid") &&
-				!$(stock_dlg.el).find(".date-received-input").hasClass("is-invalid") &&
-				!$(stock_dlg.el).find(".cost-per-unit-input").hasClass("is-invalid")){
+				!$(stock_dlg.el).find(".date-received-input").hasClass("is-invalid")){
 				
 				var exists = false;
 				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
@@ -822,8 +896,7 @@ function add_stock(item, id, name, unit){
 							query   += "	,`ExpiryDate` ";
 							query   += "	,`Manufacturer` ";
 							query   += "	,`Supplier` ";
-							query   += "	,`QuantitySupplied` ";
-							query   += "	,`CostPerUnit` ";
+							query   += "	,`QuantitySupplied` ";	
 							query   += "	,`DateReceived` ";
 							query   += "	,`Remarks` ";
 							query   += ") ";
@@ -834,25 +907,22 @@ function add_stock(item, id, name, unit){
 							query   += "	,@Manufacturer ";
 							query   += "	,@Supplier ";
 							query   += "	,@QuantitySupplied ";
-							query   += "	,@CostPerUnit ";
 							query   += "	,@DateReceived ";
 							query   += "	,@Remarks ";
 							query   += ")";
 						
 						var comm = con.createCommand(query);
-						if(comm != null){
+						if(comm != null){						
 							comm.addParameter("@StockID", "Int32", id);
 							comm.addParameter("@LotNumber", "String", _lot_number);
 							comm.addParameter("@ExpiryDate", "String", _expiry_date);
 							comm.addParameter("@Manufacturer", "String", _manufacturer);
 							comm.addParameter("@Supplier", "String", _supplier);
-							comm.addParameter("@QuantitySupplied", "Int32", _quantity_supplied);
-							comm.addParameter("@CostPerUnit", "Int32", _cost_per_unit);
+							comm.addParameter("@QuantitySupplied", "Int32", _quantity_supplied);							
 							comm.addParameter("@DateReceived", "String", _date_received);
 							comm.addParameter("@Remarks", "String", _remarks);
 							comm.executeNonQuery();
 							con.close();
-							
 							loadData();
 							
 							stock_dlg.toggle();
@@ -1026,6 +1096,74 @@ $(".add-item").click(function(){
 		content += '		</div>';
 		content += '	</div>';
 		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Strengths/Formulation"  class="strengths-formulation-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-clipboard-text-outline" />';	
+		content += '				</div>';	
+		content += '				<input type="text" placeholder="Prescribing Level"  class="prescribing-level-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-cash-register" />';	
+		content += '				</div>';	
+		content += '				<input onkeypress="return isDecimalKey(event)" type="text" placeholder="Cost per Unit - Cash"  class="cost-per-unit-cash-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';						
+		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '			<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '				<div class="icon" style="padding-top:0px;">';	
+		content += '					<i class="mdi mdi-cash-register" />';	
+		content += '				</div>';	
+		content += '				<input onkeypress="return isDecimalKey(event)" type="text" placeholder="Cost per Unit - Other"  class="cost-per-unit-other-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';
+		
+		/*content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-top:4px; margin-bottom:8px; padding:2px 8px;">';	
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px; min-width:210px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-cash-register" />';	
+		content += '					</div>';	
+		content += '					<input onkeypress="return isDecimalKey(event)" type="text" placeholder="Cost per Unit - Cash" class="cost-per-unit-cash-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '		<div class="FlexDisplay FlexRow FlexGrow"  style="height:32px; min-width:210px;">';						
+		content += '			<div class="FlexDisplay Flex" style="min-width:150px;">';
+		content += '				<div tooltip="" flow="left" class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
+		content += '					<div class="icon" style="padding-top:4px;">';	
+		content += '						<i class="mdi mdi-cash-register" />';	
+		content += '					</div>';	
+		content += '					<input onkeypress="return isDecimalKey(event)" type="text" placeholder="Cost per Unit - Other" class="cost-per-unit-other-input" style="padding:0px 0px 0px 8px;"/>';	
+		content += '				</div>';
+		content += '			</div>';
+		content += '		</div>';
+		content += '	</div>';*/
+		
+		
 		content += '	<div class="FlexDisplay FlexRow"  style="width:100%; height:32px; margin-bottom:8px; padding:2px 8px;">';						
 		content += '		<div class="FlexDisplay Flex" style="min-width:150px;">';
 		content += '			<div class="FlexDisplay Flex FlexRow form-control" style="margin:0px 4px 0px 0px; border-radius:2px; ">';	
@@ -1050,6 +1188,22 @@ $(".add-item").click(function(){
 			}
 		},"320px");	
 		
+		$(stock_dlg.el).find(".cost-per-unit-cash-input").on('change keydown paste input', function(){
+			var val = $(this).val().trim();
+			if(val.length > 0){
+				if(/^\d+(\.\d{1,2})?$/im.test(val.trim()))$(this).parent().removeClass("is-invalid");
+				else $(this).parent().addClass("is-invalid");
+			}
+		});
+		
+		$(stock_dlg.el).find(".cost-per-unit-other-input").on('change keydown paste input', function(){
+			var val = $(this).val().trim();
+			if(val.length > 0){
+				if(/^\d+(\.\d{1,2})?$/im.test(val.trim()))$(this).parent().removeClass("is-invalid");
+				else $(this).parent().addClass("is-invalid");
+			}
+		});
+		
 		focusEvents($(stock_dlg.el).find(".name-input"),
 			function(){
 				$(this).parent().removeClass("is-invalid");
@@ -1072,9 +1226,18 @@ $(".add-item").click(function(){
 		$(stock_dlg.el).find(".enter-value").click(function() {
 			var _name = $(stock_dlg.el).find(".name-input").val().trim();
 			var _unit = $(stock_dlg.el).find(".unit-input").val().trim();
+			var _strengths_formulation = $(stock_dlg.el).find(".strengths-formulation-input").val().trim();
+			var _prescribing_level = $(stock_dlg.el).find(".prescribing-level-input").val().trim();
+			var _cost_per_unit_cash = $(stock_dlg.el).find(".cost-per-unit-cash-input").val().trim();
+			var _cost_per_unit_other = $(stock_dlg.el).find(".cost-per-unit-other-input").val().trim();
 			var _remarks = $(stock_dlg.el).find(".remarks-input").val().trim();
 			
-			if(_name.length > 0 && _unit.length > 0){
+			if(_name.length > 0 && 
+			   _unit.length > 0 && 			   				
+			   !$(stock_dlg.el).find(".cost-per-unit-cash-input").hasClass("is-invalid") &&
+			   !$(stock_dlg.el).find(".cost-per-unit-other-input").hasClass("is-invalid") &&
+			   !$(stock_dlg.el).find(".prescribing-level-input").hasClass("is-invalid") &&
+			   !$(stock_dlg.el).find(".strengths-formulation-input").hasClass("is-invalid")){
 				
 				var exists = false;
 				var con = new SqlLiteConnection(System.IO.Path.Combine(getRootPath(),"databases","bhis_dict.db"),"","");
@@ -1084,10 +1247,14 @@ $(".add-item").click(function(){
 					var query   = "SELECT `ID` ";
 						query  += "FROM `stocks` "; 
 						query  += "WHERE `Name` = @Name  ";
+						query  += "AND `Unit` = @Unit  ";
+						if(_strengths_formulation.length > 0)query  += "AND `StrengthsFormulation` = @StrengthsFormulation  ";
 					
 					var comm = con.createCommand(query);
 					if(comm != null){
 						comm.addParameter("@Name", "String", _name);
+						comm.addParameter("@Unit", "String", _unit);
+						if(_strengths_formulation.length > 0)comm.addParameter("@StrengthsFormulation", "String", _strengths_formulation);
 						var reader = comm.executeReader();
 						if(reader != null){
 							exists = reader.read();
@@ -1109,19 +1276,31 @@ $(".add-item").click(function(){
 						var query    = "INSERT INTO `stocks` ( ";
 							query   += "	`Name` ";
 							query   += "	,`Unit` ";
-							query   += "	,`Remarks` ";
+							if(_strengths_formulation.length > 0)query   += "	,`StrengthsFormulation` ";
+							if(_prescribing_level.length > 0)query   += "	,`PrescribingLevel` ";
+							if(_cost_per_unit_cash.length > 0)query   += "	,`CostPerUnitCash` ";
+							if(_cost_per_unit_other.length > 0)query   += "	,`CostPerUnitOther` ";							
+							if(_remarks.length > 0)query   += "	,`Remarks` ";
 							query   += ") ";
 							query   += "VALUES ( ";
 							query   += "	@Name ";
 							query   += "	,@Unit ";
-							query   += "	,@Remarks ";
+							if(_strengths_formulation.length > 0)query   += "	,@StrengthsFormulation ";
+							if(_prescribing_level.length > 0)query   += "	,@PrescribingLevel ";							
+							if(_cost_per_unit_cash.length > 0)query   += "	,@CostPerUnitCash ";
+							if(_cost_per_unit_other.length > 0)query   += "	,@CostPerUnitOther ";
+							if(_remarks.length > 0)query   += "	,@Remarks ";
 							query   += ")";
-						
+						//CostPerUnitCash CostPerUnitOther
 						var comm = con.createCommand(query);
 						if(comm != null){
 							comm.addParameter("@Name", "String", _name);
 							comm.addParameter("@Unit", "String", _unit);
-							comm.addParameter("@Remarks", "String", _remarks);
+							if(_strengths_formulation.length > 0)comm.addParameter("@StrengthsFormulation", "String", _strengths_formulation);
+							if(_prescribing_level.length > 0)comm.addParameter("@PrescribingLevel", "String", _prescribing_level);													
+							if(_cost_per_unit_cash.length > 0)comm.addParameter("@CostPerUnitCash", "Double", _cost_per_unit_cash);
+							if(_cost_per_unit_other.length > 0)comm.addParameter("@CostPerUnitOther", "Double", _cost_per_unit_other);
+							if(_remarks.length > 0)comm.addParameter("@Remarks", "String", _remarks);
 							comm.executeNonQuery();
 							con.close();
 
@@ -1134,6 +1313,16 @@ $(".add-item").click(function(){
 					}
 				}
 				else{
+					var item = $(stock_dlg.el).find(".name-input");
+					if(item != undefined && item != null){
+						item.parent().addClass("is-invalid");
+						item.parent().attr("tooltip","Item already exists");
+						item.focus(function(){
+							$(this).parent().removeClass("is-invalid");
+							$(this).parent().attr("tooltip","");
+						});
+					}
+					
 					var item = $(stock_dlg.el).find(".name-input");
 					if(item != undefined && item != null){
 						item.parent().addClass("is-invalid");

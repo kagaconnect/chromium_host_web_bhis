@@ -285,6 +285,10 @@ function getVersion(){
 	return 3.6;
 }
 
+function pad2(n) { 
+	return n < 10 ? '0' + n : n 
+}
+
 function loadSubPage(sub_file,canNavigate){
 	if(System.IO.File.Exists(sub_file)){
 		if(canNavigate){
